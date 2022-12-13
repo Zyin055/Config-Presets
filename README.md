@@ -10,7 +10,7 @@ Dropdown values (configurable)
 
 ![dropdown](https://i.imgur.com/B1eMWAw.jpg)
 
-Screenshot of config_presets.json
+Screenshot of config_presets.json, which can be opened with the "Edit..." button
 
 ![config](https://i.imgur.com/iJ13uhU.jpg)
 

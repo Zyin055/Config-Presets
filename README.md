@@ -20,7 +20,7 @@ Screenshot of config_presets.json, which can be opened with the "Edit..." button
 
 ## Changelog
 #### 12/13/2022
-* config.json was tweaked
+* config.json was tweaked, added Firstpass width and Firstpass height
 * Better support for img2img tab compatibility
 #### 12/12/2022
 * Initial Release

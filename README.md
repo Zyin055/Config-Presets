@@ -15,5 +15,5 @@ Screenshot of config_presets.json, which can be opened with the "Edit..." button
 ![config](https://i.imgur.com/iJ13uhU.jpg)
 
 ## Installation
-* In your Automatic1111 Web UI, go to the Extensions tab > Install from URL > URL for extension's git repository: https://github.com/Zyin055/Config-Presets
+* In your Automatic1111 Web UI, go to the Extensions tab > Install from URL > URL for extension's git repository: `https://github.com/Zyin055/Config-Presets`
 * Click the Install button

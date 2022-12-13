@@ -17,3 +17,10 @@ Screenshot of config_presets.json, which can be opened with the "Edit..." button
 ## Installation
 * In your Automatic1111 Web UI, go to the Extensions tab > Install from URL > URL for extension's git repository: `https://github.com/Zyin055/Config-Presets`
 * Click the Install button
+
+## Changelog
+#### 12/13/2022
+* config.json was tweaked
+* Better support for img2img tab compatibility
+#### 12/12/2022
+* Initial Release

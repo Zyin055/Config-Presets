@@ -39,10 +39,10 @@ class Script(modules.scripts.Script):
         self.basedir = modules.scripts.basedir()     #C:\Stable Diffusion\extensions\Config-Presets
         #Load config from file
         try:
-            with open(f"{self.basedir}/extensions\\Config-Presets\\config.json") as file:
+            with open(f"{self.basedir}\\extensions\\Config-Presets\\config.json") as file:
                 self.config_presets = json.load(file)
         except FileNotFoundError:
-            print(f"[ERROR] Config Presets: Could not find config file at '{self.basedir}/extensions\\Config-Presets\\config.json'. The Config Presets dropdown will not work!")
+            print(f"[ERROR] Config Presets: Could not find config file at '{self.basedir}\\extensions\\Config-Presets\\config.json'. The Config Presets dropdown will not work!")
 
     def title(self):
         return "Config Presets"
@@ -157,7 +157,7 @@ class Script(modules.scripts.Script):
                     elem_id="config_presets_open_config_file_button"
                 )
                 open_config_file_button.click(
-                    fn=lambda: open_file(f"{self.basedir}extensions\\Config-Presets\\config.json"),
+                    fn=lambda: open_file(f"{self.basedir}\\extensions\\Config-Presets\\config.json"),
                     inputs=[],
                     outputs=[],
                 )

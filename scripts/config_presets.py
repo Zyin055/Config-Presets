@@ -16,7 +16,7 @@ class Script(scripts.Script):
 
         #self.basedir = scripts.basedir()     #C:\Stable Diffusion      #use at global instead to get the extra 'extensions\Config-Presets' path.
 
-        component_labels = [
+        self.component_labels = [
             "Sampling Steps",
             "Sampling method",
             "Width",
@@ -29,14 +29,12 @@ class Script(scripts.Script):
             "Batch size",
             "CFG Scale",
         ]
-        self.component_map = {k: None for k in component_labels}    # gets filled up in after_component()
+        self.component_map = {k: None for k in self.component_labels}    # gets filled up in after_component()
+        self.settings_file = "config.json"
+        self.save_as = gr.Text(render=False)
 
         #Load config from file
-        try:
-            with open(f"{basedir}\\config.json") as file:
-                self.config_presets = json.load(file)
-        except FileNotFoundError:
-            print(f"[ERROR] Config Presets: Could not find config file at '{basedir}\\config.json'. The Config Presets dropdown will not work!")
+        self.config_presets = self.get_config(self.settings_file)
 
     def title(self):
         return "Config Presets"
@@ -60,7 +58,7 @@ class Script(scripts.Script):
                 preset_values.append(k)
                 #print(f"Config Presets: added \"{k}\"")
 
-            with gr.Column(scale=9):
+            with gr.Column(scale=8):
                 def config_preset_dropdown_change(dropdown_value):
                     config_preset = self.config_presets[dropdown_value]
                     print(f"Config Presets: changed to {dropdown_value}")
@@ -145,7 +143,17 @@ class Script(scripts.Script):
                     outputs=[],
                     _js="function() { config_preset_dropdown_change() }",   # JS is used to update the Highres fix row to show/hide it
                 )
+            with gr.Column(scale=1, min_width=30):
+                save_button = gr.Button(
+                    value = "Save",
+                    variant = "primary"
+                )
 
+                save_button.click(
+                    fn = self.save_config(path=self.filename),
+                    inputs = list([self.save_as] + [self.component_map[comp_name] for comp_name in self.component_labels if self.component_map[comp_name] is not None]),
+                    #outputs = config_preset_dropdown
+                )
             with gr.Column(scale=1, min_width=30):
                 def open_file(f):
                     path = os.path.normpath(f)
@@ -172,8 +180,44 @@ class Script(scripts.Script):
                     outputs=[],
                 )
 
+        if component.elem_id == "script_list": # Temporary place until you figure out where you want it
+            self.save_as.render()
+
     def ui(self, is_img2img):
         pass
 
     def run(self, p, *args):
         pass
+
+    def save_config(self, path):
+        """
+            Helper function to utilize closure
+        """
+
+        # closure keeps path in memory, it's a hack to get around how click or change expects values to be formatted
+        def func(setting_name, *new_setting):
+            """
+                Formats setting and overwrites file
+                input: setting_name is text autoformatted from clicks input
+                       new_settings is a tuple (by using packing) of formatted text, outputs from
+                            click method must be in same order of labels
+            """
+            # Format new_setting from tuple of values, and map them to their label
+            new_setting = {k:new_setting[i] for i, k in enumerate(self.component_labels) if k is not None}
+
+            file = os.path.join(basedir, path)
+            self.config_presets.update({setting_name : new_setting})
+            with open(file, "w") as f:
+                json.dump(self.config_presets, file)
+            #return gr.update(choices = list(self.config_presets.keys()))
+        return func
+        
+        
+    def get_config(self, path, open_mode='r'):
+        file = os.path.join(basedir, path)
+        try:
+            with open(file, open_mode) as f:
+                as_dict = json.load(f) 
+        except FileNotFoundError:
+            print(f"[ERROR] Config Presets: Could not find config file at '{file}'. The Config Presets dropdown will not work!")
+        return as_dict

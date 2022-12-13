@@ -1,5 +1,5 @@
 ## What does this do?
-This Automatic1111 extension adds a configurable dropdown to allow you to change settings in the txt2img and img2img tabs of the Web UI.
+This [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) extension adds a configurable dropdown to allow you to change settings in the txt2img and img2img tabs of the Web UI.
 
 ## Screenshots
 The new dropdown in the image gallery

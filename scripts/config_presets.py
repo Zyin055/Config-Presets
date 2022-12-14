@@ -1,9 +1,17 @@
+"""
+    Project started by Zyin055, and co-authored by Gerschel
+"""
 import modules.scripts as scripts
+import modules.sd_samplers
 import gradio as gr
 import json
 import os
 import platform
 import subprocess as sp
+import logging
+from pprint import pprint as pp
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 basedir = scripts.basedir()     #C:\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
@@ -65,32 +73,32 @@ class Script(scripts.Script):
 
                     if self.component_map["Highres. fix"]:
                         # if we are txt2img highres fix has a component
-                        return (config_preset["steps"] if "steps" in config_preset else self.component_map["Sampling Steps"].value,
-                                config_preset["sampler_index"] if "sampler_index" in config_preset else self.component_map["Sampling method"].value,
-                                config_preset["width"] if "width" in config_preset else self.component_map["Width"].value,
-                                config_preset["height"] if "height" in config_preset else self.component_map["Height"].value,
-                                config_preset["enable_hr"] if "enable_hr" in config_preset else self.component_map["Highres. fix"].value,
-                                config_preset["firstphase_width"] if "firstphase_width" in config_preset else self.component_map["Firstpass width"].value,
-                                config_preset["firstphase_height"] if "firstphase_height" in config_preset else self.component_map["Firstpass height"].value,
-                                config_preset["denoising_strength"] if "denoising_strength" in config_preset else self.component_map["Denoising strength"].value,
-                                config_preset["batch_count"] if "batch_count" in config_preset else self.component_map["Batch count"].value,
-                                config_preset["batch_size"] if "batch_size" in config_preset else self.component_map["Batch size"].value,
-                                config_preset["cfg_scale"] if "cfg_scale" in config_preset else self.component_map["CFG Scale"].value,
+                        return (config_preset["Sampling Steps"] if "Sampling Steps" in config_preset else self.component_map["Sampling Steps"].value,
+                                config_preset["Sampling method"] if "Sampling method" in config_preset else self.component_map["Sampling method"].value,
+                                config_preset["Width"] if "Width" in config_preset else self.component_map["Width"].value,
+                                config_preset["Height"] if "Height" in config_preset else self.component_map["Height"].value,
+                                config_preset["Highres. fix"] if "Highres. fix" in config_preset else self.component_map["Highres. fix"].value,
+                                config_preset["Firstpass width"] if "Firstpass width" in config_preset else self.component_map["Firstpass width"].value,
+                                config_preset["Firstpass height"] if "Firstpass height" in config_preset else self.component_map["Firstpass height"].value,
+                                config_preset["Denoising strength"] if "Denoising strength" in config_preset else self.component_map["Denoising strength"].value,
+                                config_preset["Batch count"] if "Batch count" in config_preset else self.component_map["Batch count"].value,
+                                config_preset["Batch size"] if "Batch size" in config_preset else self.component_map["Batch size"].value,
+                                config_preset["CFG Scale"] if "CFG Scale" in config_preset else self.component_map["CFG Scale"].value,
                                 )
                         
                     else:
                         # if we are img2img highres fix component is empty
-                        return (config_preset["steps"] if "steps" in config_preset else self.component_map["Sampling Steps"].value,
-                                config_preset["sampler_index"] if "sampler_index" in config_preset else self.component_map["Sampling method"].value,
-                                config_preset["width"] if "width" in config_preset else self.component_map["Width"].value,
-                                config_preset["height"] if "height" in config_preset else self.component_map["Height"].value,
-                                #config_preset["enable_hr"] if "enable_hr" in config_preset else self.component_map["Highres. fix"].value,
-                                #config_preset["firstphase_width"] if "firstphase_width" in config_preset else self.component_map["Firstpass width"].value,
-                                #config_preset["firstphase_height"] if "firstphase_height" in config_preset else self.component_map["Firstpass height"].value,
-                                config_preset["denoising_strength"] if "denoising_strength" in config_preset else self.component_map["Denoising strength"].value,
-                                config_preset["batch_count"] if "batch_count" in config_preset else self.component_map["Batch count"].value,
-                                config_preset["batch_size"] if "batch_size" in config_preset else self.component_map["Batch size"].value,
-                                config_preset["cfg_scale"] if "cfg_scale" in config_preset else self.component_map["CFG Scale"].value,
+                        return (config_preset["Sampling Steps"] if "Sampling Steps" in config_preset else self.component_map["Sampling Steps"].value,
+                                config_preset["Sampling method"] if "Sampling method" in config_preset else self.component_map["Sampling method"].value,
+                                config_preset["Width"] if "Width" in config_preset else self.component_map["Width"].value,
+                                config_preset["Height"] if "Height" in config_preset else self.component_map["Height"].value,
+                                #config_preset["Highres. fix"] if "Highres. fix" in config_preset else self.component_map["Highres. fix"].value,
+                                #config_preset["Firstpass width"] if "Firstpass width" in config_preset else self.component_map["Firstpass width"].value,
+                                #config_preset["Firstpass height"] if "Firstpass height" in config_preset else self.component_map["Firstpass height"].value,
+                                config_preset["Denoising strength"] if "Denoising strength" in config_preset else self.component_map["Denoising strength"].value,
+                                config_preset["Batch count"] if "Batch count" in config_preset else self.component_map["Batch count"].value,
+                                config_preset["Batch size"] if "Batch size" in config_preset else self.component_map["Batch size"].value,
+                                config_preset["CFG Scale"] if "CFG Scale" in config_preset else self.component_map["CFG Scale"].value,
                                 )
 
 
@@ -150,8 +158,8 @@ class Script(scripts.Script):
                 )
 
                 save_button.click(
-                    fn = self.save_config(path=self.filename),
-                    inputs = list([self.save_as] + [self.component_map[comp_name] for comp_name in self.component_labels if self.component_map[comp_name] is not None]),
+                    fn = self.save_config(path=self.settings_file),
+                    inputs = list([config_preset_dropdown, self.save_as] + [self.component_map[comp_name] for comp_name in self.component_labels if self.component_map[comp_name] is not None]),
                     #outputs = config_preset_dropdown
                 )
             with gr.Column(scale=1, min_width=30):
@@ -195,7 +203,7 @@ class Script(scripts.Script):
         """
 
         # closure keeps path in memory, it's a hack to get around how click or change expects values to be formatted
-        def func(setting_name, *new_setting):
+        def func(dropdown_component, setting_name, *new_setting):
             """
                 Formats setting and overwrites file
                 input: setting_name is text autoformatted from clicks input
@@ -203,13 +211,20 @@ class Script(scripts.Script):
                             click method must be in same order of labels
             """
             # Format new_setting from tuple of values, and map them to their label
-            new_setting = {k:new_setting[i] for i, k in enumerate(self.component_labels) if k is not None}
-
+            # Using presence of hires button to determine if we are img2img or txt2img
+            if self.component_map["Highres. fix"]:
+                new_setting = {k:new_setting[i] if k != "Sampling method" else modules.sd_samplers.samplers[new_setting[i]].name for i, k in enumerate(self.component_labels) if self.component_map[k] is not None}
+            else:
+                new_setting = {k:new_setting[i] if k != "Sampling method" else modules.sd_samplers.samplers_for_img2img[new_setting[i]].name for i, k in enumerate(self.component_labels) if self.component_map[k] is not None}
             file = os.path.join(basedir, path)
             self.config_presets.update({setting_name : new_setting})
+            #dropdown_component.choices = [self.config_presets.keys()]
+            logging.debug(self.config_presets.keys())
+            #logging.debug(self.dropdown_components.choices)
+            
             with open(file, "w") as f:
-                json.dump(self.config_presets, file)
-            #return gr.update(choices = list(self.config_presets.keys()))
+                json.dump(self.config_presets, f, indent=4)
+            return gr.Dropdown.update(choices = self.config_presets.keys())
         return func
         
         

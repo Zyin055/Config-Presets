@@ -8,7 +8,6 @@ import json
 import os
 import platform
 import subprocess as sp
-import logging
 
 
 
@@ -27,6 +26,7 @@ class Script(scripts.Script):
             "Sampling method",
             "Width",
             "Height",
+            "Restore faces",
             "Highres. fix",
             "Firstpass width",
             "Firstpass height",
@@ -69,12 +69,13 @@ class Script(scripts.Script):
                     config_preset = self.config_presets[dropdown_value]
                     print(f"Config Presets: changed to {dropdown_value}")
 
-                    if self.component_map["Highres. fix"]:
+                    if self.is_txt2img:
                         # if we are txt2img highres fix has a component
                         return (config_preset["Sampling Steps"] if "Sampling Steps" in config_preset else self.component_map["Sampling Steps"].value,
                                 config_preset["Sampling method"] if "Sampling method" in config_preset else self.component_map["Sampling method"].value,
                                 config_preset["Width"] if "Width" in config_preset else self.component_map["Width"].value,
                                 config_preset["Height"] if "Height" in config_preset else self.component_map["Height"].value,
+                                config_preset["Restore faces"] if "Restore faces" in config_preset else self.component_map["Restore faces"].value,
                                 config_preset["Highres. fix"] if "Highres. fix" in config_preset else self.component_map["Highres. fix"].value,
                                 config_preset["Firstpass width"] if "Firstpass width" in config_preset else self.component_map["Firstpass width"].value,
                                 config_preset["Firstpass height"] if "Firstpass height" in config_preset else self.component_map["Firstpass height"].value,
@@ -209,8 +210,7 @@ class Script(scripts.Script):
                             click method must be in same order of labels
             """
             # Format new_setting from tuple of values, and map them to their label
-            # Using presence of hires button to determine if we are img2img or txt2img
-            if self.component_map["Highres. fix"]:
+            if self.is_txt2img:
                 new_setting = {k:new_setting[i] if k != "Sampling method" else modules.sd_samplers.samplers[new_setting[i]].name for i, k in enumerate(self.component_labels) if self.component_map[k] is not None}
             else:
                 new_setting = {k:new_setting[i] if k != "Sampling method" else modules.sd_samplers.samplers_for_img2img[new_setting[i]].name for i, k in enumerate(self.component_labels) if self.component_map[k] is not None}

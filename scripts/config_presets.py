@@ -9,9 +9,7 @@ import os
 import platform
 import subprocess as sp
 import logging
-from pprint import pprint as pp
 
-logging.basicConfig(level=logging.DEBUG)
 
 
 basedir = scripts.basedir()     #C:\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
@@ -219,7 +217,7 @@ class Script(scripts.Script):
             file = os.path.join(basedir, path)
             self.config_presets.update({setting_name : new_setting})
             #dropdown_component.choices = [self.config_presets.keys()]
-            logging.debug(self.config_presets.keys())
+            #logging.debug(self.config_presets.keys())
             #logging.debug(self.dropdown_components.choices)
             
             with open(file, "w") as f:

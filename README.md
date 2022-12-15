@@ -19,6 +19,8 @@ Screenshot of config_presets.json, which can be opened with the "Edit..." button
 * Click the Install button
 
 ## Changelog
+#### 12/15/2022
+* Fix for installation error on linux (maybe?)
 #### 12/13/2022
 * config.json was tweaked, added Firstpass width and Firstpass height
 * Better support for img2img tab compatibility

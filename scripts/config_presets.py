@@ -33,10 +33,10 @@ class Script(scripts.Script):
 
         #Load config from file
         try:
-            with open(f"{basedir}\\config.json") as file:
+            with open(f"{basedir}/config.json") as file:
                 self.config_presets = json.load(file)
         except FileNotFoundError:
-            print(f"[ERROR] Config Presets: Could not find config file at '{basedir}\\config.json'. The Config Presets dropdown will not work!")
+            print(f"[ERROR] Config Presets: Could not find config file at '{basedir}/config.json'. The Config Presets dropdown will not work!")
 
     def title(self):
         return "Config Presets"
@@ -167,7 +167,7 @@ class Script(scripts.Script):
                     elem_id="config_presets_open_config_file_button"
                 )
                 open_config_file_button.click(
-                    fn=lambda: open_file(f"{basedir}\\config.json"),
+                    fn=lambda: open_file(f"{basedir}/config.json"),
                     inputs=[],
                     outputs=[],
                 )

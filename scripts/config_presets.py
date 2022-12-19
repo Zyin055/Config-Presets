@@ -31,12 +31,74 @@ class Script(scripts.Script):
         ]
         self.component_map = {k: None for k in component_labels}    # gets filled up in after_component()
 
-        #Load config from file
+        # Load config from file
         try:
             with open(f"{basedir}/config.json") as file:
                 self.config_presets = json.load(file)
         except FileNotFoundError:
-            print(f"[ERROR] Config Presets: Could not find config file at '{basedir}/config.json'. The Config Presets dropdown will not work!")
+            # Config file not found
+            # First time running the extension or it was deleted, so fill it with default values
+            self.config_presets = {
+                "Default": {
+                },
+                "Low quality ------ 512x512, steps: 10, batch size: 8, DPM++ 2M Karras" : {
+                    "steps": 10,
+                    "sampler_index": "DPM++ 2M Karras",
+                    "width": 512,
+                    "height": 512,
+                    "batch_count": 1,
+                    "batch_size": 8,
+                    "cfg_scale": 7
+                },
+                "Medium quality - 512x512, steps: 20, batch size: 8, DPM++ 2S a Karras" : {
+                    "steps": 20,
+                    "sampler_index": "DPM++ 2S a Karras",
+                    "width": 512,
+                    "height": 512,
+                    "batch_count": 1,
+                    "batch_size": 8,
+                    "cfg_scale": 7
+                },
+                "High quality ------ 512x512, steps: 40, batch size: 8, DPM++ 2S a Karras" : {
+                    "steps": 40,
+                    "sampler_index": "DPM++ 2S a Karras",
+                    "width": 512,
+                    "height": 512,
+                    "batch_count": 1,
+                    "batch_size": 8,
+                    "cfg_scale": 7
+                },
+                "High res -------- 1024x1024, steps: 30, batch size: 1, DPM++ 2M Karras, [Highres fix: 512x512, Denoising: 0.4]" : {
+                    "steps": 30,
+                    "sampler_index": "DPM++ 2M Karras",
+                    "width": 1024,
+                    "height": 1024,
+                    "enable_hr": "true",
+                    "firstphase_width": 512,
+                    "firstphase_height": 512,
+                    "denoising_strength": 0.4,
+                    "batch_count": 1,
+                    "batch_size": 1,
+                    "cfg_scale": 7
+                },
+                "Wallpaper ----- 1920x1088, steps: 30, batch size: 1, DPM++ 2M Karras, [Highres fix: 768x448, Denoising: 0.3]" : {
+                    "steps": 30,
+                    "sampler_index": "DPM++ 2M Karras",
+                    "width": 1920,
+                    "height": 1088,
+                    "enable_hr": "true",
+                    "firstphase_width": 768,
+                    "firstphase_height": 448,
+                    "denoising_strength": 0.3,
+                    "batch_count": 1,
+                    "batch_size": 1,
+                    "cfg_scale": 7
+                }
+            }
+            json_object = json.dumps(self.config_presets, indent=4)
+            with open(f"{basedir}/config.json", "w") as outfile:
+                outfile.write(json_object)
+                print(f"Config Presets: Config file not found, created default config at {basedir}/config.json")
 
     def title(self):
         return "Config Presets"

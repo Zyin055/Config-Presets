@@ -1,8 +1,6 @@
 ## What does this do?
 This [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) extension adds a configurable dropdown to allow you to change settings in the txt2img and img2img tabs of the Web UI.
 
-Config Presets is under active development. If you update, please backup your config.json file if you've made any changes to it, since future updates may break the old config file.
-
 ## Screenshots
 The new dropdown in the image gallery
 

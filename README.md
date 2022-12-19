@@ -12,7 +12,7 @@ Dropdown values (configurable)
 
 Screenshot of config.json, which can be opened with the "Edit..." button. It's created after the extension is loaded for the first time
 
-![config](https://i.imgur.com/ODHBQcT.jpg)
+![config](https://i.imgur.com/acFy6Hq.jpg)
 
 ## Installation
 * In your Automatic1111 Web UI, go to the Extensions tab > Install from URL > URL for extension's git repository: `https://github.com/Zyin055/Config-Presets`

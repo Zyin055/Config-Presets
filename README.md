@@ -4,19 +4,19 @@ This [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) ex
 Note: If you're updating from a version before 12/19/2022 your config.json settings will be overwritten. Make a backup if you want to keep your custom presets before updating.
 
 ## Screenshots
-The new dropdown in the image gallery
+The new dropdown in the image gallery.
 
 ![gallery](https://i.imgur.com/ef0p7wM.jpg)
 
-Dropdown values (configurable)
+Dropdown values (configurable), select one and the generation settings values will be applied to the Web UI.
 
 ![dropdown](https://i.imgur.com/hWpoR9N.jpg)
 
-Clicking the "Add/Remove..." button
+Clicking the "Add/Remove..." button lets you create and delete custom presets the settings currently in the Web UI. Each button has tooltips to help you.
 
 ![dropdown](https://i.imgur.com/OD8wcSt.jpg)
 
-Screenshot of config.json, which can be opened with the "Edit..." button. It's created after the extension is loaded for the first time
+Screenshot of config.json, which can be opened with the "Open..." button. It's created after the extension is loaded for the first time. You can use this if you want finer control on editing your presets.
 
 ![config](https://i.imgur.com/acFy6Hq.jpg)
 

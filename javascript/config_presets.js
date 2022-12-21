@@ -1,12 +1,12 @@
 //add tooltip by piggybacking off of javascript/hints.js
-//titles["Edit..."] = "[Config Presets] open config.json"
+//titles["Add/Remove..."] = "[Config Presets] Add or remove a preset"
 
 //or do it our more precise way
 onUiUpdate(function() {
 	//set tooltips
 	gradioApp().querySelectorAll("#config_presets_open_config_file_button").forEach(el => el.setAttribute("title", "Open the config.json file for manual editing if you want to make changes that way, requires Gradio restart after editing"))
 	gradioApp().querySelectorAll("#config_preset_save_textbox").forEach(el => el.setAttribute("title", "The label that will be displayed in the dropdown to the left"))
-	gradioApp().querySelectorAll("#config_preset_save_button").forEach(el => el.setAttribute("title", "Saves current settings with the new preset name"))
+	gradioApp().querySelectorAll("#config_preset_save_button").forEach(el => el.setAttribute("title", "Saves current settings with the new preset name. This will save: Steps, Sampler, Width/Height, Highres fix, Firstpass width/height, Denoising strength, Batch size, CFG Scale."))
 	gradioApp().querySelectorAll("#config_preset_add_button").forEach(el => el.setAttribute("title", "[Config Presets] Add or remove a preset"))
 	gradioApp().querySelectorAll("#config_preset_cancel_save_button").forEach(el => el.setAttribute("title", "Go back"))
 	gradioApp().querySelectorAll("#config_preset_trash_button").forEach(el => el.setAttribute("title", "Permanently delete selected preset"))
@@ -25,11 +25,4 @@ function config_preset_dropdown_change() {
 		e.initEvent("change", true, false)
 		highresCheckbox.dispatchEvent(e)
 	}, 200) //50ms is too fast
-}
-
-function config_presets_add_new_preset() {
-	console.log("config_presets_add_new_preset()")
-	const temp = prompt("name?")
-	console.log("returning temp="+temp)
-	return temp
 }

@@ -12,7 +12,20 @@ Dropdown values (configurable), select one and the generation settings values wi
 
 ![dropdown](https://i.imgur.com/hWpoR9N.jpg)
 
-Clicking the "Add/Remove..." button lets you create and delete custom presets the settings currently in the Web UI. Each button has tooltips to help you.
+Each config preset holds values for:
+* Sampling Steps
+* Sampling method
+* Width
+* Height
+* Highres. fix
+* Firstpass width
+* Firstpass height
+* Denoising strength
+* Batch count
+* Batch size
+* CFG Scale
+
+Clicking the "Add/Remove..." button lets you create and delete custom presets of settings currently in the Web UI. Each button has tooltips to help you.
 
 ![dropdown](https://i.imgur.com/OD8wcSt.jpg)
 

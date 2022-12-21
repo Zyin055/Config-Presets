@@ -6,11 +6,15 @@ Note: If you're updating from the 12/22/2022 version your config.json will be ov
 ## Screenshots
 The new dropdown in the image gallery
 
-![gallery](https://i.imgur.com/bdIkhgu.jpg)
+![gallery](https://i.imgur.com/ef0p7wM.jpg)
 
 Dropdown values (configurable)
 
-![dropdown](https://i.imgur.com/B1eMWAw.jpg)
+![dropdown](https://i.imgur.com/hWpoR9N.jpg)
+
+Clicking the "Add/Remove..." button
+
+![dropdown](https://i.imgur.com/OD8wcSt.jpg)
 
 Screenshot of config.json, which can be opened with the "Edit..." button. It's created after the extension is loaded for the first time
 
@@ -21,6 +25,8 @@ Screenshot of config.json, which can be opened with the "Edit..." button. It's c
 * Click the Install button
 
 ## Changelog
+#### 12/21/2022
+* Added the "Add/Remove..." button to create and delete config presets within the Web UI
 #### 12/19/2022
 * config.json will be created on first startup, user edits will not be overwritten when updating the extension
 #### 12/15/2022

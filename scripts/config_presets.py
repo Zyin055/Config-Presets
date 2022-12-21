@@ -7,47 +7,37 @@ import platform
 import subprocess as sp
 
 
-basedir = scripts.basedir()     #C:\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
-
-
+BASEDIR = scripts.basedir()     #C:\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
+CONFIG_FILE_NAME = "config.json"
 
 
 class Script(scripts.Script):
 
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.config_file_name = "config.json"
-
         # These are the settings from the UI that are saved for each preset
         # First value is the component label, second value is the internal name which is kept for legacy version support
-        self.component_labels = {
-            "Sampling Steps": "steps",
-            "Sampling method": "sampler_index",
-            "Width": "width",
-            "Height": "height",
-            "Highres. fix": "enable_hr",
-            "Firstpass width": "firstphase_width",
-            "Firstpass height": "firstphase_height",
-            "Denoising strength": "denoising_strength",
-            "Batch count": "batch_count",
-            "Batch size": "batch_size",
-            "CFG Scale": "cfg_scale",
+        self.component_labels = {   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
+            "Sampling Steps":       {"internal_name": "steps",              "not_used_in_img2img": False},
+            "Sampling method":      {"internal_name": "sampler_index",      "not_used_in_img2img": False},
+            "Width":                {"internal_name": "width",              "not_used_in_img2img": False},
+            "Height":               {"internal_name": "height",             "not_used_in_img2img": False},
+            "Highres. fix":         {"internal_name": "enable_hr",          "not_used_in_img2img": True},
+            "Firstpass width":      {"internal_name": "firstphase_width",   "not_used_in_img2img": True},
+            "Firstpass height":     {"internal_name": "firstphase_height",  "not_used_in_img2img": True},
+            "Denoising strength":   {"internal_name": "denoising_strength", "not_used_in_img2img": False},
+            "Batch count":          {"internal_name": "batch_count",        "not_used_in_img2img": False},
+            "Batch size":           {"internal_name": "batch_size",         "not_used_in_img2img": False},
+            "CFG Scale":            {"internal_name": "cfg_scale",          "not_used_in_img2img": False},
         }
-        # These are the components that are NOT found in the img2img tab
-        self.components_not_in_img2img_tab = [
-            "Highres. fix",
-            "Firstpass width",
-            "Firstpass height",
-        ]
 
         # Mapping between component labels and the actual components in ui.py
         self.component_map = {k: None for k in self.component_labels}  # gets filled up in the after_component() method
 
         # Load config file
         try:
-            with open(f"{basedir}/{self.config_file_name}") as file:
+            with open(f"{BASEDIR}/{CONFIG_FILE_NAME}") as file:
                 self.config_presets = json.load(file)
         except FileNotFoundError:
             # Config file not found
@@ -111,15 +101,7 @@ class Script(scripts.Script):
             }
 
             self.write_config_presets_to_file()
-            print(f"Config Presets: Config file not found, created default config at {basedir}/{self.config_file_name}")
-
-
-
-    def write_config_presets_to_file(self):
-        json_object = json.dumps(self.config_presets, indent=4)
-        with open(f"{basedir}/{self.config_file_name}", "w") as outfile:
-            outfile.write(json_object)
-
+            print(f"Config Presets: Config file not found, created default config at {BASEDIR}/{CONFIG_FILE_NAME}")
 
 
     def title(self):
@@ -190,12 +172,10 @@ class Script(scripts.Script):
                         config_preset_dropdown.style(container=False) #set to True to give it a white box to sit in
 
                         if self.is_txt2img:
-                        #if self.component_map["Highres. fix"]:
                             config_preset_dropdown.change(
                                 fn=config_preset_dropdown_change,
                                 show_progress=False,
                                 inputs=[config_preset_dropdown],
-                                #outputs=[ui_steps, ui_sampler_index, ui_width, ui_height, ui_enable_hr, ui_denoising_strength, ui_batch_count, ui_batch_size, ui_cfg_scale],
                                 outputs=[self.component_map["Sampling Steps"],
                                          self.component_map["Sampling method"],
                                          self.component_map["Width"],
@@ -298,7 +278,7 @@ class Script(scripts.Script):
                                     elem_id="config_presets_open_config_file_button",
                                 )
                                 open_config_file_button.click(
-                                    fn=lambda: open_file(f"{basedir}/{self.config_file_name}"),
+                                    fn=lambda: open_file(f"{BASEDIR}/{CONFIG_FILE_NAME}"),
                                     inputs=[],
                                     outputs=[],
                                 )
@@ -367,13 +347,13 @@ class Script(scripts.Script):
             for i, k in enumerate(self.component_labels):
                 #print(f"i={i}, j={j} k={k}")  # i=1,2,3... k="Sampling Steps", "Sampling methods", ...
 
-                if self.is_img2img and k in self.components_not_in_img2img_tab:
+                if self.is_img2img and self.component_labels[k]["not_used_in_img2img"] == True:
                     #if we're in the img2img tab, skip Highres. fix, Firstpass width, Firstpass height
                     #print(f"{k} is not in the img2img tab, skipping")
                     continue
 
                 if self.component_map[k] is not None:
-                    internal_name = self.component_labels[k]
+                    internal_name = self.component_labels[k]["internal_name"]
                     new_value = new_setting[j]
                     #print(f"internal_name={internal_name}, new_value={new_value}")
                     if k != "Sampling method":
@@ -395,3 +375,11 @@ class Script(scripts.Script):
             return gr.Dropdown.update(value=new_setting_name, choices=list(self.config_presets.keys())), ""
 
         return func
+
+
+
+    def write_config_presets_to_file(self):
+        json_object = json.dumps(self.config_presets, indent=4)
+        with open(f"{BASEDIR}/{CONFIG_FILE_NAME}", "w") as outfile:
+            outfile.write(json_object)
+    

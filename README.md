@@ -37,6 +37,9 @@ Screenshot of config.json, which can be opened with the "Open..." button. It's c
 * In your Automatic1111 Web UI, go to the Extensions tab > Install from URL > URL for extension's git repository: `https://github.com/Zyin055/Config-Presets`
 * Click the Install button
 
+## Known bugs
+* [Won't fix] Presets added/removed in one tab won't update to the dropdown in another tab until a Gradio restart
+
 ## Changelog
 #### 12/21/2022
 * Added the "Add/Remove..." button to create and delete config presets within the Web UI

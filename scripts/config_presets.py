@@ -1,5 +1,5 @@
+import traceback
 import modules.scripts as scripts
-import modules.sd_samplers
 import gradio as gr
 import json
 import os
@@ -8,7 +8,8 @@ import subprocess as sp
 
 
 BASEDIR = scripts.basedir()     #C:\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
-CONFIG_FILE_NAME = "config.json"
+CONFIG_TXT2IMG_FILE_NAME = "config-txt2img.json"
+CONFIG_IMG2IMG_FILE_NAME = "config-img2img.json"
 
 
 class Script(scripts.Script):
@@ -16,92 +17,154 @@ class Script(scripts.Script):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        #self.txt2img_config_preset_dropdown = None
+
         # These are the settings from the UI that are saved for each preset
-        # First value is the component label, second value is the internal name which is kept for legacy version support
-        self.component_labels = {   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
-            "Sampling Steps":       {"internal_name": "steps",              "not_used_in_img2img": False},
-            "Sampling method":      {"internal_name": "sampler_index",      "not_used_in_img2img": False},
-            "Width":                {"internal_name": "width",              "not_used_in_img2img": False},
-            "Height":               {"internal_name": "height",             "not_used_in_img2img": False},
-            "Highres. fix":         {"internal_name": "enable_hr",          "not_used_in_img2img": True},
-            "Firstpass width":      {"internal_name": "firstphase_width",   "not_used_in_img2img": True},
-            "Firstpass height":     {"internal_name": "firstphase_height",  "not_used_in_img2img": True},
-            "Denoising strength":   {"internal_name": "denoising_strength", "not_used_in_img2img": False},
-            "Batch count":          {"internal_name": "batch_count",        "not_used_in_img2img": False},
-            "Batch size":           {"internal_name": "batch_size",         "not_used_in_img2img": False},
-            "CFG Scale":            {"internal_name": "cfg_scale",          "not_used_in_img2img": False},
+        self.txt2img_component_ids = {   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
+            "txt2img_sampling",
+            "txt2img_steps",
+            "txt2img_width",
+            "txt2img_height",
+            "txt2img_enable_hr",
+            "txt2img_hr_scale",
+            "txt2img_denoising_strength",
+            "txt2img_batch_count",
+            "txt2img_batch_size",
+            "txt2img_cfg_scale",
+        }
+        self.img2img_component_ids = {   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
+            "img2img_sampling",
+            "img2img_steps",
+            "img2img_width",
+            "img2img_height",
+            "img2img_denoising_strength",
+            "img2img_batch_count",
+            "img2img_batch_size",
+            "img2img_cfg_scale",
         }
 
         # Mapping between component labels and the actual components in ui.py
-        self.component_map = {k: None for k in self.component_labels}  # gets filled up in the after_component() method
+        self.txt2img_component_map = {k: None for k in self.txt2img_component_ids}  # gets filled up in the after_component() method
+        self.img2img_component_map = {k: None for k in self.img2img_component_ids}  # gets filled up in the after_component() method
 
-        # Load config file
+        # Load txt2img and img2img config files
         try:
-            with open(f"{BASEDIR}/{CONFIG_FILE_NAME}") as file:
-                self.config_presets = json.load(file)
+            with open(f"{BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME}") as file:
+                self.txt2img_config_presets = json.load(file)
+
+            # #print("self.config_presets loaded:")
+            # for preset_name, values_dict in self.txt2img_config_presets.items():
+            #     #print(preset_name,values_dict)
+            #     if "steps" in values_dict.keys():
+            #         print("[ERROR][Config-Presets] Your config.json file is using an outdated format, so the Config Presets dropdown will not work. You need to delete /extensions/Config-Presets/config.json so it can be recreated with the new updated format.")
+            #         break
+
+
         except FileNotFoundError:
-            # Config file not found
+            # txt2img config file not found
             # First time running the extension or it was deleted, so fill it with default values
-            self.config_presets = {
-                "Default": {
-                },
+            self.txt2img_config_presets = {
+                "Default": {},
                 "Low quality ------ 512x512, steps: 10, batch size: 8, DPM++ 2M Karras": {
-                    "steps": 10,
-                    "sampler_index": "DPM++ 2M Karras",
-                    "width": 512,
-                    "height": 512,
-                    "batch_count": 1,
-                    "batch_size": 8,
-                    "cfg_scale": 7
+                    "txt2img_sampling": "DPM++ 2M Karras",
+                    "txt2img_steps": 10,
+                    "txt2img_width": 512,
+                    "txt2img_height": 512,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 8,
+                    "txt2img_cfg_scale": 7,
                 },
                 "Medium quality - 512x512, steps: 20, batch size: 8, DPM++ 2S a Karras": {
-                    "steps": 20,
-                    "sampler_index": "DPM++ 2S a Karras",
-                    "width": 512,
-                    "height": 512,
-                    "batch_count": 1,
-                    "batch_size": 8,
-                    "cfg_scale": 7
+                    "txt2img_sampling": "DPM++ 2S a Karras",
+                    "txt2img_steps": 20,
+                    "txt2img_width": 512,
+                    "txt2img_height": 512,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 8,
+                    "txt2img_cfg_scale": 7,
                 },
                 "High quality ------ 512x512, steps: 40, batch size: 8, DPM++ 2S a Karras": {
-                    "steps": 40,
-                    "sampler_index": "DPM++ 2S a Karras",
-                    "width": 512,
-                    "height": 512,
-                    "batch_count": 1,
-                    "batch_size": 8,
-                    "cfg_scale": 7
+                    "txt2img_sampling": "DPM++ 2S a Karras",
+                    "txt2img_steps": 40,
+                    "txt2img_width": 512,
+                    "txt2img_height": 512,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 8,
+                    "txt2img_cfg_scale": 7,
                 },
-                "High res -------- 1024x1024, steps: 30, batch size: 1, DPM++ 2M Karras, [Highres fix: 512x512, Denoising: 0.4]": {
-                    "steps": 30,
-                    "sampler_index": "DPM++ 2M Karras",
-                    "width": 1024,
-                    "height": 1024,
-                    "enable_hr": "true",
-                    "firstphase_width": 512,
-                    "firstphase_height": 512,
-                    "denoising_strength": 0.4,
-                    "batch_count": 1,
-                    "batch_size": 1,
-                    "cfg_scale": 7
+                "High res -------- 1024x1024, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 2, Denoising: 0.4]": {
+                    "txt2img_steps": 30,
+                    "txt2img_sampling": "DPM++ 2M Karras",
+                    "txt2img_width": 512,
+                    "txt2img_height": 512,
+                    "txt2img_enable_hr": "true",
+                    "txt2img_hr_scale": 2,
+                    "txt2img_denoising_strength": 0.4,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 1,
+                    "txt2img_cfg_scale": 7,
                 },
-                "Wallpaper ----- 1920x1088, steps: 30, batch size: 1, DPM++ 2M Karras, [Highres fix: 768x448, Denoising: 0.3]": {
-                    "steps": 30,
-                    "sampler_index": "DPM++ 2M Karras",
-                    "width": 1920,
-                    "height": 1088,
-                    "enable_hr": "true",
-                    "firstphase_width": 768,
-                    "firstphase_height": 448,
-                    "denoising_strength": 0.3,
-                    "batch_count": 1,
-                    "batch_size": 1,
-                    "cfg_scale": 7
-                }
+                "Wallpaper ----- 1920x1080, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 3, Denoising: 0.3]": {
+                    "txt2img_steps": 30,
+                    "txt2img_sampling": "DPM++ 2M Karras",
+                    "txt2img_width": 640,
+                    "txt2img_height": 360,
+                    "txt2img_enable_hr": "true",
+                    "txt2img_hr_scale": 3,
+                    "txt2img_denoising_strength": 0.3,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 1,
+                    "txt2img_cfg_scale": 7,
+                },
             }
 
-            self.write_config_presets_to_file()
-            print(f"Config Presets: Config file not found, created default config at {BASEDIR}/{CONFIG_FILE_NAME}")
+            write_config_presets_to_file(self.txt2img_config_presets, CONFIG_TXT2IMG_FILE_NAME)
+            print(f"[Config Presets] txt2img config file not found, created default config at {BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME}")
+
+
+        try:
+            with open(f"{BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME}") as file:
+                self.img2img_config_presets = json.load(file)
+
+        except FileNotFoundError:
+            # img2img config file not found
+            # First time running the extension or it was deleted, so fill it with default values
+            self.img2img_config_presets = {
+                "Default": {},
+                "Low denoising ------- 512x512, denoising: 0.25, steps: 10, DPM++ 2M Karras": {
+                    "img2img_sampling": "DPM++ 2M Karras",
+                    "img2img_steps": 10,
+                    "img2img_width": 512,
+                    "img2img_height": 512,
+                    "img2img_batch_count": 1,
+                    "img2img_batch_size": 1,
+                    "img2img_cfg_scale": 7,
+                    "img2img_denoising_strength": 0.25,
+                },
+                "Medium denoising -- 512x512, denoising: 0.50, steps: 10, DPM++ 2M Karras": {
+                    "img2img_sampling": "DPM++ 2M Karras",
+                    "img2img_steps": 10,
+                    "img2img_width": 512,
+                    "img2img_height": 512,
+                    "img2img_batch_count": 1,
+                    "img2img_batch_size": 1,
+                    "img2img_cfg_scale": 7,
+                    "img2img_denoising_strength": 0.50,
+                },
+                "High denoising ------- 512x512, denoising: 0.75, steps: 10, DPM++ 2M Karras": {
+                    "img2img_sampling": "DPM++ 2M Karras",
+                    "img2img_steps": 10,
+                    "img2img_width": 512,
+                    "img2img_height": 512,
+                    "img2img_batch_count": 1,
+                    "img2img_batch_size": 1,
+                    "img2img_cfg_scale": 7,
+                    "img2img_denoising_strength": 0.75,
+                },
+            }
+
+            write_config_presets_to_file(self.img2img_config_presets, CONFIG_IMG2IMG_FILE_NAME)
+            print(f"[Config Presets] img2img config file not found, created default config at {BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME}")
 
 
     def title(self):
@@ -112,56 +175,83 @@ class Script(scripts.Script):
         return scripts.AlwaysVisible    # hide this script in the Scripts dropdown
 
     def after_component(self, component, **kwargs):
+        # to generalize the code, detect if we are in txt2img tab or img2img tab, and then use the corresponding self variables
+        # so we can use the same code for both tabs
+        component_map = None
+        component_ids = None
+        config_file_name = None
+        if self.is_txt2img:
+            component_map = self.txt2img_component_map
+            component_ids = self.txt2img_component_ids
+            config_file_name = CONFIG_TXT2IMG_FILE_NAME
+        else:
+            component_map = self.img2img_component_map
+            component_ids = self.img2img_component_ids
+            config_file_name = CONFIG_IMG2IMG_FILE_NAME
 
-        if component.label in self.component_map:
-            self.component_map[component.label] = component
-            #print(f"DEBUG: found component: {component} {component.label}")
+        #if component.label in self.component_map:
+        if component.elem_id in component_map:
+            component_map[component.elem_id] = component
+            #print(f"[Config-Presets][DEBUG]: found component: {component.elem_id} {component}")
 
         #if component.elem_id == "script_list": #bottom of the script dropdown
         #if component.elem_id == "txt2img_style2_index": #doesn't work, need to be added after all the components we edit are loaded
-        if component.elem_id == "open_folder": #bottom of the image gallery
+        #if component.elem_id == "open_folder": #bottom of the image gallery
+        if component.elem_id == "txt2img_generation_info_button" or component.elem_id == "img2img_generation_info_button": #very bottom of the txt2img/img2img image gallery
+
+            #print("Creating dropdown values...")
+            #print("key/value pairs in component_map:")
+            # before we create the dropdown, we need to check if each component was found successfully to prevent errors from bricking the Web UI
+            for k, v in component_map.items():
+                #print(k,v)
+                if v is None:
+                    print(f"[ERROR][Config-Presets] The component '{k}' no longer exists in the Web UI. Try updating the Config-Presets extension. This extension will not work until this issue is resolved.")
+                    return
+
             preset_values = []
-            for k in self.config_presets:
-                preset_values.append(k)
-                #print(f"Config Presets: added \"{k}\"")
+            config_presets = None
+            if self.is_txt2img:
+                config_presets = self.txt2img_config_presets
+            else:
+                config_presets = self.img2img_config_presets
+
+            for dropdownValue in config_presets:
+                preset_values.append(dropdownValue)
+                #print(f"Config Presets: added \"{dropdownValue}\"")
 
 
             with gr.Column(min_width=600):  # pushes our stuff onto a new row at 1080p screen resolution
                 with gr.Row():
                     with gr.Column(scale=8, min_width=100) as dropdown_column:
-                        def config_preset_dropdown_change(dropdown_value):
-                            config_preset = self.config_presets[dropdown_value]
+                        def config_preset_txt2img_dropdown_change(dropdown_value):
+                            config_preset = config_presets[dropdown_value]
                             print(f"Config Presets: changed to {dropdown_value}")
 
-                            if self.is_txt2img:
-                                # if we are txt2img highres fix has a component
-                                return (config_preset["steps"] if "steps" in config_preset else self.component_map["Sampling Steps"].value,
-                                        config_preset["sampler_index"] if "sampler_index" in config_preset else self.component_map["Sampling method"].value,
-                                        config_preset["width"] if "width" in config_preset else self.component_map["Width"].value,
-                                        config_preset["height"] if "height" in config_preset else self.component_map["Height"].value,
-                                        config_preset["enable_hr"] if "enable_hr" in config_preset else self.component_map["Highres. fix"].value,
-                                        config_preset["firstphase_width"] if "firstphase_width" in config_preset else self.component_map["Firstpass width"].value,
-                                        config_preset["firstphase_height"] if "firstphase_height" in config_preset else self.component_map["Firstpass height"].value,
-                                        config_preset["denoising_strength"] if "denoising_strength" in config_preset else self.component_map["Denoising strength"].value,
-                                        config_preset["batch_count"] if "batch_count" in config_preset else self.component_map["Batch count"].value,
-                                        config_preset["batch_size"] if "batch_size" in config_preset else self.component_map["Batch size"].value,
-                                        config_preset["cfg_scale"] if "cfg_scale" in config_preset else self.component_map["CFG Scale"].value,
-                                        )
+                            return (config_preset["txt2img_sampling"] if "txt2img_sampling" in config_preset else component_map["txt2img_sampling"].value,
+                                    config_preset["txt2img_steps"] if "txt2img_steps" in config_preset else component_map["txt2img_steps"].value,
+                                    config_preset["txt2img_width"] if "txt2img_width" in config_preset else component_map["txt2img_width"].value,
+                                    config_preset["txt2img_height"] if "txt2img_height" in config_preset else component_map["txt2img_height"].value,
+                                    config_preset["txt2img_enable_hr"] if "txt2img_enable_hr" in config_preset else component_map["txt2img_enable_hr"].value,
+                                    config_preset["txt2img_hr_scale"] if "txt2img_hr_scale" in config_preset else component_map["txt2img_hr_scale"].value,
+                                    config_preset["txt2img_denoising_strength"] if "txt2img_denoising_strength" in config_preset else component_map["txt2img_denoising_strength"].value,
+                                    config_preset["txt2img_batch_count"] if "txt2img_batch_count" in config_preset else component_map["txt2img_batch_count"].value,
+                                    config_preset["txt2img_batch_size"] if "txt2img_batch_size" in config_preset else component_map["txt2img_batch_size"].value,
+                                    config_preset["txt2img_cfg_scale"] if "txt2img_cfg_scale" in config_preset else component_map["txt2img_cfg_scale"].value,
+                                    )
 
-                            else:
-                                # if we are img2img highres fix component is empty
-                                return (config_preset["steps"] if "steps" in config_preset else self.component_map["Sampling Steps"].value,
-                                        config_preset["sampler_index"] if "sampler_index" in config_preset else self.component_map["Sampling method"].value,
-                                        config_preset["width"] if "width" in config_preset else self.component_map["Width"].value,
-                                        config_preset["height"] if "height" in config_preset else self.component_map["Height"].value,
-                                        #config_preset["enable_hr"] if "enable_hr" in config_preset else self.component_map["Highres. fix"].value,
-                                        #config_preset["firstphase_width"] if "firstphase_width" in config_preset else self.component_map["Firstpass width"].value,
-                                        #config_preset["firstphase_height"] if "firstphase_height" in config_preset else self.component_map["Firstpass height"].value,
-                                        config_preset["denoising_strength"] if "denoising_strength" in config_preset else self.component_map["Denoising strength"].value,
-                                        config_preset["batch_count"] if "batch_count" in config_preset else self.component_map["Batch count"].value,
-                                        config_preset["batch_size"] if "batch_size" in config_preset else self.component_map["Batch size"].value,
-                                        config_preset["cfg_scale"] if "cfg_scale" in config_preset else self.component_map["CFG Scale"].value,
-                                        )
+                        def config_preset_img2img_dropdown_change(dropdown_value):
+                            config_preset = config_presets[dropdown_value]
+                            print(f"Config Presets: changed to {dropdown_value}")
+
+                            return (config_preset["img2img_sampling"] if "img2img_sampling" in config_preset else component_map["img2img_sampling"].value,
+                                    config_preset["img2img_steps"] if "img2img_steps" in config_preset else component_map["img2img_steps"].value,
+                                    config_preset["img2img_width"] if "img2img_width" in config_preset else component_map["img2img_width"].value,
+                                    config_preset["img2img_height"] if "img2img_height" in config_preset else component_map["img2img_height"].value,
+                                    config_preset["img2img_batch_count"] if "img2img_batch_count" in config_preset else component_map["img2img_batch_count"].value,
+                                    config_preset["img2img_batch_size"] if "img2img_batch_size" in config_preset else component_map["img2img_batch_size"].value,
+                                    config_preset["img2img_cfg_scale"] if "img2img_cfg_scale" in config_preset else component_map["img2img_cfg_scale"].value,
+                                    config_preset["img2img_denoising_strength"] if "img2img_denoising_strength" in config_preset else component_map["img2img_denoising_strength"].value,
+                                    )
 
 
                         config_preset_dropdown = gr.Dropdown(
@@ -171,60 +261,63 @@ class Script(scripts.Script):
                         )
                         config_preset_dropdown.style(container=False) #set to True to give it a white box to sit in
 
-                        if self.is_txt2img:
-                            config_preset_dropdown.change(
-                                fn=config_preset_dropdown_change,
-                                show_progress=False,
-                                inputs=[config_preset_dropdown],
-                                outputs=[self.component_map["Sampling Steps"],
-                                         self.component_map["Sampling method"],
-                                         self.component_map["Width"],
-                                         self.component_map["Height"],
-                                         self.component_map["Highres. fix"],
-                                         self.component_map["Firstpass width"],
-                                         self.component_map["Firstpass height"],
-                                         self.component_map["Denoising strength"],
-                                         self.component_map["Batch count"],
-                                         self.component_map["Batch size"],
-                                         self.component_map["CFG Scale"]]
-                            )
-                        else:
-                            config_preset_dropdown.change(
-                                fn=config_preset_dropdown_change,
-                                show_progress=False,
-                                inputs=[config_preset_dropdown],
-                                #outputs = list([self.component_map[e] for e in AVAILABLE_COMPONENTS if e != "Seeds" and e != "Highres. fix"]) # **** LIST COMPS FAIL W/ GRADIO'S IN/OUTPUTS
-                                outputs=[self.component_map["Sampling Steps"],
-                                         self.component_map["Sampling method"],
-                                         self.component_map["Width"],
-                                         self.component_map["Height"],
-                                         #self.component_map["Highres. fix"],   no highres fix in img2img
-                                         #self.component_map["Firstpass width"],
-                                         #self.component_map["Firstpass height"],
-                                         self.component_map["Denoising strength"],
-                                         self.component_map["Batch count"],
-                                         self.component_map["Batch size"],
-                                         self.component_map["CFG Scale"]]
+                        #self.txt2img_config_preset_dropdown = config_preset_dropdown
+
+                        try:
+                            if self.is_txt2img:
+                                config_preset_dropdown.change(
+                                    fn=config_preset_txt2img_dropdown_change,
+                                    show_progress=False,
+                                    inputs=[config_preset_dropdown],
+                                    outputs=[component_map["txt2img_sampling"],
+                                             component_map["txt2img_steps"],
+                                             component_map["txt2img_width"],
+                                             component_map["txt2img_height"],
+                                             component_map["txt2img_enable_hr"],
+                                             component_map["txt2img_hr_scale"],
+                                             component_map["txt2img_denoising_strength"],
+                                             component_map["txt2img_batch_count"],
+                                             component_map["txt2img_batch_size"],
+                                             component_map["txt2img_cfg_scale"],
+                                             ]
+                                    )
+                            else:
+                                config_preset_dropdown.change(
+                                    fn=config_preset_img2img_dropdown_change,
+                                    show_progress=False,
+                                    inputs=[config_preset_dropdown],
+                                    outputs=[component_map["img2img_sampling"],
+                                             component_map["img2img_steps"],
+                                             component_map["img2img_width"],
+                                             component_map["img2img_height"],
+                                             component_map["img2img_batch_count"],
+                                             component_map["img2img_batch_size"],
+                                             component_map["img2img_cfg_scale"],
+                                             component_map["img2img_denoising_strength"],
+                                             ]
                                 )
+                        except AttributeError:
+                            print(traceback.format_exc())   # prints the exception stacktrace
+                            print("[ERROR][CRITICAL][Config-Presets] The Config-Presets extension encountered a fatal error. A component required by this extension no longer exists in the Web UI. This is most likely due to the A1111 Web UI being updated. Try updating the Config-Presets extension. If that doesn't work, please post a bug report at https://github.com/Zyin055/Config-Presets/issues and delete your extensions/Config-Presets folder until an update is published.")
 
                         config_preset_dropdown.change(
                             fn=None,
                             inputs=[],
                             outputs=[],
-                            _js="function() { config_preset_dropdown_change() }",   # JS is used to update the Highres fix row to show/hide it
+                            _js="function() { config_preset_dropdown_change() }",   # JS is used to update the Hires fix row to show/hide it
                         )
                     with gr.Column(scale=15, min_width=100, visible=False) as collapsable_column:
                         with gr.Row():
                             with gr.Column(scale=1, min_width=10):
 
                                 def delete_selected_preset(config_preset_name):
-                                    if config_preset_name in self.config_presets.keys():
-                                        del self.config_presets[config_preset_name]
+                                    if config_preset_name in config_presets.keys():
+                                        del config_presets[config_preset_name]
                                         print(f'Config Presets: deleted "{config_preset_name}"')
 
-                                        self.write_config_presets_to_file()
+                                        write_config_presets_to_file(config_presets, config_file_name)
 
-                                        preset_keys = list(self.config_presets.keys())
+                                        preset_keys = list(config_presets.keys())
                                         return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1], choices=preset_keys)
                                     return gr.Dropdown.update() # do nothing if no value is selected
 
@@ -245,19 +338,25 @@ class Script(scripts.Script):
                                     max_lines=1,
                                     elem_id="config_preset_save_textbox",
                                 )
-                            with gr.Column(scale=2, min_width=50):
+                            with gr.Column(scale=2, min_width=60):
                                 save_button = gr.Button(
-                                    value="Create",
+                                    #value="Create",
+                                    value="Save & Restart",
                                     variant="primary",
                                     elem_id="config_preset_save_button",
                                 )
+
                                 save_button.click(
-                                    fn=self.save_config(),
-                                    inputs=list([save_textbox] + [self.component_map[comp_name] for comp_name in self.component_labels if self.component_map[comp_name] is not None]),
-                                    outputs=[config_preset_dropdown, save_textbox],
+                                    fn=save_config(config_presets, component_map, config_file_name),
+                                    inputs=list([save_textbox] + [component_map[comp_name] for comp_name in component_ids if component_map[comp_name] is not None]),
+                                    #outputs=[config_preset_dropdown, save_textbox],
+                                )
+                                save_button.click(  # need this to runa after save_config()
+                                    fn=None,
+                                    _js="config_preset_settings_restart_gradio()",  # restart Gradio
                                 )
 
-                            with gr.Column(scale=2, min_width=50):
+                            with gr.Column(scale=2, min_width=55):
                                 def open_file(f):
                                     path = os.path.normpath(f)
 
@@ -278,7 +377,7 @@ class Script(scripts.Script):
                                     elem_id="config_presets_open_config_file_button",
                                 )
                                 open_config_file_button.click(
-                                    fn=lambda: open_file(f"{BASEDIR}/{CONFIG_FILE_NAME}"),
+                                    fn=lambda: open_file(f"{BASEDIR}/{config_file_name}"),
                                     inputs=[],
                                     outputs=[],
                                 )
@@ -330,56 +429,47 @@ class Script(scripts.Script):
     def run(self, p, *args):
         pass
 
-    # Save the current values on the UI to a new entry in the config file
-    # Gerschel came up with the idea for this code trick
-    def save_config(self):
-        # closure keeps path in memory, it's a hack to get around how click or change expects values to be formatted
-        def func(new_setting_name, *new_setting):
-            #print(f"save_config() func() new_setting_name={new_setting_name} *new_setting={new_setting}")
-            #print(f"new_setting_name={new_setting_name}")
 
-            if new_setting_name == "":
-                return gr.Dropdown.update(), "" # do nothing if no label entered in textbox
+# Save the current values on the UI to a new entry in the config file
+def save_config(config_presets, component_map, config_file_name):
+    #print("save_config()")
+    # closure keeps path in memory, it's a hack to get around how click or change expects values to be formatted
+    def func(new_setting_name, *new_setting):
+        #print(f"save_config() func() new_setting_name={new_setting_name} *new_setting={new_setting}")
+        #print(f"config_presets()={config_presets}")
+        #print(f"component_map()={component_map}")
+        #print(f"config_file_name()={config_file_name}")
 
-            new_setting_map = {}
+        if new_setting_name == "":
+            return gr.Dropdown.update(), "" # do nothing if no label entered in textbox
 
-            j = 0
-            for i, k in enumerate(self.component_labels):
-                #print(f"i={i}, j={j} k={k}")  # i=1,2,3... k="Sampling Steps", "Sampling methods", ...
+        new_setting_map = {}    # dict[str, Any]    {"txt2img_steps": 10, ...}
 
-                if self.is_img2img and self.component_labels[k]["not_used_in_img2img"] == True:
-                    #if we're in the img2img tab, skip Highres. fix, Firstpass width, Firstpass height
-                    #print(f"{k} is not in the img2img tab, skipping")
-                    continue
+        for i, component_id in enumerate(component_map.keys()):
+            if component_map[component_id] is not None:
+                new_setting_map[component_id] = new_setting[i]
 
-                if self.component_map[k] is not None:
-                    internal_name = self.component_labels[k]["internal_name"]
-                    new_value = new_setting[j]
-                    #print(f"internal_name={internal_name}, new_value={new_value}")
-                    if k != "Sampling method":
-                        new_setting_map[internal_name] = new_value
-                    else:
-                        if self.is_txt2img:
-                            new_setting_map[internal_name] = modules.sd_samplers.samplers[new_value].name
-                        else:
-                            new_setting_map[internal_name] = modules.sd_samplers.samplers_for_img2img[new_value].name
+        config_presets.update({new_setting_name: new_setting_map})
+        write_config_presets_to_file(config_presets, config_file_name)
 
-                j += 1
+        # print(f"self.txt2img_config_preset_dropdown.choices before =\n{self.txt2img_config_preset_dropdown.choices}")
+        # self.txt2img_config_preset_dropdown.choices = list(config_presets.keys())
+        # print(f"self.txt2img_config_preset_dropdown.choices after =\n{self.txt2img_config_preset_dropdown.choices}")
 
-            self.config_presets.update({new_setting_name: new_setting_map})
+        print(f"[Config-Presets] Added new preset: {new_setting_name}")
+        print(f"[Config-Presets] Restarting UI...") # done in _js
+        # update the dropdown with the new config preset, and clear the 'new preset name' textbox
+        return gr.Dropdown.update(value=new_setting_name, choices=list(config_presets.keys())), ""
 
-            self.write_config_presets_to_file()
+        # this errors when adding a 2nd config preset
+        # the solution is supposed to be updating the backend Gradio object to reflect the frontend dropdown values, but it doesn't work. still throws: "ValueError: 0 is not in list"
+        # workaround is to restart the whole UI after creating a new config preset by clicking the "Restart Gradio and Refresh Components" button in javascript
+        # https://github.com/gradio-app/gradio/discussions/2848
 
-            #print(f"new dropdown values: {list(self.config_presets.keys())}")
-            # update the dropdown with the new config preset, clear the 'new preset name' textbox
-            return gr.Dropdown.update(value=new_setting_name, choices=list(self.config_presets.keys())), ""
-
-        return func
+    return func
 
 
-
-    def write_config_presets_to_file(self):
-        json_object = json.dumps(self.config_presets, indent=4)
-        with open(f"{BASEDIR}/{CONFIG_FILE_NAME}", "w") as outfile:
-            outfile.write(json_object)
-    
+def write_config_presets_to_file(config_presets, config_file_name: str):
+    json_object = json.dumps(config_presets, indent=4)
+    with open(f"{BASEDIR}/{config_file_name}", "w") as outfile:
+        outfile.write(json_object)

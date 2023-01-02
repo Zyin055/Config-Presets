@@ -39,7 +39,7 @@ Screenshot of config-txt2img.json, which can be opened with the "Open..." button
 * Click the Install button
 
 ## Known bugs
-* [Won't fix] Presets added/removed in one tab won't update to the dropdown in another tab until a Gradio restart
+* [Can't fix] Updating from an old version (before 12/21/2022 update) will wipe your custom config presets
 
 ## Changelog
 #### 1/02/2023

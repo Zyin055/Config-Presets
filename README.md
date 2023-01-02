@@ -1,3 +1,5 @@
+# **Jan 2, 11:00am: Automatic1111's latest update changed/broke a lot of stuff, working on a fix now.**
+
 ## What does this do?
 This [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) extension adds a configurable dropdown to allow you to change settings in the txt2img and img2img tabs of the Web UI.
 

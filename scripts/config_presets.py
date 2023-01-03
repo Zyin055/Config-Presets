@@ -1,4 +1,5 @@
 import traceback
+import modules.sd_samplers
 import modules.scripts as scripts
 import gradio as gr
 import json
@@ -447,7 +448,15 @@ def save_config(config_presets, component_map, config_file_name):
 
         for i, component_id in enumerate(component_map.keys()):
             if component_map[component_id] is not None:
-                new_setting_map[component_id] = new_setting[i]
+                new_value = new_setting[i]  # this gives the index when the component is a dropdown
+                if component_id == "txt2img_sampling":
+                    new_setting_map[component_id] = modules.sd_samplers.samplers[new_value].name
+                elif component_id == "img2img_sampling":
+                    new_setting_map[component_id] = modules.sd_samplers.samplers_for_img2img[new_value].name
+                else:
+                    new_setting_map[component_id] = new_value
+
+        #print(f"new_setting_map = {new_setting_map}")
 
         config_presets.update({new_setting_name: new_setting_map})
         write_config_presets_to_file(config_presets, config_file_name)

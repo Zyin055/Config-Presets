@@ -18,9 +18,8 @@ Each config preset holds values for:
 * Sampling method
 * Width
 * Height
-* Highres. fix
-* Firstpass width
-* Firstpass height
+* Hires. fix
+* Upscale by
 * Denoising strength
 * Batch count
 * Batch size

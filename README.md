@@ -39,7 +39,7 @@ Screenshot of config-txt2img.json, which can be opened with the "Open..." button
 
 ## Changelog
 #### 2/09/2023
-* Added 768x768, 1080p, 1440p, and 4k presets
+* Added 768x768, 1080p, 1440p, and 4k presets for txt2img (they won't show up for existing installations, you'd need to delete your config-txt2img.json file to have it recreated with the new presets)
 #### 1/02/2023
 * Your custom presets will be wiped, you will need to remake any saved custom presets because of changes made in Automatic1111
 * The Config Presets dropdown in the txt2img and img2img tabs now use separate config files and thus have separate presets

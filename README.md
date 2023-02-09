@@ -1,6 +1,3 @@
-# Jan 2: Automatic1111's latest update changed/broke a lot of stuff. If you've updated your Automaticc1111 install and your Web UI is bricked/unresponsive you need to manually delete your /extensions/Config-Presets folder and reinstall it in the Web UI, or update the files manually.
-# You will lose all your custom config presets after updating, nothing I can do about that. Blame them for changing the Web UI.
-
 ## What does this do?
 This [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) extension adds a configurable dropdown to allow you to change settings in the txt2img and img2img tabs of the Web UI.
 
@@ -41,6 +38,8 @@ Screenshot of config-txt2img.json, which can be opened with the "Open..." button
 * [Can't fix] Updating from an old version (before 12/21/2022 update) will wipe your custom config presets
 
 ## Changelog
+#### 2/09/2023
+* Added 768x768, 1080p, 1440p, and 4k presets
 #### 1/02/2023
 * Your custom presets will be wiped, you will need to remake any saved custom presets because of changes made in Automatic1111
 * The Config Presets dropdown in the txt2img and img2img tabs now use separate config files and thus have separate presets

@@ -28,6 +28,7 @@ class Script(scripts.Script):
             "txt2img_height",
             "txt2img_enable_hr",
             "txt2img_hr_scale",
+            #"txt2img_hires_steps",
             "txt2img_denoising_strength",
             "txt2img_batch_count",
             "txt2img_batch_size",
@@ -93,26 +94,81 @@ class Script(scripts.Script):
                     "txt2img_batch_size": 8,
                     "txt2img_cfg_scale": 7,
                 },
-                "High res -------- 1024x1024, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 2, Denoising: 0.4]": {
+                "Low quality ------ 768x768, steps: 10, batch size: 8, DPM++ 2M Karras": {
+                    "txt2img_sampling": "DPM++ 2M Karras",
+                    "txt2img_steps": 10,
+                    "txt2img_width": 768,
+                    "txt2img_height": 768,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 8,
+                    "txt2img_cfg_scale": 7,
+                },
+                "Medium quality - 768x768, steps: 20, batch size: 8, DPM++ 2S a Karras": {
+                    "txt2img_sampling": "DPM++ 2S a Karras",
+                    "txt2img_steps": 20,
+                    "txt2img_width": 768,
+                    "txt2img_height": 768,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 8,
+                    "txt2img_cfg_scale": 7,
+                },
+                "High quality ------ 768x768, steps: 40, batch size: 8, DPM++ 2S a Karras": {
+                    "txt2img_sampling": "DPM++ 2S a Karras",
+                    "txt2img_steps": 40,
+                    "txt2img_width": 768,
+                    "txt2img_height": 768,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 8,
+                    "txt2img_cfg_scale": 7,
+                },
+                "High res -------- 1024x1024, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 2, Denoising: 0.3, Hires steps: 10]": {
                     "txt2img_steps": 30,
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 512,
                     "txt2img_height": 512,
                     "txt2img_enable_hr": "true",
                     "txt2img_hr_scale": 2,
-                    "txt2img_denoising_strength": 0.4,
+                    #"txt2img_hires_steps": 15,
+                    "txt2img_denoising_strength": 0.3,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 1,
                     "txt2img_cfg_scale": 7,
                 },
-                "Wallpaper ----- 1920x1080, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 3, Denoising: 0.3]": {
+                "1080p ----------- 1920x1080, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 3, Denoising: 0.2, Hires steps: 10]": {
                     "txt2img_steps": 30,
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 640,
                     "txt2img_height": 360,
                     "txt2img_enable_hr": "true",
                     "txt2img_hr_scale": 3,
-                    "txt2img_denoising_strength": 0.3,
+                    #"txt2img_hires_steps": 15,
+                    "txt2img_denoising_strength": 0.2,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 1,
+                    "txt2img_cfg_scale": 7,
+                },
+                "1440p ----------- 2560x1440, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 4, Denoising: 0.2, Hires steps: 10]": {
+                    "txt2img_steps": 30,
+                    "txt2img_sampling": "DPM++ 2M Karras",
+                    "txt2img_width": 640,
+                    "txt2img_height": 360,
+                    "txt2img_enable_hr": "true",
+                    "txt2img_hr_scale": 4,
+                    #"txt2img_hires_steps": 20,
+                    "txt2img_denoising_strength": 0.2,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 1,
+                    "txt2img_cfg_scale": 7,
+                },
+                "4k ---------------- 3840x2160, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 6, Denoising: 0.2, Hires steps: 10]": {
+                    "txt2img_steps": 30,
+                    "txt2img_sampling": "DPM++ 2M Karras",
+                    "txt2img_width": 640,
+                    "txt2img_height": 360,
+                    "txt2img_enable_hr": "true",
+                    "txt2img_hr_scale": 6,
+                    #"txt2img_hires_steps": 20,
+                    "txt2img_denoising_strength": 0.2,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 1,
                     "txt2img_cfg_scale": 7,
@@ -221,7 +277,7 @@ class Script(scripts.Script):
                 #print(f"Config Presets: added \"{dropdownValue}\"")
 
 
-            with gr.Column(min_width=600):  # pushes our stuff onto a new row at 1080p screen resolution
+            with gr.Column(min_width=600, elem_id="config_preset_wrapper_txt2img" if self.is_txt2img else "config_preset_wrapper_img2img"):  # pushes our stuff onto a new row at 1080p screen resolution
                 with gr.Row():
                     with gr.Column(scale=8, min_width=100) as dropdown_column:
                         def config_preset_txt2img_dropdown_change(dropdown_value):
@@ -234,6 +290,7 @@ class Script(scripts.Script):
                                     config_preset["txt2img_height"] if "txt2img_height" in config_preset else component_map["txt2img_height"].value,
                                     config_preset["txt2img_enable_hr"] if "txt2img_enable_hr" in config_preset else component_map["txt2img_enable_hr"].value,
                                     config_preset["txt2img_hr_scale"] if "txt2img_hr_scale" in config_preset else component_map["txt2img_hr_scale"].value,
+                                    #config_preset["txt2img_hires_steps"] if "txt2img_hires_steps" in config_preset else component_map["txt2img_hires_steps"].value,
                                     config_preset["txt2img_denoising_strength"] if "txt2img_denoising_strength" in config_preset else component_map["txt2img_denoising_strength"].value,
                                     config_preset["txt2img_batch_count"] if "txt2img_batch_count" in config_preset else component_map["txt2img_batch_count"].value,
                                     config_preset["txt2img_batch_size"] if "txt2img_batch_size" in config_preset else component_map["txt2img_batch_size"].value,
@@ -258,7 +315,7 @@ class Script(scripts.Script):
                         config_preset_dropdown = gr.Dropdown(
                             label="Config Presets",
                             choices=preset_values,
-                            elem_id="config_preset_dropdown",
+                            elem_id="config_preset_txt2img_dropdown" if self.is_txt2img else "config_preset_img2img_dropdown",
                         )
                         config_preset_dropdown.style(container=False) #set to True to give it a white box to sit in
 
@@ -276,6 +333,7 @@ class Script(scripts.Script):
                                              component_map["txt2img_height"],
                                              component_map["txt2img_enable_hr"],
                                              component_map["txt2img_hr_scale"],
+                                             #component_map["txt2img_hires_steps"],
                                              component_map["txt2img_denoising_strength"],
                                              component_map["txt2img_batch_count"],
                                              component_map["txt2img_batch_size"],

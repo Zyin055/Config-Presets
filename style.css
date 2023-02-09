@@ -1,0 +1,4 @@
+#config_preset_wrapper_txt2img,
+#config_preset_wrapper_img2img {
+	margin-top: 10px; /* prevent our dropdown label from overlapping the html_log performance element */
+}

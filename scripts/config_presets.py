@@ -72,6 +72,7 @@ class Script(scripts.Script):
                     "txt2img_steps": 10,
                     "txt2img_width": 512,
                     "txt2img_height": 512,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 8,
                     "txt2img_cfg_scale": 7,
@@ -81,6 +82,7 @@ class Script(scripts.Script):
                     "txt2img_steps": 20,
                     "txt2img_width": 512,
                     "txt2img_height": 512,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 8,
                     "txt2img_cfg_scale": 7,
@@ -90,6 +92,7 @@ class Script(scripts.Script):
                     "txt2img_steps": 40,
                     "txt2img_width": 512,
                     "txt2img_height": 512,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 8,
                     "txt2img_cfg_scale": 7,
@@ -99,6 +102,7 @@ class Script(scripts.Script):
                     "txt2img_steps": 10,
                     "txt2img_width": 768,
                     "txt2img_height": 768,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 8,
                     "txt2img_cfg_scale": 7,
@@ -108,6 +112,7 @@ class Script(scripts.Script):
                     "txt2img_steps": 20,
                     "txt2img_width": 768,
                     "txt2img_height": 768,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 8,
                     "txt2img_cfg_scale": 7,
@@ -117,6 +122,7 @@ class Script(scripts.Script):
                     "txt2img_steps": 40,
                     "txt2img_width": 768,
                     "txt2img_height": 768,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 8,
                     "txt2img_cfg_scale": 7,
@@ -126,7 +132,7 @@ class Script(scripts.Script):
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 512,
                     "txt2img_height": 512,
-                    "txt2img_enable_hr": "true",
+                    "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 2,
                     #"txt2img_hires_steps": 15,
                     "txt2img_denoising_strength": 0.3,
@@ -139,7 +145,7 @@ class Script(scripts.Script):
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 640,
                     "txt2img_height": 360,
-                    "txt2img_enable_hr": "true",
+                    "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 3,
                     #"txt2img_hires_steps": 15,
                     "txt2img_denoising_strength": 0.2,
@@ -152,7 +158,7 @@ class Script(scripts.Script):
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 640,
                     "txt2img_height": 360,
-                    "txt2img_enable_hr": "true",
+                    "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 4,
                     #"txt2img_hires_steps": 20,
                     "txt2img_denoising_strength": 0.2,
@@ -165,7 +171,7 @@ class Script(scripts.Script):
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 640,
                     "txt2img_height": 360,
-                    "txt2img_enable_hr": "true",
+                    "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 6,
                     #"txt2img_hires_steps": 20,
                     "txt2img_denoising_strength": 0.2,
@@ -359,12 +365,6 @@ class Script(scripts.Script):
                             print(traceback.format_exc())   # prints the exception stacktrace
                             print("[ERROR][CRITICAL][Config-Presets] The Config-Presets extension encountered a fatal error. A component required by this extension no longer exists in the Web UI. This is most likely due to the A1111 Web UI being updated. Try updating the Config-Presets extension. If that doesn't work, please post a bug report at https://github.com/Zyin055/Config-Presets/issues and delete your extensions/Config-Presets folder until an update is published.")
 
-                        config_preset_dropdown.change(
-                            fn=None,
-                            inputs=[],
-                            outputs=[],
-                            _js="function() { config_preset_dropdown_change() }",   # JS is used to update the Hires fix row to show/hide it
-                        )
                     with gr.Column(scale=15, min_width=100, visible=False) as collapsable_column:
                         with gr.Row():
                             with gr.Column(scale=1, min_width=10):

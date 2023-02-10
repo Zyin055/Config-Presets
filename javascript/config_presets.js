@@ -11,24 +11,6 @@ onUiUpdate(function() {
 	gradioApp().querySelectorAll("#config_preset_trash_button").forEach(el => el.setAttribute("title", "Permanently delete selected preset"))
 })
 
-//this function called by config_preset_dropdown in config_presets.py
-function config_preset_dropdown_change() {
-	//when Python changes the enable_hr checkbox in config_preset_dropdown_change() it doesn't fire off the change() JS event, so do this manually
-	
-	//there is a race condition between the checkbox being checked in Python, and us firing its change event in JavaScript, so wait a bit before firing the event
-	setTimeout(function() { 
-		let hiresFixCheckbox = gradioApp().querySelector("#txt2img_enable_hr > label").firstChild //gets the <input> element next to the "Hires. fix" <span>
-		
-		let e = document.createEvent("HTMLEvents")
-		e.initEvent("change", true, false)
-		hiresFixCheckbox.dispatchEvent(e)
-		
-		//console.log("hiresFixCheckbox="+hiresFixCheckbox)
-		//console.log("e="+e)
-	}, 200) //50ms is too fast
-}
-
-
 function config_preset_settings_restart_gradio() {
 	console.log('[Config-Presets] Restarting to apply new config preset...')
 	setTimeout(function() {

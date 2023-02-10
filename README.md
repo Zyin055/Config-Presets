@@ -22,6 +22,8 @@ Each config preset holds values for:
 * Batch size
 * CFG Scale
 
+Manually removing one of these fields from the json config file will mean that field will get ignored.
+
 Clicking the "Add/Remove..." button lets you create and delete custom presets of settings currently in the Web UI. Each button has tooltips to help you.
 
 ![dropdown](https://i.imgur.com/OD8wcSt.jpg)
@@ -38,6 +40,8 @@ Screenshot of config-txt2img.json, which can be opened with the "Open..." button
 * [Can't fix] Updating from an old version (before 12/21/2022 update) will wipe your custom config presets
 
 ## Changelog
+#### 2/10/2023
+* Manually removing a preset value in the config file will make that value be ignored
 #### 2/09/2023
 * Added 768x768, 1080p, 1440p, and 4k presets for txt2img (they won't show up for existing installations, you'd need to delete your config-txt2img.json file to have it recreated with the new presets)
 #### 1/02/2023

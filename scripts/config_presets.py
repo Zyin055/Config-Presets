@@ -259,15 +259,16 @@ class Script(scripts.Script):
             #print("Creating dropdown values...")
             #print("key/value pairs in component_map:")
             # before we create the dropdown, we need to check if each component was found successfully to prevent errors from bricking the Web UI
-            for k, v in component_map.items():
-                #print(k,v)
-                if v is None:
-                    print(f"[ERROR][Config-Presets] The component '{k}' no longer exists in the Web UI. Try updating the Config-Presets extension. This extension will not work until this issue is resolved.")
+            for component_name, component in component_map.items():
+                #print(component_name, component_type)
+                if component is None:
+                    print(f"[ERROR][Config-Presets] The component '{component_name}' no longer exists in the Web UI. Try updating the Config-Presets extension. This extension will not work until this issue is resolved.")
                     return
 
             # Mark components with type "index" to be transform
             index_type_components = []
             for component in component_map.values():
+                #print(component)
                 if getattr(component, "type", "No type attr") == "index":
                     # print(component.elem_id)
                     index_type_components.append(component.elem_id)
@@ -295,15 +296,16 @@ class Script(scripts.Script):
 
                             # update component values with user preset
                             current_components = dict(zip(component_map.keys(),components_value))
-                            print("Components before:", current_components)
+                            #print("Components before:", current_components)
                             current_components.update(config_preset)
 
                             # transform necessary components from index to value
-                            for k,v in current_components.items():
-                                if k in index_type_components and type(v) == int:
-                                    current_components[k] = component_map[k].choices[v]
+                            for component_name, component_value in current_components.items():
+                                #print(component_name, component_value)
+                                if component_name in index_type_components and type(component_value) == int:
+                                    current_components[component_name] = component_map[component_name].choices[component_value]
 
-                            print("Components after :", current_components)
+                            #print("Components after :", current_components)
                             
                             return list(current_components.values())
 

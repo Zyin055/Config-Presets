@@ -259,11 +259,19 @@ class Script(scripts.Script):
             #print("Creating dropdown values...")
             #print("key/value pairs in component_map:")
             # before we create the dropdown, we need to check if each component was found successfully to prevent errors from bricking the Web UI
-            for k, v in component_map.items():
-                #print(k,v)
-                if v is None:
-                    print(f"[ERROR][Config-Presets] The component '{k}' no longer exists in the Web UI. Try updating the Config-Presets extension. This extension will not work until this issue is resolved.")
+            for component_name, component in component_map.items():
+                #print(component_name, component_type)
+                if component is None:
+                    print(f"[ERROR][Config-Presets] The component '{component_name}' no longer exists in the Web UI. Try updating the Config-Presets extension. This extension will not work until this issue is resolved.")
                     return
+
+            # Mark components with type "index" to be transform
+            index_type_components = []
+            for component in component_map.values():
+                #print(component)
+                if getattr(component, "type", "No type attr") == "index":
+                    # print(component.elem_id)
+                    index_type_components.append(component.elem_id)
 
             preset_values = []
             config_presets = None
@@ -280,37 +288,26 @@ class Script(scripts.Script):
             with gr.Column(min_width=600, elem_id="config_preset_wrapper_txt2img" if self.is_txt2img else "config_preset_wrapper_img2img"):  # pushes our stuff onto a new row at 1080p screen resolution
                 with gr.Row():
                     with gr.Column(scale=8, min_width=100) as dropdown_column:
-                        def config_preset_txt2img_dropdown_change(dropdown_value):
+
+
+                        def config_preset_dropdown_change(dropdown_value, *components_value):
                             config_preset = config_presets[dropdown_value]
                             print(f"Config Presets: changed to {dropdown_value}")
 
-                            return (config_preset["txt2img_sampling"] if "txt2img_sampling" in config_preset else component_map["txt2img_sampling"].value,
-                                    config_preset["txt2img_steps"] if "txt2img_steps" in config_preset else component_map["txt2img_steps"].value,
-                                    config_preset["txt2img_width"] if "txt2img_width" in config_preset else component_map["txt2img_width"].value,
-                                    config_preset["txt2img_height"] if "txt2img_height" in config_preset else component_map["txt2img_height"].value,
-                                    config_preset["txt2img_enable_hr"] if "txt2img_enable_hr" in config_preset else component_map["txt2img_enable_hr"].value,
-                                    config_preset["txt2img_hr_scale"] if "txt2img_hr_scale" in config_preset else component_map["txt2img_hr_scale"].value,
-                                    #config_preset["txt2img_hires_steps"] if "txt2img_hires_steps" in config_preset else component_map["txt2img_hires_steps"].value,
-                                    config_preset["txt2img_denoising_strength"] if "txt2img_denoising_strength" in config_preset else component_map["txt2img_denoising_strength"].value,
-                                    config_preset["txt2img_batch_count"] if "txt2img_batch_count" in config_preset else component_map["txt2img_batch_count"].value,
-                                    config_preset["txt2img_batch_size"] if "txt2img_batch_size" in config_preset else component_map["txt2img_batch_size"].value,
-                                    config_preset["txt2img_cfg_scale"] if "txt2img_cfg_scale" in config_preset else component_map["txt2img_cfg_scale"].value,
-                                    )
+                            # update component values with user preset
+                            current_components = dict(zip(component_map.keys(),components_value))
+                            #print("Components before:", current_components)
+                            current_components.update(config_preset)
 
-                        def config_preset_img2img_dropdown_change(dropdown_value):
-                            config_preset = config_presets[dropdown_value]
-                            print(f"Config Presets: changed to {dropdown_value}")
+                            # transform necessary components from index to value
+                            for component_name, component_value in current_components.items():
+                                #print(component_name, component_value)
+                                if component_name in index_type_components and type(component_value) == int:
+                                    current_components[component_name] = component_map[component_name].choices[component_value]
 
-                            return (config_preset["img2img_sampling"] if "img2img_sampling" in config_preset else component_map["img2img_sampling"].value,
-                                    config_preset["img2img_steps"] if "img2img_steps" in config_preset else component_map["img2img_steps"].value,
-                                    config_preset["img2img_width"] if "img2img_width" in config_preset else component_map["img2img_width"].value,
-                                    config_preset["img2img_height"] if "img2img_height" in config_preset else component_map["img2img_height"].value,
-                                    config_preset["img2img_batch_count"] if "img2img_batch_count" in config_preset else component_map["img2img_batch_count"].value,
-                                    config_preset["img2img_batch_size"] if "img2img_batch_size" in config_preset else component_map["img2img_batch_size"].value,
-                                    config_preset["img2img_cfg_scale"] if "img2img_cfg_scale" in config_preset else component_map["img2img_cfg_scale"].value,
-                                    config_preset["img2img_denoising_strength"] if "img2img_denoising_strength" in config_preset else component_map["img2img_denoising_strength"].value,
-                                    )
-
+                            #print("Components after :", current_components)
+                            
+                            return list(current_components.values())
 
                         config_preset_dropdown = gr.Dropdown(
                             label="Config Presets",
@@ -322,38 +319,12 @@ class Script(scripts.Script):
                         #self.txt2img_config_preset_dropdown = config_preset_dropdown
 
                         try:
-                            if self.is_txt2img:
-                                config_preset_dropdown.change(
-                                    fn=config_preset_txt2img_dropdown_change,
-                                    show_progress=False,
-                                    inputs=[config_preset_dropdown],
-                                    outputs=[component_map["txt2img_sampling"],
-                                             component_map["txt2img_steps"],
-                                             component_map["txt2img_width"],
-                                             component_map["txt2img_height"],
-                                             component_map["txt2img_enable_hr"],
-                                             component_map["txt2img_hr_scale"],
-                                             #component_map["txt2img_hires_steps"],
-                                             component_map["txt2img_denoising_strength"],
-                                             component_map["txt2img_batch_count"],
-                                             component_map["txt2img_batch_size"],
-                                             component_map["txt2img_cfg_scale"],
-                                             ]
-                                    )
-                            else:
-                                config_preset_dropdown.change(
-                                    fn=config_preset_img2img_dropdown_change,
-                                    show_progress=False,
-                                    inputs=[config_preset_dropdown],
-                                    outputs=[component_map["img2img_sampling"],
-                                             component_map["img2img_steps"],
-                                             component_map["img2img_width"],
-                                             component_map["img2img_height"],
-                                             component_map["img2img_batch_count"],
-                                             component_map["img2img_batch_size"],
-                                             component_map["img2img_cfg_scale"],
-                                             component_map["img2img_denoising_strength"],
-                                             ]
+                            components = list(component_map.values())
+                            config_preset_dropdown.change(
+                                fn=config_preset_dropdown_change,
+                                show_progress=False,
+                                inputs=[config_preset_dropdown, *components],
+                                outputs=components
                                 )
                         except AttributeError:
                             print(traceback.format_exc())   # prints the exception stacktrace

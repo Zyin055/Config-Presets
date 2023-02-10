@@ -265,6 +265,13 @@ class Script(scripts.Script):
                     print(f"[ERROR][Config-Presets] The component '{k}' no longer exists in the Web UI. Try updating the Config-Presets extension. This extension will not work until this issue is resolved.")
                     return
 
+            # Mark components with type "index" to be transform
+            index_type_components = []
+            for component in component_map.values():
+                if getattr(component, "type", "No type attr") == "index":
+                    # print(component.elem_id)
+                    index_type_components.append(component.elem_id)
+
             preset_values = []
             config_presets = None
             if self.is_txt2img:
@@ -280,12 +287,22 @@ class Script(scripts.Script):
             with gr.Column(min_width=600, elem_id="config_preset_wrapper_txt2img" if self.is_txt2img else "config_preset_wrapper_img2img"):  # pushes our stuff onto a new row at 1080p screen resolution
                 with gr.Row():
                     with gr.Column(scale=8, min_width=100) as dropdown_column:
+
+
                         def config_preset_dropdown_change(dropdown_value, *components_value):
                             config_preset = config_presets[dropdown_value]
                             print(f"Config Presets: changed to {dropdown_value}")
+
+                            # update component values with user preset
                             current_components = dict(zip(component_map.keys(),components_value))
                             print("Components before:", current_components)
                             current_components.update(config_preset)
+
+                            # transform necessary components from index to value
+                            for k,v in current_components.items():
+                                if k in index_type_components and type(v) == int:
+                                    current_components[k] = component_map[k].choices[v]
+
                             print("Components after :", current_components)
                             
                             return list(current_components.values())

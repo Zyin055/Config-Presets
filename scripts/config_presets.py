@@ -33,10 +33,9 @@ class Script(scripts.Script):
             "txt2img_restore_faces",
             "txt2img_enable_hr",
             "txt2img_hr_scale",
-            "txt2img_hr_upscaler",
+            #"txt2img_hr_upscaler",
             "txt2img_hires_steps",
             "txt2img_denoising_strength",
-            "txt2img_hr_scale",
             "txt2img_cfg_scale",
 
         ]
@@ -380,31 +379,6 @@ class Script(scripts.Script):
                                     inputs=[config_preset_dropdown],
                                     outputs=[config_preset_dropdown],
                                 )
-                            # with gr.Column(scale=10, min_width=100):
-                            #     save_textbox = gr.Textbox(
-                            #         label="New preset name",
-                            #         placeholder="Ex: Low quality",
-                            #         #value="My Preset",
-                            #         max_lines=1,
-                            #         elem_id="config_preset_save_textbox",
-                            #     )
-                            # with gr.Column(scale=2, min_width=60):
-                            #     save_button = gr.Button(
-                            #         #value="Create",
-                            #         value="Save & Restart",
-                            #         variant="primary",
-                            #         elem_id="config_preset_save_button",
-                            #     )
-                            #
-                            #     save_button.click(
-                            #         fn=save_config(config_presets, component_map, config_file_name),
-                            #         inputs=list([save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in component_ids if component_map[comp_name] is not None]),
-                            #         #outputs=[config_preset_dropdown, save_textbox],
-                            #     )
-                            #     save_button.click(  # need this to runa after save_config()
-                            #         fn=None,
-                            #         _js="config_preset_settings_restart_gradio()",  # restart Gradio
-                            #     )
 
                             with gr.Column(scale=2, min_width=55):
                                 def open_file(f):
@@ -443,6 +417,7 @@ class Script(scripts.Script):
                             value="Add/Remove...",
                             elem_id="config_preset_add_button",
                         )
+
                 with gr.Row() as collapsable_row:
                     collapsable_row.visible = False
                     with gr.Column():
@@ -529,6 +504,9 @@ def save_config(config_presets, component_map, config_file_name):
 
         new_setting_map = {}    # dict[str, Any]    {"txt2img_steps": 10, ...}
 
+        #print(f"component_map={component_map}")
+        #print(f"new_setting={new_setting}")
+
         for i, component_id in enumerate(component_map.keys()):
 
             if component_id not in fields_to_save_list:
@@ -543,6 +521,8 @@ def save_config(config_presets, component_map, config_file_name):
                     new_setting_map[component_id] = modules.sd_samplers.samplers_for_img2img[new_value].name
                 else:
                     new_setting_map[component_id] = new_value
+
+                #print(f"Saving '{component_id}' as: {new_setting_map[component_id]} ({new_value})")
 
         #print(f"new_setting_map = {new_setting_map}")
 

@@ -12,6 +12,8 @@ BASEDIR = scripts.basedir()     #C:\Stable Diffusion\extensions\Config-Presets  
 CONFIG_TXT2IMG_FILE_NAME = "config-txt2img.json"
 CONFIG_IMG2IMG_FILE_NAME = "config-img2img.json"
 
+#fields_checkboxgroup = None
+
 
 class Script(scripts.Script):
 
@@ -21,29 +23,34 @@ class Script(scripts.Script):
         #self.txt2img_config_preset_dropdown = None
 
         # These are the settings from the UI that are saved for each preset
-        self.txt2img_component_ids = {   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
+        self.txt2img_component_ids = [   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
             "txt2img_sampling",
             "txt2img_steps",
             "txt2img_width",
             "txt2img_height",
-            "txt2img_enable_hr",
-            "txt2img_hr_scale",
-            #"txt2img_hires_steps",
-            "txt2img_denoising_strength",
             "txt2img_batch_count",
             "txt2img_batch_size",
+            "txt2img_restore_faces",
+            "txt2img_enable_hr",
+            "txt2img_hr_scale",
+            "txt2img_hr_upscaler",
+            "txt2img_hires_steps",
+            "txt2img_denoising_strength",
+            "txt2img_hr_scale",
             "txt2img_cfg_scale",
-        }
-        self.img2img_component_ids = {   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
+
+        ]
+        self.img2img_component_ids = [   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
             "img2img_sampling",
             "img2img_steps",
             "img2img_width",
             "img2img_height",
-            "img2img_denoising_strength",
             "img2img_batch_count",
             "img2img_batch_size",
             "img2img_cfg_scale",
-        }
+            "img2img_denoising_strength",
+            "img2img_restore_faces",
+        ]
 
         # Mapping between component labels and the actual components in ui.py
         self.txt2img_component_map = {k: None for k in self.txt2img_component_ids}  # gets filled up in the after_component() method
@@ -66,70 +73,76 @@ class Script(scripts.Script):
             # txt2img config file not found
             # First time running the extension or it was deleted, so fill it with default values
             self.txt2img_config_presets = {
-                "Default": {},
-                "Low quality ------ 512x512, steps: 10, batch size: 8, DPM++ 2M Karras": {
+                #"Default": {},
+                "Low quality ------ 512x512, steps: 10, batch size: 4, DPM++ 2M Karras": {
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_steps": 10,
                     "txt2img_width": 512,
                     "txt2img_height": 512,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
-                    "txt2img_batch_size": 8,
+                    "txt2img_batch_size": 4,
                     "txt2img_cfg_scale": 7,
                 },
-                "Medium quality - 512x512, steps: 20, batch size: 8, DPM++ 2S a Karras": {
+                "Medium quality - 512x512, steps: 15, batch size: 4, DPM++ 2M Karras": {
+                    "txt2img_sampling": "DPM++ 2M Karras",
+                    "txt2img_steps": 15,
+                    "txt2img_width": 512,
+                    "txt2img_height": 512,
+                    "txt2img_enable_hr": False,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 4,
+                    "txt2img_cfg_scale": 7,
+                },
+                "High quality ------ 512x512, steps: 20, batch size: 4, DPM++ 2S a Karras": {
                     "txt2img_sampling": "DPM++ 2S a Karras",
                     "txt2img_steps": 20,
                     "txt2img_width": 512,
                     "txt2img_height": 512,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
-                    "txt2img_batch_size": 8,
+                    "txt2img_batch_size": 4,
                     "txt2img_cfg_scale": 7,
                 },
-                "High quality ------ 512x512, steps: 40, batch size: 8, DPM++ 2S a Karras": {
-                    "txt2img_sampling": "DPM++ 2S a Karras",
-                    "txt2img_steps": 40,
-                    "txt2img_width": 512,
-                    "txt2img_height": 512,
-                    "txt2img_batch_count": 1,
-                    "txt2img_batch_size": 8,
-                    "txt2img_cfg_scale": 7,
-                },
-                "Low quality ------ 768x768, steps: 10, batch size: 8, DPM++ 2M Karras": {
+                "Low quality ------ 768x768, steps: 10, batch size: 4, DPM++ 2M Karras": {
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_steps": 10,
                     "txt2img_width": 768,
                     "txt2img_height": 768,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
-                    "txt2img_batch_size": 8,
+                    "txt2img_batch_size": 4,
                     "txt2img_cfg_scale": 7,
                 },
-                "Medium quality - 768x768, steps: 20, batch size: 8, DPM++ 2S a Karras": {
+                "Medium quality - 768x768, steps: 15, batch size: 4, DPM++ 2M Karras": {
+                    "txt2img_sampling": "DPM++ 2M Karras",
+                    "txt2img_steps": 15,
+                    "txt2img_width": 768,
+                    "txt2img_height": 768,
+                    "txt2img_enable_hr": False,
+                    "txt2img_batch_count": 1,
+                    "txt2img_batch_size": 4,
+                    "txt2img_cfg_scale": 7,
+                },
+                "High quality ------ 768x768, steps: 20, batch size: 4, DPM++ 2S a Karras": {
                     "txt2img_sampling": "DPM++ 2S a Karras",
                     "txt2img_steps": 20,
                     "txt2img_width": 768,
                     "txt2img_height": 768,
+                    "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
-                    "txt2img_batch_size": 8,
+                    "txt2img_batch_size": 4,
                     "txt2img_cfg_scale": 7,
                 },
-                "High quality ------ 768x768, steps: 40, batch size: 8, DPM++ 2S a Karras": {
-                    "txt2img_sampling": "DPM++ 2S a Karras",
-                    "txt2img_steps": 40,
-                    "txt2img_width": 768,
-                    "txt2img_height": 768,
-                    "txt2img_batch_count": 1,
-                    "txt2img_batch_size": 8,
-                    "txt2img_cfg_scale": 7,
-                },
-                "High res -------- 1024x1024, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 2, Denoising: 0.3, Hires steps: 10]": {
+                "High res -------- 1024x1024, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 2, Denoising: 0.25, Hires steps: 10]": {
                     "txt2img_steps": 30,
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 512,
                     "txt2img_height": 512,
-                    "txt2img_enable_hr": "true",
+                    "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 2,
                     #"txt2img_hires_steps": 15,
-                    "txt2img_denoising_strength": 0.3,
+                    "txt2img_denoising_strength": 0.25,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 1,
                     "txt2img_cfg_scale": 7,
@@ -139,7 +152,7 @@ class Script(scripts.Script):
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 640,
                     "txt2img_height": 360,
-                    "txt2img_enable_hr": "true",
+                    "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 3,
                     #"txt2img_hires_steps": 15,
                     "txt2img_denoising_strength": 0.2,
@@ -152,7 +165,7 @@ class Script(scripts.Script):
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 640,
                     "txt2img_height": 360,
-                    "txt2img_enable_hr": "true",
+                    "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 4,
                     #"txt2img_hires_steps": 20,
                     "txt2img_denoising_strength": 0.2,
@@ -165,7 +178,7 @@ class Script(scripts.Script):
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_width": 640,
                     "txt2img_height": 360,
-                    "txt2img_enable_hr": "true",
+                    "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 6,
                     #"txt2img_hires_steps": 20,
                     "txt2img_denoising_strength": 0.2,
@@ -187,7 +200,7 @@ class Script(scripts.Script):
             # img2img config file not found
             # First time running the extension or it was deleted, so fill it with default values
             self.img2img_config_presets = {
-                "Default": {},
+                #"Default": {},
                 "Low denoising ------- 512x512, denoising: 0.25, steps: 10, DPM++ 2M Karras": {
                     "img2img_sampling": "DPM++ 2M Karras",
                     "img2img_steps": 10,
@@ -284,6 +297,13 @@ class Script(scripts.Script):
                 preset_values.append(dropdownValue)
                 #print(f"Config Presets: added \"{dropdownValue}\"")
 
+            fields_checkboxgroup = gr.CheckboxGroup(choices=component_ids,
+                                                    value=component_ids,    #check all checkboxes by default
+                                                    label="Fields to save",
+                                                    show_label=True,
+                                                    interactive=True,
+                                                    elem_id="config_preset_fields_to_save",
+                                                    ).unrender() #we need to define this early on so that it can be used as an input for another function
 
             with gr.Column(min_width=600, elem_id="config_preset_wrapper_txt2img" if self.is_txt2img else "config_preset_wrapper_img2img"):  # pushes our stuff onto a new row at 1080p screen resolution
                 with gr.Row():
@@ -292,7 +312,7 @@ class Script(scripts.Script):
 
                         def config_preset_dropdown_change(dropdown_value, *components_value):
                             config_preset = config_presets[dropdown_value]
-                            print(f"Config Presets: changed to {dropdown_value}")
+                            print(f"[Config-Presets] Changed to: {dropdown_value}")
 
                             # update component values with user preset
                             current_components = dict(zip(component_map.keys(),components_value))
@@ -336,7 +356,7 @@ class Script(scripts.Script):
                             outputs=[],
                             _js="function() { config_preset_dropdown_change() }",   # JS is used to update the Hires fix row to show/hide it
                         )
-                    with gr.Column(scale=15, min_width=100, visible=False) as collapsable_column:
+                    with gr.Column(scale=8, min_width=100, visible=False) as collapsable_column:
                         with gr.Row():
                             with gr.Column(scale=1, min_width=10):
 
@@ -360,31 +380,31 @@ class Script(scripts.Script):
                                     inputs=[config_preset_dropdown],
                                     outputs=[config_preset_dropdown],
                                 )
-                            with gr.Column(scale=10, min_width=100):
-                                save_textbox = gr.Textbox(
-                                    label="New preset name",
-                                    placeholder="Ex: Low quality",
-                                    #value="My Preset",
-                                    max_lines=1,
-                                    elem_id="config_preset_save_textbox",
-                                )
-                            with gr.Column(scale=2, min_width=60):
-                                save_button = gr.Button(
-                                    #value="Create",
-                                    value="Save & Restart",
-                                    variant="primary",
-                                    elem_id="config_preset_save_button",
-                                )
-
-                                save_button.click(
-                                    fn=save_config(config_presets, component_map, config_file_name),
-                                    inputs=list([save_textbox] + [component_map[comp_name] for comp_name in component_ids if component_map[comp_name] is not None]),
-                                    #outputs=[config_preset_dropdown, save_textbox],
-                                )
-                                save_button.click(  # need this to runa after save_config()
-                                    fn=None,
-                                    _js="config_preset_settings_restart_gradio()",  # restart Gradio
-                                )
+                            # with gr.Column(scale=10, min_width=100):
+                            #     save_textbox = gr.Textbox(
+                            #         label="New preset name",
+                            #         placeholder="Ex: Low quality",
+                            #         #value="My Preset",
+                            #         max_lines=1,
+                            #         elem_id="config_preset_save_textbox",
+                            #     )
+                            # with gr.Column(scale=2, min_width=60):
+                            #     save_button = gr.Button(
+                            #         #value="Create",
+                            #         value="Save & Restart",
+                            #         variant="primary",
+                            #         elem_id="config_preset_save_button",
+                            #     )
+                            #
+                            #     save_button.click(
+                            #         fn=save_config(config_presets, component_map, config_file_name),
+                            #         inputs=list([save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in component_ids if component_map[comp_name] is not None]),
+                            #         #outputs=[config_preset_dropdown, save_textbox],
+                            #     )
+                            #     save_button.click(  # need this to runa after save_config()
+                            #         fn=None,
+                            #         _js="config_preset_settings_restart_gradio()",  # restart Gradio
+                            #     )
 
                             with gr.Column(scale=2, min_width=55):
                                 def open_file(f):
@@ -403,7 +423,7 @@ class Script(scripts.Script):
                                         sp.Popen(["xdg-open", path])
 
                                 open_config_file_button = gr.Button(
-                                    value="Open...",
+                                    value="Open config file...",
                                     elem_id="config_presets_open_config_file_button",
                                 )
                                 open_config_file_button.click(
@@ -423,34 +443,68 @@ class Script(scripts.Script):
                             value="Add/Remove...",
                             elem_id="config_preset_add_button",
                         )
+                with gr.Row() as collapsable_row:
+                    collapsable_row.visible = False
+                    with gr.Column():
+                        with gr.Row():
+                            with gr.Column(scale=10, min_width=100):
+                                save_textbox = gr.Textbox(
+                                    label="New preset name",
+                                    placeholder="Ex: Low quality",
+                                    # value="My Preset",
+                                    max_lines=1,
+                                    elem_id="config_preset_save_textbox",
+                                )
+                            with gr.Column(scale=2, min_width=60):
+                                save_button = gr.Button(
+                                    # value="Create",
+                                    value="Save & Restart",
+                                    variant="primary",
+                                    elem_id="config_preset_save_button",
+                                )
 
+                                save_button.click(
+                                    fn=save_config(config_presets, component_map, config_file_name),
+                                    inputs=list(
+                                        [save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
+                                                                                   component_ids if
+                                                                                   component_map[comp_name] is not None]),
+                                    # outputs=[config_preset_dropdown, save_textbox],
+                                )
+                                save_button.click(  # need this to runa after save_config()
+                                    fn=None,
+                                    _js="config_preset_settings_restart_gradio()",  # restart Gradio
+                                )
 
-                        def add_remove_button_click():
-                            return gr.update(visible=True), gr.update(visible=False)
+                                def add_remove_button_click():
+                                    return gr.update(visible=True), gr.update(visible=True), gr.update(visible=False)
 
-                        def save_button_click(save_text):
-                            if save_text == "":
-                                return gr.update(), gr.update()
-                            return gr.update(visible=True), gr.update(visible=False)
+                                # def save_button_click(save_text):
+                                #     if save_text == "":
+                                #         return gr.update(), gr.update()
+                                #     return gr.update(visible=True), gr.update(visible=False)
 
-                        def cancel_button_click():
-                            return gr.update(visible=True), gr.update(visible=False)
+                                def cancel_button_click():
+                                    return gr.update(visible=False), gr.update(visible=False), gr.update(visible=True)
 
-                        add_remove_button.click(
-                            fn=add_remove_button_click,
-                            inputs=[],
-                            outputs=[collapsable_column, add_remove_button_column],
-                        )
-                        save_button.click(
-                            fn=save_button_click,
-                            inputs=[save_textbox],
-                            outputs=[add_remove_button_column, collapsable_column],
-                        )
-                        cancel_button.click(
-                            fn=cancel_button_click,
-                            inputs=[],
-                            outputs=[add_remove_button_column, collapsable_column],
-                        )
+                                add_remove_button.click(
+                                    fn=add_remove_button_click,
+                                    inputs=[],
+                                    outputs=[collapsable_column, collapsable_row, add_remove_button_column],
+                                )
+                                # save_button.click(
+                                #     fn=save_button_click,
+                                #     inputs=[save_textbox],
+                                #     outputs=[add_remove_button_column, collapsable_column],
+                                # )
+                                cancel_button.click(
+                                    fn=cancel_button_click,
+                                    inputs=[],
+                                    outputs=[collapsable_column, collapsable_row, add_remove_button_column],
+                                )
+
+                        with gr.Row():
+                            fields_checkboxgroup.render()
 
 
     def ui(self, is_img2img):
@@ -464,7 +518,7 @@ class Script(scripts.Script):
 def save_config(config_presets, component_map, config_file_name):
     #print("save_config()")
     # closure keeps path in memory, it's a hack to get around how click or change expects values to be formatted
-    def func(new_setting_name, *new_setting):
+    def func(new_setting_name, fields_to_save_list, *new_setting):
         #print(f"save_config() func() new_setting_name={new_setting_name} *new_setting={new_setting}")
         #print(f"config_presets()={config_presets}")
         #print(f"component_map()={component_map}")
@@ -476,6 +530,11 @@ def save_config(config_presets, component_map, config_file_name):
         new_setting_map = {}    # dict[str, Any]    {"txt2img_steps": 10, ...}
 
         for i, component_id in enumerate(component_map.keys()):
+
+            if component_id not in fields_to_save_list:
+                #print(f"[Config-Presets] New preset '{new_setting_name}' will not include {component_id}")
+                continue
+
             if component_map[component_id] is not None:
                 new_value = new_setting[i]  # this gives the index when the component is a dropdown
                 if component_id == "txt2img_sampling":

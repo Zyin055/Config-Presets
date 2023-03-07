@@ -3,12 +3,13 @@
 //...or do it our more precise way:
 onUiUpdate(function() {
 	//set tooltips
-	gradioApp().querySelectorAll("#config_presets_open_config_file_button").forEach(el => el.setAttribute("title", "Open the config file for manual editing if you want to make changes that way, requires Gradio restart after editing. The txt2img and img2img tabs have separate config files."))
-	gradioApp().querySelectorAll("#config_preset_save_textbox").forEach(el => el.setAttribute("title", "The label that will be displayed in the dropdown to the left"))
-	gradioApp().querySelectorAll("#config_preset_save_button").forEach(el => el.setAttribute("title", "Saves current settings with the new preset name and restarts the UI. Overwrites existing preset. This will save: Sampler, Steps, Width/Height, Hires. fix, Upscale by, Denoising strength, Batch size, CFG Scale."))
+	gradioApp().querySelectorAll("#config_presets_open_config_file_button").forEach(el => el.setAttribute("title", "Open the config .json file for manual editing if you want to make changes that way, requires Gradio restart after editing. The txt2img and img2img tabs have separate config files."))
+	gradioApp().querySelectorAll("#config_preset_save_textbox").forEach(el => el.setAttribute("title", "The name of a new Config Preset that will be added to the dropdown above"))
+	gradioApp().querySelectorAll("#config_preset_save_button").forEach(el => el.setAttribute("title", "Save selected fields with the new preset name, then restarts the UI. Overwrites existing preset with the same name."))
 	gradioApp().querySelectorAll("#config_preset_add_button").forEach(el => el.setAttribute("title", "[Config Presets] Create or delete a preset"))
 	gradioApp().querySelectorAll("#config_preset_cancel_save_button").forEach(el => el.setAttribute("title", "Go back"))
 	gradioApp().querySelectorAll("#config_preset_trash_button").forEach(el => el.setAttribute("title", "Permanently delete selected preset"))
+	gradioApp().querySelectorAll("#config_preset_fields_to_save > span").forEach(el => el.setAttribute("title", "Only selected field values will be saved. Unselected fields will be ignored."))
 })
 
 //this function called by config_preset_dropdown in config_presets.py

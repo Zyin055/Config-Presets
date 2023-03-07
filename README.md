@@ -14,7 +14,7 @@ Clicking the "Add/Remove..." button lets you create and delete custom presets of
 
 ![addremove](https://i.imgur.com/sYANTi2.jpg)
 
-Screenshot of config-txt2img.json, which can be opened with the "Open..." button in the txt2img tab. It's created after the extension is loaded for the first time. You can use this if you want finer control on editing your presets. config-img2img.json also exists for the img2img tab.
+Screenshot of config-txt2img.json, which can be opened with the "Open config file..." button. You can use this if you want manual control while editing your presets. config-img2img.json also exists for the img2img tab.
 
 ![config](https://i.imgur.com/rLONKXz.jpg)
 

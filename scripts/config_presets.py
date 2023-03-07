@@ -33,7 +33,7 @@ class Script(scripts.Script):
             "txt2img_restore_faces",
             "txt2img_enable_hr",
             "txt2img_hr_scale",
-            #"txt2img_hr_upscaler",
+            "txt2img_hr_upscaler",
             "txt2img_hires_steps",
             "txt2img_denoising_strength",
             "txt2img_cfg_scale",

@@ -9,7 +9,7 @@ onUiUpdate(function() {
 	gradioApp().querySelectorAll("#config_preset_add_button").forEach(el => el.setAttribute("title", "[Config Presets] Create or delete a preset"))
 	gradioApp().querySelectorAll("#config_preset_cancel_save_button").forEach(el => el.setAttribute("title", "Go back"))
 	gradioApp().querySelectorAll("#config_preset_trash_button").forEach(el => el.setAttribute("title", "Permanently delete selected preset"))
-	gradioApp().querySelectorAll("#config_preset_fields_to_save > span").forEach(el => el.setAttribute("title", "Only selected field values will be saved. Unselected fields will be ignored."))
+	gradioApp().querySelectorAll("#config_preset_fields_to_save > span").forEach(el => el.setAttribute("title", "Only selected field values will be saved with the preset. Unselected fields will be ignored."))
 })
 
 //this function called by config_preset_dropdown in config_presets.py

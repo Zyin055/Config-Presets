@@ -380,7 +380,7 @@ class Script(scripts.Script):
                                     outputs=[config_preset_dropdown],
                                 )
 
-                            with gr.Column(scale=2, min_width=55):
+                            with gr.Column(scale=2, min_width=190):
                                 def open_file(f):
                                     path = os.path.normpath(f)
 
@@ -397,7 +397,7 @@ class Script(scripts.Script):
                                         sp.Popen(["xdg-open", path])
 
                                 open_config_file_button = gr.Button(
-                                    value="Open config file...",
+                                    value="📂 Open config file...",
                                     elem_id="config_presets_open_config_file_button",
                                 )
                                 open_config_file_button.click(
@@ -430,10 +430,10 @@ class Script(scripts.Script):
                                     max_lines=1,
                                     elem_id="config_preset_save_textbox",
                                 )
-                            with gr.Column(scale=2, min_width=60):
+                            with gr.Column(scale=2, min_width=200):
                                 save_button = gr.Button(
                                     # value="Create",
-                                    value="Save & Restart",
+                                    value="💾 Save & Restart",
                                     variant="primary",
                                     elem_id="config_preset_save_button",
                                 )

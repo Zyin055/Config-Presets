@@ -40,6 +40,7 @@ class Script(scripts.Script):
 
         ]
         self.img2img_component_ids = [   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
+            "img2img_mask_blur",
             "img2img_sampling",
             "img2img_steps",
             "img2img_width",

@@ -73,14 +73,14 @@ class Script(scripts.Script):
             # First time running the extension or it was deleted, so fill it with default values
             self.txt2img_config_presets = {
                 "None": {},
-                "Low quality ------ 512x512, steps: 10, batch size: 4, DPM++ 2M Karras": {
+                "Low quality ------ 512x512, steps: 10, batch size: 8, DPM++ 2M Karras": {
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_steps": 10,
                     "txt2img_width": 512,
                     "txt2img_height": 512,
                     "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
-                    "txt2img_batch_size": 4,
+                    "txt2img_batch_size": 8,
                     #"txt2img_cfg_scale": 7,
                 },
                 "Medium quality - 512x512, steps: 15, batch size: 4, DPM++ 2M Karras": {
@@ -103,14 +103,14 @@ class Script(scripts.Script):
                     "txt2img_batch_size": 4,
                     #"txt2img_cfg_scale": 7,
                 },
-                "Low quality ------ 768x768, steps: 10, batch size: 4, DPM++ 2M Karras": {
+                "Low quality ------ 768x768, steps: 10, batch size: 8, DPM++ 2M Karras": {
                     "txt2img_sampling": "DPM++ 2M Karras",
                     "txt2img_steps": 10,
                     "txt2img_width": 768,
                     "txt2img_height": 768,
                     "txt2img_enable_hr": False,
                     "txt2img_batch_count": 1,
-                    "txt2img_batch_size": 4,
+                    "txt2img_batch_size": 8,
                     #"txt2img_cfg_scale": 7,
                 },
                 "Medium quality - 768x768, steps: 15, batch size: 4, DPM++ 2M Karras": {
@@ -146,7 +146,7 @@ class Script(scripts.Script):
                     "txt2img_batch_size": 1,
                     #"txt2img_cfg_scale": 7,
                 },
-                "1080p ----------- 1920x1080, steps: 20, batch size: 1, DPM++ 2S a Karras, [Upscale by: 2.5, Denoising: 0.3, Hires steps: 15]": {
+                "1080p ----------- 1920x1080, steps: 20, batch size: 1, DPM++ 2S a Karras, [Upscale by: 2.5, Denoising: 0.3, Hires steps: 10]": {
                     #2x 960x536, 2.5x 768x432, 3x 640x360
                     "txt2img_steps": 20,
                     "txt2img_sampling": "DPM++ 2S a Karras",
@@ -154,13 +154,13 @@ class Script(scripts.Script):
                     "txt2img_height": 432,
                     "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 2.5,
-                    "txt2img_hires_steps": 15,
+                    "txt2img_hires_steps": 10,
                     "txt2img_denoising_strength": 0.3,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 1,
                     #"txt2img_cfg_scale": 7,
                 },
-                "1440p ----------- 2560x1440, steps: 25, batch size: 1, DPM++ 2S a Karras, [Upscale by: 3.3334, Denoising: 0.3, Hires steps: 15]": {
+                "1440p ----------- 2560x1440, steps: 25, batch size: 1, DPM++ 2S a Karras, [Upscale by: 3.3334, Denoising: 0.3, Hires steps: 10]": {
                     #2x 1024x720, 2.5x 1024x576, 3.3334x 768x432, 4x 640x360
                     "txt2img_steps": 25,
                     "txt2img_sampling": "DPM++ 2S a Karras",
@@ -168,13 +168,13 @@ class Script(scripts.Script):
                     "txt2img_height": 432,
                     "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 3.3334,
-                    "txt2img_hires_steps": 15,
+                    "txt2img_hires_steps": 10,
                     "txt2img_denoising_strength": 0.3,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 1,
                     #"txt2img_cfg_scale": 7,
                 },
-                "4k ---------------- 3840x2160, steps: 30, batch size: 1, DPM++ 2S a Karras, [Upscale by: 5, Denoising: 0.3, Hires steps: 20]": {
+                "4k ---------------- 3840x2160, steps: 30, batch size: 1, DPM++ 2S a Karras, [Upscale by: 5, Denoising: 0.3, Hires steps: 15]": {
                     #2x 1420x1080, 2.5x 1536x864, 3x 1280x720, 5x 768x432, 6x 640x360
                     "txt2img_steps": 30,
                     "txt2img_sampling": "DPM++ 2S a Karras",
@@ -182,7 +182,7 @@ class Script(scripts.Script):
                     "txt2img_height": 432,
                     "txt2img_enable_hr": True,
                     "txt2img_hr_scale": 5,
-                    "txt2img_hires_steps": 20,
+                    "txt2img_hires_steps": 15,
                     "txt2img_denoising_strength": 0.3,
                     "txt2img_batch_count": 1,
                     "txt2img_batch_size": 1,

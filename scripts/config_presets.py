@@ -37,7 +37,7 @@ class Script(scripts.Script):
             "txt2img_hires_steps",
             "txt2img_denoising_strength",
             "txt2img_cfg_scale",
-
+            "script_list",
         ]
         self.img2img_component_ids = [   # mirrors the config_preset_dropdown.change(output) events and config_preset_dropdown_change()
             "img2img_sampling",
@@ -49,6 +49,7 @@ class Script(scripts.Script):
             "img2img_cfg_scale",
             "img2img_denoising_strength",
             "img2img_restore_faces",
+            "script_list",
         ]
 
         # Mapping between component labels and the actual components in ui.py

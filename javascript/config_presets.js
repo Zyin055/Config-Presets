@@ -22,13 +22,15 @@ function config_preset_dropdown_change() {
 			gradioApp().querySelector("#txt2img_enable_hr > label > input"), // gets the <input> element next to the "Hires. fix" <span>
 			gradioApp().querySelector("#txt2img_script_container #script_list label input"), // script dropdown box in txt2img
 			gradioApp().querySelector("#img2img_script_container #script_list label input"), // script dropdown box in img2img
-		]
+		];
 
 		elementsToTrigger.forEach(el => {
-			let e = document.createEvent("HTMLEvents")
-			e.initEvent("change", true, false)
-			el.dispatchEvent(new Event("change"))
-		})
+			if (el) {
+				let e = document.createEvent("HTMLEvents");
+				e.initEvent("change", true, false);
+				el.dispatchEvent(new Event("change"));
+			}
+		});
 	}, 200) //50ms is too fast
 }
 

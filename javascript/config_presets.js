@@ -18,14 +18,17 @@ function config_preset_dropdown_change() {
 	
 	//there is a race condition between the checkbox being checked in Python, and us firing its change event in JavaScript, so wait a bit before firing the event
 	setTimeout(function() { 
-		let hiresFixCheckbox = gradioApp().querySelector("#txt2img_enable_hr > label").firstChild //gets the <input> element next to the "Hires. fix" <span>
-		
-		let e = document.createEvent("HTMLEvents")
-		e.initEvent("change", true, false)
-		hiresFixCheckbox.dispatchEvent(e)
-		
-		//console.log("hiresFixCheckbox="+hiresFixCheckbox)
-		//console.log("e="+e)
+		let elementsToTrigger = [
+			gradioApp().querySelector("#txt2img_enable_hr > label > input"), // gets the <input> element next to the "Hires. fix" <span>
+			gradioApp().querySelector("#txt2img_script_container #script_list label input"), // script dropdown box in txt2img
+			gradioApp().querySelector("#img2img_script_container #script_list label input"), // script dropdown box in img2img
+		]
+
+		elementsToTrigger.forEach(el => {
+			let e = document.createEvent("HTMLEvents")
+			e.initEvent("change", true, false)
+			el.dispatchEvent(new Event("change"))
+		})
 	}, 200) //50ms is too fast
 }
 

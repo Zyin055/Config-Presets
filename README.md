@@ -33,6 +33,7 @@ Screenshot of config-txt2img.json, which can be opened with the "Open config fil
     <summary>Click to view Changelog</summary>
     
 #### 4/29/2023
+* Updated for the March 29th Automatic1111 version which uses Gradio 3.23
 * Added the ability to add almost any field on the UI to a config preset with the "Add tracked fields..." button
 #### 3/06/2023
 * Added the ability to select which fields are saved when creating a new config preset (before, this could have been done manually by editing the .json config file)

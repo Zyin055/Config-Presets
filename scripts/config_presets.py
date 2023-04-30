@@ -32,7 +32,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
         # First time running the extension or it was deleted, so fill it with default values
         txt2img_custom_tracked_components_default_text = """# Put custom txt2img tracked component IDs here. This will allow those fields to be saved as a config preset.
 # Lines starting with a # are ignored.
-# Component IDs can be found in the HTML (id="...") or in modules/ui.py (elem_id="...").
+# Component IDs can be found in the HTML (id="...") or in modules/ui.py (elem_id="..."). IDs like "component-5890" won't work because the number at the end will change each startup.
 # Entering an invalid component ID here will cause this extension to error and not load.
 # Note that components on the top row of the UI cannot be added here, such as "setting_sd_model_checkpoint", "setting_sd_vae", and "setting_CLIP_stop_at_last_layers".
 
@@ -89,7 +89,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
         # First time running the extension or it was deleted, so fill it with default values
         img2img_custom_tracked_components_ids = """# Put custom img2img tracked component IDs here. This will allow those fields to be saved as a config preset.
 # Lines starting with a # are ignored.
-# Component IDs can be found in the HTML (id="...") or in modules/ui.py (elem_id="...").
+# Component IDs can be found in the HTML (id="...") or in modules/ui.py (elem_id="..."). IDs like "component-5890" won't work because the number at the end will change each startup.
 # Entering an invalid component ID here will cause this extension to error and not load.
 # Note that components on the top row of the UI cannot be added here, such as "setting_sd_model_checkpoint", "setting_sd_vae", and "setting_CLIP_stop_at_last_layers".
 

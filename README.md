@@ -10,7 +10,7 @@ Dropdown values (configurable), select one and the generation settings values wi
 
 ![dropdown](https://i.imgur.com/WqbTZCR.jpg)
 
-Clicking the "Add/Remove..." button lets you create and delete custom presets of settings currently in the Web UI. Each button has tooltips to help you.
+Clicking the "Add/Remove..." button lets you create and delete custom presets of settings currently in the Web UI. Custom fields added by other scripts/extensions can also be used by clicking the "Add custom fields..." button. Each button has tooltips to help you.
 
 ![addremove](https://i.imgur.com/sYANTi2.jpg)
 
@@ -32,6 +32,9 @@ Screenshot of config-txt2img.json, which can be opened with the "Open config fil
 <details>
     <summary>Click to view Changelog</summary>
     
+#### 4/29/2023
+* Updated for the March 29th Automatic1111 version which uses Gradio 3.23
+* Added the ability to add almost any field on the UI to a config preset with the "Add tracked fields..." button
 #### 3/06/2023
 * Added the ability to select which fields are saved when creating a new config preset (before, this could have been done manually by editing the .json config file)
 * Moved some buttons around in the UI for creating a new config preset

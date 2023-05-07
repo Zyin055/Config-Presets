@@ -597,7 +597,7 @@ class Script(scripts.Script):
                             with gr.Column(scale=2, min_width=200):
                                 save_button = gr.Button(
                                     # value="Create",
-                                    value="💾 Save & Restart",
+                                    value="💾 Save",
                                     variant="primary",
                                     elem_id="script_config_preset_save_button",
                                 )
@@ -710,7 +710,6 @@ class Script(scripts.Script):
             write_json_to_file(config_presets, config_file_name)
 
             print(f"[Config-Presets] Added new preset: {new_setting_name}")
-            print(f"[Config-Presets] Restarting UI...") # done in _js
             return gr.Dropdown.update(value=new_setting_name, choices=list(config_presets.keys())), ""
 
         return func

@@ -6,7 +6,8 @@ import json
 import os
 import platform
 import subprocess as sp
-import typing as tg
+from modules.ui import refresh_symbol, clear_prompt_symbol
+from modules.ui_components import ToolButton
 
 
 BASEDIR = scripts.basedir()     #C:\path\to\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
@@ -455,58 +456,72 @@ class Script(scripts.Script):
                 with gr.Row():
                     with gr.Column(scale=8, min_width=100) as dropdown_column:
 
+                        with gr.Row():
 
-                        def config_preset_dropdown_change(dropdown_value, *components_value):
-                            if self.is_txt2img:
-                                config_presets = self.txt2img_config_presets
-                            else:
-                                config_presets = self.img2img_config_presets
-                            config_preset = config_presets[dropdown_value]
-                            print(f"[Config-Presets] Changed to: {dropdown_value}")
+                            def config_preset_dropdown_change(dropdown_value, *components_value):
+                                if self.is_txt2img:
+                                    config_presets = self.txt2img_config_presets
+                                else:
+                                    config_presets = self.img2img_config_presets
+                                config_preset = config_presets[dropdown_value]
+                                print(f"[Config-Presets] Changed to: {dropdown_value}")
 
-                            # update component values with user preset
-                            current_components = dict(zip(component_map.keys(), components_value))
-                            #print("Components before:", current_components)
-                            current_components.update(config_preset)
+                                # update component values with user preset
+                                current_components = dict(zip(component_map.keys(), components_value))
+                                #print("Components before:", current_components)
+                                current_components.update(config_preset)
 
-                            # transform necessary components from index to value
-                            for component_name, component_value in current_components.items():
-                                #print(component_name, component_value)
-                                if component_name in index_type_components and type(component_value) == int:
-                                    current_components[component_name] = component_map[component_name].choices[component_value]
+                                # transform necessary components from index to value
+                                for component_name, component_value in current_components.items():
+                                    #print(component_name, component_value)
+                                    if component_name in index_type_components and type(component_value) == int:
+                                        current_components[component_name] = component_map[component_name].choices[component_value]
 
-                            #print("Components after :", current_components)
+                                #print("Components after :", current_components)
 
-                            return list(current_components.values())
+                                return list(current_components.values())
 
-                        config_preset_dropdown = gr.Dropdown(
-                            label="Config Presets",
-                            choices=preset_values,
-                            elem_id="config_preset_txt2img_dropdown" if self.is_txt2img else "config_preset_img2img_dropdown",
-                        )
-                        config_preset_dropdown.style(container=False) #set to True to give it a white box to sit in
+                            config_preset_dropdown = gr.Dropdown(
+                                label="Config Presets",
+                                choices=preset_values,
+                                elem_id="config_preset_txt2img_dropdown" if self.is_txt2img else "config_preset_img2img_dropdown",
+                            )
+                            config_preset_dropdown.style(container=False) #set to True to give it a white box to sit in
 
-                        #self.txt2img_config_preset_dropdown = config_preset_dropdown
 
-                        try:
-                            components = list(component_map.values())
-                            config_preset_dropdown.change(
-                                fn=config_preset_dropdown_change,
-                                show_progress=False,
-                                inputs=[config_preset_dropdown, *components],
-                                outputs=components
-                                )
-                        except AttributeError:
-                            print(traceback.format_exc())   # prints the exception stacktrace
-                            print("[ERROR][CRITICAL][Config-Presets] The Config-Presets extension encountered a fatal error. A component required by this extension no longer exists in the Web UI. This is most likely due to the A1111 Web UI being updated. Try updating the Config-Presets extension. If that doesn't work, please post a bug report at https://github.com/Zyin055/Config-Presets/issues and delete your extensions/Config-Presets folder until an update is published.")
+                            refresh_models = ToolButton(
+                                value=modules.ui.refresh_symbol,
+                                elem_id="script_config_preset_refresh_models",
+                            )
+                            refresh_models.click(
+                                fn=lambda: self.load_config(config_preset_dropdown),
+                                outputs=config_preset_dropdown,
+                            )
 
-                        # No longer needed after the bump to Gradio 3.23
-                        # config_preset_dropdown.change(
-                        #     fn=None,
-                        #     inputs=[],
-                        #     outputs=[],
-                        #     _js="function() { config_preset_dropdown_change() }",   # JS is used to update the Hires fix row to show/hide it
-                        # )
+                            #self.txt2img_config_preset_dropdown = config_preset_dropdown
+
+                            try:
+                                components = list(component_map.values())
+                                config_preset_dropdown.change(
+                                    fn=config_preset_dropdown_change,
+                                    show_progress=False,
+                                    inputs=[config_preset_dropdown, *components],
+                                    outputs=components
+                                    )
+                            except AttributeError:
+                                print(traceback.format_exc())   # prints the exception stacktrace
+                                print("[ERROR][CRITICAL][Config-Presets] The Config-Presets extension encountered a fatal error. A component required by this extension no longer exists in the Web UI. This is most likely due to the A1111 Web UI being updated. Try updating the Config-Presets extension. If that doesn't work, please post a bug report at https://github.com/Zyin055/Config-Presets/issues and delete your extensions/Config-Presets folder until an update is published.")
+
+                            # No longer needed after the bump to Gradio 3.23
+                            # config_preset_dropdown.change(
+                            #     fn=None,
+                            #     inputs=[],
+                            #     outputs=[],
+                            #     _js="function() { config_preset_dropdown_change() }",   # JS is used to update the Hires fix row to show/hide it
+                            # )
+
+
+
                     with gr.Column(scale=8, min_width=100, visible=False) as collapsable_column:
                         with gr.Row():
                             with gr.Column(scale=1, min_width=10):
@@ -526,8 +541,13 @@ class Script(scripts.Script):
                                         return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1], choices=preset_keys)
                                     return gr.Dropdown.update() # do nothing if no value is selected
 
+                                # trash_button = ToolButton(
+                                #     #value="\U0001F5D1",
+                                #     value=modules.ui.clear_prompt_symbol,
+                                #     elem_id="script_config_preset_trash_button",
+                                # )
                                 trash_button = gr.Button(
-                                    value="\U0001F5D1",
+                                    value=modules.ui.clear_prompt_symbol,
                                     elem_id="script_config_preset_trash_button",
                                 )
                                 trash_button.click(
@@ -568,13 +588,12 @@ class Script(scripts.Script):
                                     elem_id="script_config_preset_cancel_save_button",
                                 )
 
-                    with gr.Column(scale=1, min_width=120,
-                                   visible=True) as refresh_button_column:
-                        refresh_symbol = '\U0001f504'  # 🔄
-                        refresh_models = gr.Button(value=refresh_symbol)
-                        refresh_models.click(fn=lambda: self.load_config(
-                            self.is_txt2img, config_preset_dropdown),
-                                             outputs=config_preset_dropdown)
+                    # with gr.Column(scale=1, min_width=35, visible=True) as refresh_button_column:
+                    #     refresh_models = gr.Button(value="\U0001f504",  # 🔄
+                    #                                elem_classes="tool", # mimics other Refresh buttons, shrinks button size
+                    #                                elem_id="script_config_preset_refresh_models",
+                    #                                )
+                    #     pass
 
                     with gr.Column(scale=1, min_width=120, visible=True) as add_remove_button_column:
                         add_remove_button = gr.Button(
@@ -596,25 +615,45 @@ class Script(scripts.Script):
                                 )
                             with gr.Column(scale=2, min_width=200):
                                 save_button = gr.Button(
-                                    # value="Create",
                                     value="💾 Save",
                                     variant="primary",
                                     elem_id="script_config_preset_save_button",
                                 )
 
-                                save_button.click(
+                                save_button.click(  # save the new config preset to config file
                                     fn=self.save_config(component_map, config_file_name),
-                                    inputs=list(
-                                        [save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
+                                    inputs=list([save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
                                                                                    component_ids if
                                                                                    component_map[comp_name] is not None]),
                                     # outputs=[config_preset_dropdown, save_textbox],
                                 )
-                                save_button.click(
-                                    fn=lambda: self.load_config(
-                                        self.is_txt2img, config_preset_dropdown
-                                    ),
-                                    outputs=config_preset_dropdown)
+
+                                def reload_config_presets_dropdown(dropdown: gr.Dropdown = None):
+                                    # Load txt2img and img2img config files
+
+                                    if dropdown is not None:
+                                        if self.is_txt2img:
+                                            self.txt2img_config_presets = load_txt2img_config_file()
+                                            return dropdown.update(choices=[key for key in self.txt2img_config_presets])
+                                        else:
+                                            self.img2img_config_presets = load_img2img_config_file()
+                                            return dropdown.update(choices=[key for key in self.img2img_config_presets])
+
+                                    return {}
+
+                                save_button.click(  # reload the new config settings
+                                    fn=lambda: reload_config_presets_dropdown(config_preset_dropdown),
+                                    inputs=[],
+                                    outputs=config_preset_dropdown,
+                                )
+
+                                save_button.click(  # clear the textbox
+                                    fn=lambda: "",
+                                    inputs=[],
+                                    outputs=save_textbox,
+                                )
+
+
 
                                 def add_remove_button_click():
                                     return gr.update(visible=True), gr.update(visible=True), gr.update(visible=False)
@@ -667,18 +706,7 @@ class Script(scripts.Script):
     def run(self, p, *args):
         pass
 
-    def load_config(self, is_t2i: bool = False, dropdown: tg.Optional[gr.Dropdown] = None) -> tg.Dict[tg.Text, tg.Any]:
-        # Load txt2img and img2img config files
-        self.txt2img_config_presets = load_txt2img_config_file()
-        self.img2img_config_presets = load_img2img_config_file()
 
-        if dropdown is not None:
-            if is_t2i:
-                return dropdown.update(choices=[key for key in self.txt2img_config_presets])
-            else:
-                return dropdown.update(choices=[key for key in self.img2img_config_presets])
-
-        return {}
 
     def save_config(self, component_map, config_file_name):
         def func(new_setting_name, fields_to_save_list, *new_setting):

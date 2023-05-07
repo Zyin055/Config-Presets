@@ -6,6 +6,7 @@ import json
 import os
 import platform
 import subprocess as sp
+import typing as tg
 
 
 BASEDIR = scripts.basedir()     #C:\path\to\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
@@ -456,6 +457,10 @@ class Script(scripts.Script):
 
 
                         def config_preset_dropdown_change(dropdown_value, *components_value):
+                            if self.is_txt2img:
+                                config_presets = self.txt2img_config_presets
+                            else:
+                                config_presets = self.img2img_config_presets
                             config_preset = config_presets[dropdown_value]
                             print(f"[Config-Presets] Changed to: {dropdown_value}")
 
@@ -468,10 +473,10 @@ class Script(scripts.Script):
                             for component_name, component_value in current_components.items():
                                 #print(component_name, component_value)
                                 if component_name in index_type_components and type(component_value) == int:
-                                        current_components[component_name] = component_map[component_name].choices[component_value]
+                                    current_components[component_name] = component_map[component_name].choices[component_value]
 
                             #print("Components after :", current_components)
-                            
+
                             return list(current_components.values())
 
                         config_preset_dropdown = gr.Dropdown(
@@ -507,6 +512,10 @@ class Script(scripts.Script):
                             with gr.Column(scale=1, min_width=10):
 
                                 def delete_selected_preset(config_preset_name):
+                                    if self.is_txt2img:
+                                        config_presets = self.txt2img_config_presets
+                                    else:
+                                        config_presets = self.img2img_config_presets
                                     if config_preset_name in config_presets.keys():
                                         del config_presets[config_preset_name]
                                         print(f'Config Presets: deleted "{config_preset_name}"')
@@ -559,6 +568,14 @@ class Script(scripts.Script):
                                     elem_id="script_config_preset_cancel_save_button",
                                 )
 
+                    with gr.Column(scale=1, min_width=120,
+                                   visible=True) as refresh_button_column:
+                        refresh_symbol = '\U0001f504'  # 🔄
+                        refresh_models = gr.Button(value=refresh_symbol)
+                        refresh_models.click(fn=lambda: self.load_config(
+                            self.is_txt2img, config_preset_dropdown),
+                                             outputs=config_preset_dropdown)
+
                     with gr.Column(scale=1, min_width=120, visible=True) as add_remove_button_column:
                         add_remove_button = gr.Button(
                             value="Add/Remove...",
@@ -586,17 +603,18 @@ class Script(scripts.Script):
                                 )
 
                                 save_button.click(
-                                    fn=save_config(config_presets, component_map, config_file_name),
+                                    fn=self.save_config(component_map, config_file_name),
                                     inputs=list(
                                         [save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
                                                                                    component_ids if
                                                                                    component_map[comp_name] is not None]),
                                     # outputs=[config_preset_dropdown, save_textbox],
                                 )
-                                save_button.click(  # need this to runa after save_config()
-                                    fn=None,
-                                    _js="config_preset_settings_restart_gradio()",  # restart Gradio
-                                )
+                                save_button.click(
+                                    fn=lambda: self.load_config(
+                                        self.is_txt2img, config_preset_dropdown
+                                    ),
+                                    outputs=config_preset_dropdown)
 
                                 def add_remove_button_click():
                                     return gr.update(visible=True), gr.update(visible=True), gr.update(visible=False)
@@ -649,6 +667,53 @@ class Script(scripts.Script):
     def run(self, p, *args):
         pass
 
+    def load_config(self, is_t2i: bool = False, dropdown: tg.Optional[gr.Dropdown] = None) -> tg.Dict[tg.Text, tg.Any]:
+        # Load txt2img and img2img config files
+        self.txt2img_config_presets = load_txt2img_config_file()
+        self.img2img_config_presets = load_img2img_config_file()
+
+        if dropdown is not None:
+            if is_t2i:
+                return dropdown.update(choices=[key for key in self.txt2img_config_presets])
+            else:
+                return dropdown.update(choices=[key for key in self.img2img_config_presets])
+
+        return {}
+
+    def save_config(self, component_map, config_file_name):
+        def func(new_setting_name, fields_to_save_list, *new_setting):
+            if self.is_txt2img:
+                config_presets = self.txt2img_config_presets
+            else:
+                config_presets = self.img2img_config_presets
+
+            if new_setting_name == "":
+                return gr.Dropdown.update(), "" # do nothing if no label entered in textbox
+
+            new_setting_map = {}    # dict[str, Any]    {"txt2img_steps": 10, ...}
+
+            for i, component_id in enumerate(component_map.keys()):
+
+                if component_id not in fields_to_save_list:
+                    continue
+
+                if component_map[component_id] is not None:
+                    new_value = new_setting[i]  # this gives the index when the component is a dropdown
+                    if component_id == "txt2img_sampling":
+                        new_setting_map[component_id] = modules.sd_samplers.samplers[new_value].name
+                    elif component_id == "img2img_sampling":
+                        new_setting_map[component_id] = modules.sd_samplers.samplers_for_img2img[new_value].name
+                    else:
+                        new_setting_map[component_id] = new_value
+
+            config_presets.update({new_setting_name: new_setting_map})
+            write_json_to_file(config_presets, config_file_name)
+
+            print(f"[Config-Presets] Added new preset: {new_setting_name}")
+            print(f"[Config-Presets] Restarting UI...") # done in _js
+            return gr.Dropdown.update(value=new_setting_name, choices=list(config_presets.keys())), ""
+
+        return func
 
 # Save the current values on the UI to a new entry in the config file
 def save_config(config_presets, component_map, config_file_name):

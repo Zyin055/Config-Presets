@@ -3,14 +3,10 @@ import os
 import platform
 import subprocess as sp
 import traceback
-import typing as tg
-
 import gradio as gr
-
 import modules.scripts as scripts
 import modules.sd_samplers
-from modules.ui import (clear_prompt_symbol, refresh_symbol,  # 🔄🗑💾
-                        save_style_symbol)
+from modules.ui import (clear_prompt_symbol, refresh_symbol, save_style_symbol) # 🔄🗑💾
 from modules.ui_common import folder_symbol  # 📂
 from modules.ui_components import ToolButton
 
@@ -494,11 +490,11 @@ class Script(scripts.Script):
 
 
                             refresh_models = ToolButton(
-                                value=modules.ui.refresh_symbol,
+                                value=refresh_symbol,
                                 elem_id="script_config_preset_refresh_models",
                             )
                             refresh_models.click(
-                                fn=lambda: self.load_config(config_preset_dropdown),
+                                fn=lambda: self.reload_config_presets_dropdown(config_preset_dropdown),
                                 outputs=config_preset_dropdown,
                             )
 
@@ -632,21 +628,8 @@ class Script(scripts.Script):
                                     # outputs=[config_preset_dropdown, save_textbox],
                                 )
 
-                                def reload_config_presets_dropdown(dropdown: gr.Dropdown = None):
-                                    # Load txt2img and img2img config files
-
-                                    if dropdown is not None:
-                                        if self.is_txt2img:
-                                            self.txt2img_config_presets = load_txt2img_config_file()
-                                            return dropdown.update(choices=[key for key in self.txt2img_config_presets])
-                                        else:
-                                            self.img2img_config_presets = load_img2img_config_file()
-                                            return dropdown.update(choices=[key for key in self.img2img_config_presets])
-
-                                    return {}
-
                                 save_button.click(  # reload the new config settings
-                                    fn=lambda: reload_config_presets_dropdown(config_preset_dropdown),
+                                    fn=lambda: self.reload_config_presets_dropdown(config_preset_dropdown),
                                     inputs=[],
                                     outputs=config_preset_dropdown,
                                 )
@@ -711,8 +694,8 @@ class Script(scripts.Script):
         pass
 
 
-    def load_config(self, dropdown: tg.Optional[gr.Dropdown] = None):
-        # Load txt2img and img2img config files
+    def reload_config_presets_dropdown(self, dropdown: gr.Dropdown = None):
+        # Load appropriate config file and apply to the dropdown
         if dropdown is not None:
             if self.is_txt2img:
                 self.txt2img_config_presets = load_txt2img_config_file()

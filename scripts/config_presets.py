@@ -1,15 +1,18 @@
-import traceback
-import modules.sd_samplers
-import modules.scripts as scripts
-import gradio as gr
 import json
 import os
 import platform
 import subprocess as sp
-from modules.ui import refresh_symbol, clear_prompt_symbol, save_style_symbol   # 🔄🗑💾
-from modules.ui_common import folder_symbol # 📂
-from modules.ui_components import ToolButton
+import traceback
+import typing as tg
 
+import gradio as gr
+
+import modules.scripts as scripts
+import modules.sd_samplers
+from modules.ui import (clear_prompt_symbol, refresh_symbol,  # 🔄🗑💾
+                        save_style_symbol)
+from modules.ui_common import folder_symbol  # 📂
+from modules.ui_components import ToolButton
 
 BASEDIR = scripts.basedir()     #C:\path\to\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
 CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME = "config-txt2img-custom-tracked-components.txt"
@@ -708,6 +711,17 @@ class Script(scripts.Script):
         pass
 
 
+    def load_config(self, dropdown: tg.Optional[gr.Dropdown] = None):
+        # Load txt2img and img2img config files
+        if dropdown is not None:
+            if self.is_txt2img:
+                self.txt2img_config_presets = load_txt2img_config_file()
+                return dropdown.update(choices=[key for key in self.txt2img_config_presets])
+            else:
+                self.img2img_config_presets = load_img2img_config_file()
+                return dropdown.update(choices=[key for key in self.img2img_config_presets])
+
+        return {}
 
     def save_config(self, component_map, config_file_name):
         def func(new_setting_name, fields_to_save_list, *new_setting):

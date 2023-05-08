@@ -6,7 +6,8 @@ import json
 import os
 import platform
 import subprocess as sp
-from modules.ui import refresh_symbol, clear_prompt_symbol
+from modules.ui import refresh_symbol, clear_prompt_symbol, save_style_symbol   # 🔄🗑💾
+from modules.ui_common import folder_symbol # 📂
 from modules.ui_components import ToolButton
 
 
@@ -543,11 +544,11 @@ class Script(scripts.Script):
 
                                 # trash_button = ToolButton(
                                 #     #value="\U0001F5D1",
-                                #     value=modules.ui.clear_prompt_symbol,
+                                #     value=clear_prompt_symbol,
                                 #     elem_id="script_config_preset_trash_button",
                                 # )
                                 trash_button = gr.Button(
-                                    value=modules.ui.clear_prompt_symbol,
+                                    value=clear_prompt_symbol,
                                     elem_id="script_config_preset_trash_button",
                                 )
                                 trash_button.click(
@@ -573,7 +574,7 @@ class Script(scripts.Script):
                                         sp.Popen(["xdg-open", path])
 
                                 open_config_file_button = gr.Button(
-                                    value="📂 Open config file...",
+                                    value=f"{folder_symbol} Open config file...",
                                     elem_id="script_config_preset_open_config_file_button",
                                 )
                                 open_config_file_button.click(
@@ -615,7 +616,7 @@ class Script(scripts.Script):
                                 )
                             with gr.Column(scale=2, min_width=200):
                                 save_button = gr.Button(
-                                    value="💾 Save",
+                                    value=f"{save_style_symbol} Save",
                                     variant="primary",
                                     elem_id="script_config_preset_save_button",
                                 )
@@ -688,7 +689,7 @@ class Script(scripts.Script):
                         with gr.Row():
                             with gr.Column(scale=1):
                                 open_custom_tracked_components_config_file_button = gr.Button(
-                                    value="📂 Add custom fields...",
+                                    value=f"{folder_symbol} Add custom fields...",
                                     elem_id="script_config_preset_open_custom_tracked_components_config",
                                 )
                                 open_custom_tracked_components_config_file_button.click(

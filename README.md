@@ -1,6 +1,8 @@
 ## What does this do?
 This [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) extension adds a configurable dropdown to allow you to change settings in the txt2img and img2img tabs of the Web UI.
 
+This allows you to do things like swap from low quality rendering settings to high quality. Or apply hires settings that uses your favorite anime upscaler. Or set image dimensions to make a wallpaper. You can even use it to set custom script fields like XYZ plot values.
+
 ## Screenshots
 The new dropdown in the image gallery.
 
@@ -12,7 +14,7 @@ Dropdown values (configurable), select one and the generation settings values wi
 
 Clicking the "Add/Remove..." button lets you create and delete custom presets of settings currently in the Web UI. Custom fields added by other scripts/extensions can also be used by clicking the "Add custom fields..." button. Each button has tooltips to help you.
 
-![addremove](https://i.imgur.com/sYANTi2.jpg)
+![addremove](https://i.imgur.com/7rSoTUF.jpg)
 
 Screenshot of config-txt2img.json, which can be opened with the "Open config file..." button. You can use this if you want manual control while editing your presets. config-img2img.json also exists for the img2img tab.
 

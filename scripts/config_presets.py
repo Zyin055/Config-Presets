@@ -14,8 +14,6 @@ CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME = "config-img2img-custom-trac
 CONFIG_TXT2IMG_FILE_NAME = "config-txt2img.json"
 CONFIG_IMG2IMG_FILE_NAME = "config-img2img.json"
 
-#fields_checkboxgroup = None
-
 
 def load_txt2img_custom_tracked_component_ids() -> list[str]:
     txt2img_custom_tracked_components_ids = []
@@ -329,6 +327,20 @@ def load_img2img_config_file():
     return img2img_config_presets
 
 
+# workaround function for not being able to select new dropdown values after new choices are added to the dropdown in Gradio v3.28.1 (Automatic1111 v1.1.0)
+# it's possible they will fix this in Gradio v4
+# see: https://github.com/Zyin055/Config-Presets/pull/41
+#def get_config_preset_dropdown_choices(new_config_presets) -> list[str]:
+def get_config_preset_dropdown_choices(new_config_presets: list[str]) -> list[str]:
+    new_choices = []
+    if len(new_config_presets) > 0:
+        # if isinstance(new_config_presets, dict):
+        #     new_choices.extend(new_config_presets.keys())
+        # else: # List assumed.
+        #     new_choices.extend(new_config_presets)
+        new_choices.extend(new_config_presets)
+    return new_choices
+
 
 class Script(scripts.Script):
 
@@ -432,15 +444,16 @@ class Script(scripts.Script):
                     index_type_components.append(component.elem_id)
 
             preset_values = []
-            config_presets = None
+            config_presets: dict[str, any] = None
             if self.is_txt2img:
                 config_presets = self.txt2img_config_presets
             else:
                 config_presets = self.img2img_config_presets
 
-            for dropdownValue in config_presets:
-                preset_values.append(dropdownValue)
-                #print(f"Config Presets: added \"{dropdownValue}\"")
+            preset_values: list[str] = list(config_presets.keys())
+            # for dropdownValue in config_presets:
+            #     preset_values.append(dropdownValue)
+            #     #print(f"Config Presets: added \"{dropdownValue}\"")
 
             fields_checkboxgroup = gr.CheckboxGroup(choices=component_ids,
                                                     value=component_ids,    #check all checkboxes by default
@@ -476,7 +489,8 @@ class Script(scripts.Script):
 
                         config_preset_dropdown = gr.Dropdown(
                             label="Config Presets",
-                            choices=preset_values,
+                            #choices=preset_values,
+                            choices=get_config_preset_dropdown_choices(preset_values),
                             elem_id="config_preset_txt2img_dropdown" if self.is_txt2img else "config_preset_img2img_dropdown",
                         )
                         config_preset_dropdown.style(container=False) #set to True to give it a white box to sit in
@@ -509,12 +523,15 @@ class Script(scripts.Script):
                                 def delete_selected_preset(config_preset_name):
                                     if config_preset_name in config_presets.keys():
                                         del config_presets[config_preset_name]
-                                        print(f'Config Presets: deleted "{config_preset_name}"')
+                                        print(f'[Config-Presets]: deleted: "{config_preset_name}"')
 
                                         write_json_to_file(config_presets, config_file_name)
 
                                         preset_keys = list(config_presets.keys())
-                                        return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1], choices=preset_keys)
+                                        return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1],
+                                                                  #choices=preset_values,
+                                                                  choices=get_config_preset_dropdown_choices(preset_keys),
+                                                                  )
                                     return gr.Dropdown.update() # do nothing if no value is selected
 
                                 trash_button = gr.Button(
@@ -580,7 +597,7 @@ class Script(scripts.Script):
                             with gr.Column(scale=2, min_width=200):
                                 save_button = gr.Button(
                                     # value="Create",
-                                    value="💾 Save & Restart",
+                                    value="💾 Save",
                                     variant="primary",
                                     elem_id="script_config_preset_save_button",
                                 )
@@ -591,11 +608,7 @@ class Script(scripts.Script):
                                         [save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
                                                                                    component_ids if
                                                                                    component_map[comp_name] is not None]),
-                                    # outputs=[config_preset_dropdown, save_textbox],
-                                )
-                                save_button.click(  # need this to runa after save_config()
-                                    fn=None,
-                                    _js="config_preset_settings_restart_gradio()",  # restart Gradio
+                                    outputs=[config_preset_dropdown, save_textbox],
                                 )
 
                                 def add_remove_button_click():
@@ -695,14 +708,11 @@ def save_config(config_presets, component_map, config_file_name):
         # print(f"self.txt2img_config_preset_dropdown.choices after =\n{self.txt2img_config_preset_dropdown.choices}")
 
         print(f"[Config-Presets] Added new preset: {new_setting_name}")
-        print(f"[Config-Presets] Restarting UI...") # done in _js
-        # update the dropdown with the new config preset, and clear the 'new preset name' textbox
-        return gr.Dropdown.update(value=new_setting_name, choices=list(config_presets.keys())), ""
-
-        # this errors when adding a 2nd config preset
-        # the solution is supposed to be updating the backend Gradio object to reflect the frontend dropdown values, but it doesn't work. still throws: "ValueError: 0 is not in list"
-        # workaround is to restart the whole UI after creating a new config preset by clicking the "Restart Gradio and Refresh Components" button in javascript
-        # https://github.com/gradio-app/gradio/discussions/2848
+        #print(f"[Config-Presets] Restarting UI...") # done in _js
+        return gr.Dropdown.update(value=new_setting_name,   # update the dropdown with the new config preset
+                                  #choices=list(config_presets.keys()),
+                                  choices=get_config_preset_dropdown_choices(config_presets.keys()),
+                                  ), "" # clear the 'New preset name' textbox
 
     return func
 

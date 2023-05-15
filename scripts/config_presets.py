@@ -101,6 +101,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_inpaint_full_res
 #img2img_inpaint_full_res_padding
 #resize_mode
+#img2img_scale
 #img2img_seed
 #img2img_subseed_show
 #img2img_subseed

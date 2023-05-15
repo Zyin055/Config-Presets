@@ -14,25 +14,30 @@ CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME = "config-img2img-custom-trac
 CONFIG_TXT2IMG_FILE_NAME = "config-txt2img.json"
 CONFIG_IMG2IMG_FILE_NAME = "config-img2img.json"
 
-#fields_checkboxgroup = None
+# not needed?
+#LCONFIGTXT = []
+#LCONFIGIMG = []
 
-LCONFIGTXT = []
-LCONFIGIMG = []
 
-def update_config(config_file_name, newcfg):
-    if config_file_name == CONFIG_TXT2IMG_FILE_NAME:
-        lcfg = LCONFIGTXT
-    elif config_file_name == CONFIG_IMG2IMG_FILE_NAME:
-        lcfg = LCONFIGIMG
-    else: # Unknown file.
-        raise NotImplementedError
-    lcfg.clear()
-    if len(newcfg) > 0:
-        if isinstance(newcfg,dict):
-            lcfg.extend(newcfg.keys())
+# workaround function for not being able to select new dropdown values after new choices are added to the dropdown
+# see: https://github.com/Zyin055/Config-Presets/pull/41
+def get_config_preset_dropdown_choices(new_config_presets) -> list[str]:
+#def get_config_preset_dropdown_choices(config_file_name: str, new_config_presets) -> list[str]:
+    # if config_file_name == CONFIG_TXT2IMG_FILE_NAME:
+    #     pass
+    # elif config_file_name == CONFIG_IMG2IMG_FILE_NAME:
+    #     pass
+    # else: # Unknown file.
+    #     raise NotImplementedError
+
+    new_choices = []
+    if len(new_config_presets) > 0:
+        if isinstance(new_config_presets, dict):
+            new_choices.extend(new_config_presets.keys())
         else: # List assumed.
-            lcfg.extend(newcfg)
-    return lcfg
+            new_choices.extend(new_config_presets)
+    return new_choices
+
 
 def load_txt2img_custom_tracked_component_ids() -> list[str]:
     txt2img_custom_tracked_components_ids = []
@@ -493,7 +498,8 @@ class Script(scripts.Script):
 
                         config_preset_dropdown = gr.Dropdown(
                             label="Config Presets",
-                            choices=update_config(config_file_name, config_presets),
+                            #choices=get_config_preset_dropdown_choices(config_file_name, config_presets),
+                            choices=get_config_preset_dropdown_choices(config_presets),
                             elem_id="config_preset_txt2img_dropdown" if self.is_txt2img else "config_preset_img2img_dropdown",
                         )
                         config_preset_dropdown.style(container=False) #set to True to give it a white box to sit in
@@ -532,7 +538,9 @@ class Script(scripts.Script):
 
                                         preset_keys = list(config_presets.keys())
                                         return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1],
-                                                                  choices=update_config(config_file_name, preset_keys))
+                                                                  #choices=get_config_preset_dropdown_choices(config_file_name, preset_keys),
+                                                                  choices=get_config_preset_dropdown_choices(preset_keys),
+                                                                  )
                                     return gr.Dropdown.update() # do nothing if no value is selected
 
                                 trash_button = gr.Button(
@@ -712,7 +720,9 @@ def save_config(config_presets, component_map, config_file_name):
         print(f"[Config-Presets] Restarting UI...") # done in _js
         # update the dropdown with the new config preset, and clear the 'new preset name' textbox
         return gr.Dropdown.update(value=new_setting_name,
-                                  choices=update_config(config_file_name, config_presets)), ""
+                                  #choices=get_config_preset_dropdown_choices(config_file_name, config_presets),
+                                  choices=get_config_preset_dropdown_choices(config_presets),
+                                  ), ""
 
         # this errors when adding a 2nd config preset
         # the solution is supposed to be updating the backend Gradio object to reflect the frontend dropdown values, but it doesn't work. still throws: "ValueError: 0 is not in list"

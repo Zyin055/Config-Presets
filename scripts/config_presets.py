@@ -606,7 +606,7 @@ class Script(scripts.Script):
                             with gr.Column(scale=2, min_width=200):
                                 save_button = gr.Button(
                                     # value="Create",
-                                    value="💾 Save & Restart",
+                                    value="💾 Save",
                                     variant="primary",
                                     elem_id="script_config_preset_save_button",
                                 )

@@ -536,7 +536,7 @@ class Script(scripts.Script):
                                     return gr.Dropdown.update() # do nothing if no value is selected
 
                                 trash_button = gr.Button(
-                                    value="\U0001F5D1",
+                                    value="\U0001f5d1\ufe0f", #🗑
                                     elem_id="script_config_preset_trash_button",
                                 )
                                 trash_button.click(

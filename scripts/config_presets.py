@@ -30,8 +30,8 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
         # First time running the extension or it was deleted, so fill it with default values
         txt2img_custom_tracked_components_default_text = """# Put custom txt2img tracked component IDs here. This will allow those fields to be saved as a config preset.
 # Lines starting with a # are ignored.
-# Component IDs can be found in the HTML (id="...") or in modules/ui.py (elem_id="..."). IDs like "component-5890" won't work because the number at the end will change each startup.
-# Entering an invalid component ID here will cause this extension to error and not load.
+# Component IDs can be found in the HTML (id="..."), in modules/ui.py (elem_id="..."), or in an extensions python code. IDs like "component-5890" won't work because the number at the end will change each startup.
+# Entering an invalid component ID here will cause this extension to error and not load. Components that do not have a value associated with them, such as tabs and accordions, are not supported.
 # Note that components on the top row of the UI cannot be added here, such as "setting_sd_model_checkpoint", "setting_sd_vae", and "setting_CLIP_stop_at_last_layers".
 
 # Other fields:
@@ -63,6 +63,46 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #cd_txt2img_positions
 #cd_txt2img_weights
 #cd_txt2img_end_at_this_step
+
+# ControlNet (extension):
+#txt2img_controlnet_ControlNet-0_controlnet_enable_checkbox
+#txt2img_controlnet_ControlNet-0_controlnet_low_vram_checkbox
+#txt2img_controlnet_ControlNet-0_controlnet_pixel_perfect_checkbox
+#txt2img_controlnet_ControlNet-0_controlnet_preprocessor_preview_checkbox
+#txt2img_controlnet_ControlNet-0_controlnet_preprocessor_dropdown
+#txt2img_controlnet_ControlNet-0_controlnet_model_dropdown
+#txt2img_controlnet_ControlNet-0_controlnet_control_weight_slider
+#txt2img_controlnet_ControlNet-0_controlnet_start_control_step_slider
+#txt2img_controlnet_ControlNet-0_controlnet_ending_control_step_slider
+#txt2img_controlnet_ControlNet-0_controlnet_control_mod_radio
+#txt2img_controlnet_ControlNet-0_controlnet_resize_mode_radio
+#txt2img_controlnet_ControlNet-0_controlnet_automatically_send_generated_images_checkbox
+
+#txt2img_controlnet_ControlNet-1_controlnet_enable_checkbox
+#txt2img_controlnet_ControlNet-1_controlnet_low_vram_checkbox
+#txt2img_controlnet_ControlNet-1_controlnet_pixel_perfect_checkbox
+#txt2img_controlnet_ControlNet-1_controlnet_preprocessor_preview_checkbox
+#txt2img_controlnet_ControlNet-1_controlnet_preprocessor_dropdown
+#txt2img_controlnet_ControlNet-1_controlnet_model_dropdown
+#txt2img_controlnet_ControlNet-1_controlnet_control_weight_slider
+#txt2img_controlnet_ControlNet-1_controlnet_start_control_step_slider
+#txt2img_controlnet_ControlNet-1_controlnet_ending_control_step_slider
+#txt2img_controlnet_ControlNet-1_controlnet_control_mod_radio
+#txt2img_controlnet_ControlNet-1_controlnet_resize_mode_radio
+#txt2img_controlnet_ControlNet-1_controlnet_automatically_send_generated_images_checkbox
+
+#txt2img_controlnet_ControlNet-2_controlnet_enable_checkbox
+#txt2img_controlnet_ControlNet-2_controlnet_low_vram_checkbox
+#txt2img_controlnet_ControlNet-2_controlnet_pixel_perfect_checkbox
+#txt2img_controlnet_ControlNet-2_controlnet_preprocessor_preview_checkbox
+#txt2img_controlnet_ControlNet-2_controlnet_preprocessor_dropdown
+#txt2img_controlnet_ControlNet-2_controlnet_model_dropdown
+#txt2img_controlnet_ControlNet-2_controlnet_control_weight_slider
+#txt2img_controlnet_ControlNet-2_controlnet_start_control_step_slider
+#txt2img_controlnet_ControlNet-2_controlnet_ending_control_step_slider
+#txt2img_controlnet_ControlNet-2_controlnet_control_mod_radio
+#txt2img_controlnet_ControlNet-2_controlnet_resize_mode_radio
+#txt2img_controlnet_ControlNet-2_controlnet_automatically_send_generated_images_checkbox
 """
 
         write_text_to_file(txt2img_custom_tracked_components_default_text, CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)
@@ -87,8 +127,8 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
         # First time running the extension or it was deleted, so fill it with default values
         img2img_custom_tracked_components_ids = """# Put custom img2img tracked component IDs here. This will allow those fields to be saved as a config preset.
 # Lines starting with a # are ignored.
-# Component IDs can be found in the HTML (id="...") or in modules/ui.py (elem_id="..."). IDs like "component-5890" won't work because the number at the end will change each startup.
-# Entering an invalid component ID here will cause this extension to error and not load.
+# Component IDs can be found in the HTML (id="..."), in modules/ui.py (elem_id="..."), or in an extensions python code. IDs like "component-5890" won't work because the number at the end will change each startup.
+# Entering an invalid component ID here will cause this extension to error and not load. Components that do not have a value associated with them, such as tabs and accordions, are not supported.
 # Note that components on the top row of the UI cannot be added here, such as "setting_sd_model_checkpoint", "setting_sd_vae", and "setting_CLIP_stop_at_last_layers".
 
 # Other fields:
@@ -139,6 +179,46 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #cd_img2img_positions
 #cd_img2img_weights
 #cd_img2img_end_at_this_step
+
+# ControlNet (extension):
+#img2img_controlnet_ControlNet-0_controlnet_enable_checkbox
+#img2img_controlnet_ControlNet-0_controlnet_low_vram_checkbox
+#img2img_controlnet_ControlNet-0_controlnet_pixel_perfect_checkbox
+#img2img_controlnet_ControlNet-0_controlnet_preprocessor_preview_checkbox
+#img2img_controlnet_ControlNet-0_controlnet_preprocessor_dropdown
+#img2img_controlnet_ControlNet-0_controlnet_model_dropdown
+#img2img_controlnet_ControlNet-0_controlnet_control_weight_slider
+#img2img_controlnet_ControlNet-0_controlnet_start_control_step_slider
+#img2img_controlnet_ControlNet-0_controlnet_ending_control_step_slider
+#img2img_controlnet_ControlNet-0_controlnet_control_mod_radio
+#img2img_controlnet_ControlNet-0_controlnet_resize_mode_radio
+#img2img_controlnet_ControlNet-0_controlnet_automatically_send_generated_images_checkbox
+
+#img2img_controlnet_ControlNet-1_controlnet_enable_checkbox
+#img2img_controlnet_ControlNet-1_controlnet_low_vram_checkbox
+#img2img_controlnet_ControlNet-1_controlnet_pixel_perfect_checkbox
+#img2img_controlnet_ControlNet-1_controlnet_preprocessor_preview_checkbox
+#img2img_controlnet_ControlNet-1_controlnet_preprocessor_dropdown
+#img2img_controlnet_ControlNet-1_controlnet_model_dropdown
+#img2img_controlnet_ControlNet-1_controlnet_control_weight_slider
+#img2img_controlnet_ControlNet-1_controlnet_start_control_step_slider
+#img2img_controlnet_ControlNet-1_controlnet_ending_control_step_slider
+#img2img_controlnet_ControlNet-1_controlnet_control_mod_radio
+#img2img_controlnet_ControlNet-1_controlnet_resize_mode_radio
+#img2img_controlnet_ControlNet-1_controlnet_automatically_send_generated_images_checkbox
+
+#img2img_controlnet_ControlNet-2_controlnet_enable_checkbox
+#img2img_controlnet_ControlNet-2_controlnet_low_vram_checkbox
+#img2img_controlnet_ControlNet-2_controlnet_pixel_perfect_checkbox
+#img2img_controlnet_ControlNet-2_controlnet_preprocessor_preview_checkbox
+#img2img_controlnet_ControlNet-2_controlnet_preprocessor_dropdown
+#img2img_controlnet_ControlNet-2_controlnet_model_dropdown
+#img2img_controlnet_ControlNet-2_controlnet_control_weight_slider
+#img2img_controlnet_ControlNet-2_controlnet_start_control_step_slider
+#img2img_controlnet_ControlNet-2_controlnet_ending_control_step_slider
+#img2img_controlnet_ControlNet-2_controlnet_control_mod_radio
+#img2img_controlnet_ControlNet-2_controlnet_resize_mode_radio
+#img2img_controlnet_ControlNet-2_controlnet_automatically_send_generated_images_checkbox
 """
 
         write_text_to_file(img2img_custom_tracked_components_ids, CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)

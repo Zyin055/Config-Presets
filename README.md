@@ -28,7 +28,7 @@ Screenshot of config-txt2img.json, which can be opened with the "Open config fil
 * Git clone this repo to the `extensions` folder in your Stable Diffusion installation
 
 ## Known bugs
-* [v1.1.0](https://github.com/AUTOMATIC1111/stable-diffusion-webui/releases/tag/v1.1.0) causes the script dropdown to not be auto changed when `script_list` is a tracked component
+* [v1.1.0](https://github.com/AUTOMATIC1111/stable-diffusion-webui/releases/tag/v1.1.0)+ causes script dropdown change events to occur. This affects components such as the script_list dropdown, XYZ plot dropdowns, and ControlNet model/preprocessor dropdowns.
 * [Can't fix] Updating from an old version (before 12/21/2022 update) will wipe your custom config presets
 
 ## Changelog

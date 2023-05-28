@@ -103,6 +103,63 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_controlnet_ControlNet-2_controlnet_control_mod_radio
 #txt2img_controlnet_ControlNet-2_controlnet_resize_mode_radio
 #txt2img_controlnet_ControlNet-2_controlnet_automatically_send_generated_images_checkbox
+
+# Tiled Diffusion (extension)
+#MD-t2i-enabled
+#MD-t2i-overwrite-image-size
+#MD-overwrite-width-t2i
+#MD-overwrite-height-t2i
+#MD-t2i-method
+#MD-t2i-control-tensor-cpu
+#MD-t2i-latent-tile-width
+#MD-t2i-latent-tile-height
+#MD-t2i-latent-tile-overlap
+#MD-t2i-latent-tile-batch-size
+# Tiled Diffusion - Region Prompt Control
+#MD-t2i-enable-bbox-control
+#MD-t2i-draw-background
+#MD-t2i-cfg-name
+# Tiled Diffusion - Region Prompt Control - Region 1
+#MD-bbox-t2i-0-enable
+#MD-t2i-0-blend-mode
+#MD-t2i-0-feather
+#MD-t2i-0-x
+#MD-t2i-0-y
+#MD-t2i-0-w
+#MD-t2i-0-h
+#MD-t2i-0-prompt
+#MD-t2i-0-neg-prompt
+#MD-t2i-0-seed
+# Tiled Diffusion - Region Prompt Control - Region 2
+#MD-bbox-t2i-1-enable
+#MD-t2i-1-blend-mode
+#MD-t2i-1-feather
+#MD-t2i-1-x
+#MD-t2i-1-y
+#MD-t2i-1-w
+#MD-t2i-1-h
+#MD-t2i-1-prompt
+#MD-t2i-1-neg-prompt
+#MD-t2i-1-seed
+# Tiled Diffusion - Region Prompt Control - Region 3
+#MD-bbox-t2i-2-enable
+#MD-t2i-2-blend-mode
+#MD-t2i-2-feather
+#MD-t2i-2-x
+#MD-t2i-2-y
+#MD-t2i-2-w
+#MD-t2i-2-h
+#MD-t2i-2-prompt
+#MD-t2i-2-neg-prompt
+#MD-t2i-2-seed
+# Tiled Diffusion - Tiled VAE
+#tiledvae-t2i-enable
+#tiledvae-t2i-vae2gpu
+#tiledvae-t2i-enc-size
+#tiledvae-t2i-dec-size
+#tiledvae-t2i-fastenc
+#tiledvae-t2i-fastenc-colorfix
+#tiledvae-t2i-fastdec
 """
 
         write_text_to_file(txt2img_custom_tracked_components_default_text, CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)
@@ -219,6 +276,69 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_controlnet_ControlNet-2_controlnet_control_mod_radio
 #img2img_controlnet_ControlNet-2_controlnet_resize_mode_radio
 #img2img_controlnet_ControlNet-2_controlnet_automatically_send_generated_images_checkbox
+
+# Tiled Diffusion (extension)
+#MD-i2i-enabled
+#MD-i2i-keep-input-size
+#MD-i2i-method
+#MD-i2i-control-tensor-cpu
+#MD-i2i-latent-tile-width
+#MD-i2i-latent-tile-height
+#MD-i2i-latent-tile-overlap
+#MD-i2i-latent-tile-batch-size
+#MD-i2i-upscaler-index
+#MD-i2i-upscaler-factor
+# Tiled Diffusion - Noise Inversion
+#MD-i2i-noise-inverse
+#MD-i2i-noise-inverse-steps
+#MD-i2i-noise-inverse-retouch
+#MD-i2i-noise-inverse-renoise-strength
+#MD-i2i-noise-inverse-renoise-kernel
+# Tiled Diffusion - Region Prompt Control
+#MD-i2i-enable-bbox-control
+#MD-i2i-draw-background
+#MD-i2i-cfg-name
+# Tiled Diffusion - Region Prompt Control - Region 1
+#MD-bbox-i2i-0-enable
+#MD-i2i-0-blend-mode
+#MD-i2i-0-feather
+#MD-i2i-0-x
+#MD-i2i-0-y
+#MD-i2i-0-w
+#MD-i2i-0-h
+#MD-i2i-0-prompt
+#MD-i2i-0-neg-prompt
+#MD-i2i-0-seed
+# Tiled Diffusion - Region Prompt Control - Region 2
+#MD-bbox-i2i-1-enable
+#MD-i2i-1-blend-mode
+#MD-i2i-1-feather
+#MD-i2i-1-x
+#MD-i2i-1-y
+#MD-i2i-1-w
+#MD-i2i-1-h
+#MD-i2i-1-prompt
+#MD-i2i-1-neg-prompt
+#MD-i2i-1-seed
+# Tiled Diffusion - Region Prompt Control - Region 3
+#MD-bbox-i2i-2-enable
+#MD-i2i-2-blend-mode
+#MD-i2i-2-feather
+#MD-i2i-2-x
+#MD-i2i-2-y
+#MD-i2i-2-w
+#MD-i2i-2-h
+#MD-i2i-2-prompt
+#MD-i2i-2-neg-prompt
+#MD-i2i-2-seed
+# Tiled Diffusion - Tiled VAE
+#tiledvae-i2i-enable
+#tiledvae-i2i-vae2gpu
+#tiledvae-i2i-enc-size
+#tiledvae-i2i-dec-size
+#tiledvae-i2i-fastenc
+#tiledvae-i2i-fastenc-colorfix
+#tiledvae-i2i-fastdec
 """
 
         write_text_to_file(img2img_custom_tracked_components_ids, CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)
@@ -513,7 +633,7 @@ class Script(scripts.Script):
             for component_name, component in component_map.items():
                 #print(component_name, component_type)
                 if component is None:
-                    print(f"[ERROR][Config-Presets] The component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist or is an invalid component. This extension will not work until this issue is resolved.")
+                    print(f"[ERROR][Config-Presets] The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist, no longer exists (if you updated an extension), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name}). This extension will not work until this issue is resolved.")
                     return
 
             # Mark components with type "index" to be transform
@@ -692,29 +812,34 @@ class Script(scripts.Script):
                                     outputs=[config_preset_dropdown, save_textbox],
                                 )
 
-                                def add_remove_button_click():
+                                def add_remove_button_click(save_textbox_text: str, config_preset_dropdown_value: str):
+                                    if save_textbox_text == "" or save_textbox_text is None:
+                                        if config_preset_dropdown_value != "" and config_preset_dropdown_value is not None:
+                                            # save textbox is empty, and we have a dropdown value selected
+                                            # auto-populate the save textbox so it's easier to overwrite existing config preset
+                                            return gr.Textbox.update(value=config_preset_dropdown_value)
+                                    return gr.Textbox.update()
+
+
+                                def expand_edit_ui():
                                     return gr.update(visible=True), gr.update(visible=True), gr.update(visible=False)
 
-                                # def save_button_click(save_text):
-                                #     if save_text == "":
-                                #         return gr.update(), gr.update()
-                                #     return gr.update(visible=True), gr.update(visible=False)
-
-                                def cancel_button_click():
+                                def collapse_edit_ui():
                                     return gr.update(visible=False), gr.update(visible=False), gr.update(visible=True)
 
                                 add_remove_button.click(
                                     fn=add_remove_button_click,
+                                    inputs=[save_textbox, config_preset_dropdown],
+                                    outputs=[save_textbox],
+                                )
+                                add_remove_button.click(
+                                    fn=expand_edit_ui,
                                     inputs=[],
                                     outputs=[collapsable_column, collapsable_row, add_remove_button_column],
                                 )
-                                # save_button.click(
-                                #     fn=save_button_click,
-                                #     inputs=[save_textbox],
-                                #     outputs=[add_remove_button_column, collapsable_column],
-                                # )
+
                                 cancel_button.click(
-                                    fn=cancel_button_click,
+                                    fn=collapse_edit_ui,
                                     inputs=[],
                                     outputs=[collapsable_column, collapsable_row, add_remove_button_column],
                                 )

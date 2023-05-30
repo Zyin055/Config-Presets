@@ -74,7 +74,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_controlnet_ControlNet-0_controlnet_control_weight_slider
 #txt2img_controlnet_ControlNet-0_controlnet_start_control_step_slider
 #txt2img_controlnet_ControlNet-0_controlnet_ending_control_step_slider
-#txt2img_controlnet_ControlNet-0_controlnet_control_mod_radio
+#txt2img_controlnet_ControlNet-0_controlnet_control_mode_radio
 #txt2img_controlnet_ControlNet-0_controlnet_resize_mode_radio
 #txt2img_controlnet_ControlNet-0_controlnet_automatically_send_generated_images_checkbox
 
@@ -87,7 +87,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_controlnet_ControlNet-1_controlnet_control_weight_slider
 #txt2img_controlnet_ControlNet-1_controlnet_start_control_step_slider
 #txt2img_controlnet_ControlNet-1_controlnet_ending_control_step_slider
-#txt2img_controlnet_ControlNet-1_controlnet_control_mod_radio
+#txt2img_controlnet_ControlNet-1_controlnet_control_mode_radio
 #txt2img_controlnet_ControlNet-1_controlnet_resize_mode_radio
 #txt2img_controlnet_ControlNet-1_controlnet_automatically_send_generated_images_checkbox
 
@@ -100,7 +100,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_controlnet_ControlNet-2_controlnet_control_weight_slider
 #txt2img_controlnet_ControlNet-2_controlnet_start_control_step_slider
 #txt2img_controlnet_ControlNet-2_controlnet_ending_control_step_slider
-#txt2img_controlnet_ControlNet-2_controlnet_control_mod_radio
+#txt2img_controlnet_ControlNet-2_controlnet_control_mode_radio
 #txt2img_controlnet_ControlNet-2_controlnet_resize_mode_radio
 #txt2img_controlnet_ControlNet-2_controlnet_automatically_send_generated_images_checkbox
 
@@ -247,7 +247,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_controlnet_ControlNet-0_controlnet_control_weight_slider
 #img2img_controlnet_ControlNet-0_controlnet_start_control_step_slider
 #img2img_controlnet_ControlNet-0_controlnet_ending_control_step_slider
-#img2img_controlnet_ControlNet-0_controlnet_control_mod_radio
+#img2img_controlnet_ControlNet-0_controlnet_control_mode_radio
 #img2img_controlnet_ControlNet-0_controlnet_resize_mode_radio
 #img2img_controlnet_ControlNet-0_controlnet_automatically_send_generated_images_checkbox
 
@@ -260,7 +260,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_controlnet_ControlNet-1_controlnet_control_weight_slider
 #img2img_controlnet_ControlNet-1_controlnet_start_control_step_slider
 #img2img_controlnet_ControlNet-1_controlnet_ending_control_step_slider
-#img2img_controlnet_ControlNet-1_controlnet_control_mod_radio
+#img2img_controlnet_ControlNet-1_controlnet_control_mode_radio
 #img2img_controlnet_ControlNet-1_controlnet_resize_mode_radio
 #img2img_controlnet_ControlNet-1_controlnet_automatically_send_generated_images_checkbox
 
@@ -273,7 +273,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_controlnet_ControlNet-2_controlnet_control_weight_slider
 #img2img_controlnet_ControlNet-2_controlnet_start_control_step_slider
 #img2img_controlnet_ControlNet-2_controlnet_ending_control_step_slider
-#img2img_controlnet_ControlNet-2_controlnet_control_mod_radio
+#img2img_controlnet_ControlNet-2_controlnet_control_mode_radio
 #img2img_controlnet_ControlNet-2_controlnet_resize_mode_radio
 #img2img_controlnet_ControlNet-2_controlnet_automatically_send_generated_images_checkbox
 
@@ -633,7 +633,14 @@ class Script(scripts.Script):
             for component_name, component in component_map.items():
                 #print(component_name, component_type)
                 if component is None:
-                    print(f"[ERROR][Config-Presets] The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist, no longer exists (if you updated an extension), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name}). This extension will not work until this issue is resolved.")
+                    log_error(f"The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist, no longer exists (if you updated an extension), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name}). This extension will not work until this issue is resolved.")
+
+                    if "controlnet_control_mod_radio" in component_name:
+                        # 5/26/2023 special error message for ControlNet users letting them know their config file has been automatically updated
+                        # https://github.com/Mikubill/sd-webui-controlnet/commit/0d1c252cad9c37a75e839d52f9ea8207adb8aa46
+                        replace_text_in_file("controlnet_control_mod_radio", "controlnet_control_mode_radio", custom_tracked_components_config_file_name)
+                        log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
+
                     return
 
             # Mark components with type "index" to be transform
@@ -708,7 +715,7 @@ class Script(scripts.Script):
                                 )
                         except AttributeError:
                             print(traceback.format_exc())   # prints the exception stacktrace
-                            print("[ERROR][CRITICAL][Config-Presets] The Config-Presets extension encountered a fatal error. A component required by this extension no longer exists in the Web UI. This is most likely due to the A1111 Web UI being updated. Try updating the Config-Presets extension. If that doesn't work, please post a bug report at https://github.com/Zyin055/Config-Presets/issues and delete your extensions/Config-Presets folder until an update is published.")
+                            log_critical_error("The Config-Presets extension encountered a fatal error. A component required by this extension no longer exists in the Web UI. This is most likely due to the A1111 Web UI being updated. Try updating the Config-Presets extension. If that doesn't work, please post a bug report at https://github.com/Zyin055/Config-Presets/issues and delete your extensions/Config-Presets folder until an update is published.")
 
                         # No longer needed after the bump to Gradio 3.23
                         # config_preset_dropdown.change(
@@ -931,3 +938,23 @@ def write_json_to_file(json_data, file_name: str):
 def write_text_to_file(text, file_name: str):
     with open(f"{BASEDIR}/{file_name}", "w") as file:
         file.write(text)
+
+
+def replace_text_in_file(old: str, new: str, file_name: str):
+    with open(f"{BASEDIR}/{file_name}", "r") as file:
+        content = file.read()
+
+    with open(f"{BASEDIR}/{file_name}", "w") as file:
+        file.write(content.replace(old, new))
+
+
+def log(text: str):
+    print(f"[Config Presets] {text}")
+
+
+def log_error(text: str):
+    print(f"[ERROR][Config Presets] {text}")
+
+
+def log_critical_error(text: str):
+    print(f"[ERROR][CRITICAL][Config Presets] {text}")

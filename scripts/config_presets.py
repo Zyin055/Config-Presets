@@ -160,6 +160,71 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #tiledvae-t2i-fastenc
 #tiledvae-t2i-fastenc-colorfix
 #tiledvae-t2i-fastdec
+
+# ADetailer (extension)
+#script_txt2img_adetailer_ad_enable
+# ADetailer - 1st tab
+#script_txt2img_adetailer_ad_model
+#script_txt2img_adetailer_ad_prompt
+#script_txt2img_adetailer_ad_negative_prompt
+# ADetailer - 1st tab - Detection
+#script_txt2img_adetailer_ad_confidence
+#script_txt2img_adetailer_ad_mask_min_ratio
+#script_txt2img_adetailer_ad_mask_max_ratio
+# ADetailer - 1st tab - Mask Preprocessing
+#script_txt2img_adetailer_ad_x_offset
+#script_txt2img_adetailer_ad_y_offset
+#script_txt2img_adetailer_ad_dilate_erode
+#script_txt2img_adetailer_ad_mask_merge_invert
+# ADetailer - 1st tab - Inpainting
+#script_txt2img_adetailer_ad_mask_blur
+#script_txt2img_adetailer_ad_denoising_strength
+#script_txt2img_adetailer_ad_inpaint_full_res
+#script_txt2img_adetailer_ad_inpaint_full_res_padding
+#script_txt2img_adetailer_ad_use_inpaint_width_height
+#script_txt2img_adetailer_ad_inpaint_width
+#script_txt2img_adetailer_ad_inpaint_height
+#script_txt2img_adetailer_ad_use_steps
+#script_txt2img_adetailer_ad_steps
+#script_txt2img_adetailer_ad_use_cfg_scale
+#script_txt2img_adetailer_ad_cfg_scale
+#script_txt2img_adetailer_ad_restore_face
+# ADetailer - 1st tab - ControlNet
+#script_txt2img_adetailer_ad_controlnet_model
+#script_txt2img_adetailer_ad_controlnet_weight
+#script_txt2img_adetailer_ad_controlnet_guidance_start
+#script_txt2img_adetailer_ad_controlnet_guidance_end
+# ADetailer - 2nd tab
+#script_txt2img_adetailer_ad_model_2nd
+#script_txt2img_adetailer_ad_prompt_2nd
+#script_txt2img_adetailer_ad_negative_prompt_2nd
+# ADetailer - 2nd tab - Detection
+#script_txt2img_adetailer_ad_confidence_2nd
+#script_txt2img_adetailer_ad_mask_min_ratio_2nd
+#script_txt2img_adetailer_ad_mask_max_ratio_2nd
+# ADetailer - 2nd tab - Mask Preprocessing
+#script_txt2img_adetailer_ad_x_offset_2nd
+#script_txt2img_adetailer_ad_y_offset_2nd
+#script_txt2img_adetailer_ad_dilate_erode_2nd
+#script_txt2img_adetailer_ad_mask_merge_invert_2nd
+# ADetailer - 2nd tab - Inpainting
+#script_txt2img_adetailer_ad_mask_blur_2nd
+#script_txt2img_adetailer_ad_denoising_strength_2nd
+#script_txt2img_adetailer_ad_inpaint_full_res_2nd
+#script_txt2img_adetailer_ad_inpaint_full_res_padding_2nd
+#script_txt2img_adetailer_ad_use_inpaint_width_height_2nd
+#script_txt2img_adetailer_ad_inpaint_width_2nd
+#script_txt2img_adetailer_ad_inpaint_height_2nd
+#script_txt2img_adetailer_ad_use_steps_2nd
+#script_txt2img_adetailer_ad_steps_2nd
+#script_txt2img_adetailer_ad_use_cfg_scale_2nd
+#script_txt2img_adetailer_ad_cfg_scale_2nd
+#script_txt2img_adetailer_ad_restore_face_2nd
+# ADetailer - 2nd tab - ControlNet
+#script_txt2img_adetailer_ad_controlnet_model_2nd
+#script_txt2img_adetailer_ad_controlnet_weight_2nd
+#script_txt2img_adetailer_ad_controlnet_guidance_start_2nd
+#script_txt2img_adetailer_ad_controlnet_guidance_end_2nd
 """
 
         write_text_to_file(txt2img_custom_tracked_components_default_text, CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)
@@ -339,6 +404,78 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #tiledvae-i2i-fastenc
 #tiledvae-i2i-fastenc-colorfix
 #tiledvae-i2i-fastdec
+
+# StableSR (extension)
+#SR Model does not have an ID as of June 1 2023
+#StableSR-scale
+#StableSR-color-fix
+#StableSR-save-original
+#StableSR-pure-noise
+
+# ADetailer (extension)
+#script_img2img_adetailer_ad_enable
+# ADetailer - 1st tab
+#script_img2img_adetailer_ad_model
+#script_img2img_adetailer_ad_prompt
+#script_img2img_adetailer_ad_negative_prompt
+# ADetailer - 1st tab - Detection
+#script_img2img_adetailer_ad_confidence
+#script_img2img_adetailer_ad_mask_min_ratio
+#script_img2img_adetailer_ad_mask_max_ratio
+# ADetailer - 1st tab - Mask Preprocessing
+#script_img2img_adetailer_ad_x_offset
+#script_img2img_adetailer_ad_y_offset
+#script_img2img_adetailer_ad_dilate_erode
+#script_img2img_adetailer_ad_mask_merge_invert
+# ADetailer - 1st tab - Inpainting
+#script_img2img_adetailer_ad_mask_blur
+#script_img2img_adetailer_ad_denoising_strength
+#script_img2img_adetailer_ad_inpaint_full_res
+#script_img2img_adetailer_ad_inpaint_full_res_padding
+#script_img2img_adetailer_ad_use_inpaint_width_height
+#script_img2img_adetailer_ad_inpaint_width
+#script_img2img_adetailer_ad_inpaint_height
+#script_img2img_adetailer_ad_use_steps
+#script_img2img_adetailer_ad_steps
+#script_img2img_adetailer_ad_use_cfg_scale
+#script_img2img_adetailer_ad_cfg_scale
+#script_img2img_adetailer_ad_restore_face
+# ADetailer - 1st tab - ControlNet
+#script_img2img_adetailer_ad_controlnet_model
+#script_img2img_adetailer_ad_controlnet_weight
+#script_img2img_adetailer_ad_controlnet_guidance_start
+#script_img2img_adetailer_ad_controlnet_guidance_end
+# ADetailer - 2nd tab
+#script_img2img_adetailer_ad_model_2nd
+#script_img2img_adetailer_ad_prompt_2nd
+#script_img2img_adetailer_ad_negative_prompt_2nd
+# ADetailer - 2nd tab - Detection
+#script_img2img_adetailer_ad_confidence_2nd
+#script_img2img_adetailer_ad_mask_min_ratio_2nd
+#script_img2img_adetailer_ad_mask_max_ratio_2nd
+# ADetailer - 2nd tab - Mask Preprocessing
+#script_img2img_adetailer_ad_x_offset_2nd
+#script_img2img_adetailer_ad_y_offset_2nd
+#script_img2img_adetailer_ad_dilate_erode_2nd
+#script_img2img_adetailer_ad_mask_merge_invert_2nd
+# ADetailer - 2nd tab - Inpainting
+#script_img2img_adetailer_ad_mask_blur_2nd
+#script_img2img_adetailer_ad_denoising_strength_2nd
+#script_img2img_adetailer_ad_inpaint_full_res_2nd
+#script_img2img_adetailer_ad_inpaint_full_res_padding_2nd
+#script_img2img_adetailer_ad_use_inpaint_width_height_2nd
+#script_img2img_adetailer_ad_inpaint_width_2nd
+#script_img2img_adetailer_ad_inpaint_height_2nd
+#script_img2img_adetailer_ad_use_steps_2nd
+#script_img2img_adetailer_ad_steps_2nd
+#script_img2img_adetailer_ad_use_cfg_scale_2nd
+#script_img2img_adetailer_ad_cfg_scale_2nd
+#script_img2img_adetailer_ad_restore_face_2nd
+# ADetailer - 2nd tab - ADetailer ControlNet
+#script_img2img_adetailer_ad_controlnet_model_2nd
+#script_img2img_adetailer_ad_controlnet_weight_2nd
+#script_img2img_adetailer_ad_controlnet_guidance_start_2nd
+#script_img2img_adetailer_ad_controlnet_guidance_end_2nd
 """
 
         write_text_to_file(img2img_custom_tracked_components_ids, CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)
@@ -633,7 +770,7 @@ class Script(scripts.Script):
             for component_name, component in component_map.items():
                 #print(component_name, component_type)
                 if component is None:
-                    log_error(f"The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist, no longer exists (if you updated an extension), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name}). This extension will not work until this issue is resolved.")
+                    log_error(f"The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist, no longer exists (if you updated an extension), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name} or just delete it so it resets to defaults). This extension will not work until this issue is resolved.")
 
                     if "controlnet_control_mod_radio" in component_name:
                         # 5/26/2023 special error message for ControlNet users letting them know their config file has been automatically updated
@@ -731,7 +868,7 @@ class Script(scripts.Script):
                                 def delete_selected_preset(config_preset_name):
                                     if config_preset_name in config_presets.keys():
                                         del config_presets[config_preset_name]
-                                        print(f'[Config-Presets]: deleted: "{config_preset_name}"')
+                                        print(f'[Config-Presets] deleted: "{config_preset_name}"')
 
                                         write_json_to_file(config_presets, config_file_name)
 

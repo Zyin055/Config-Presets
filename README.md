@@ -29,7 +29,7 @@ Screenshot of config-txt2img.json, which can be opened with the "Open config fil
 
 ## Known bugs
 * Automatic1111 [v1.1.0](https://github.com/AUTOMATIC1111/stable-diffusion-webui/releases/tag/v1.1.0)+ causes dropdown change events to not occur. This affects components such as the script_list dropdown, XYZ plot dropdowns, and ControlNet model/preprocessor dropdowns, and likely others. The workaround is to manually reselect the value in the dropdown list.
-* [Can't fix] Updating from an old version (before 12/21/2022 update) will wipe your custom config presets
+  * This is fixed in Automatic1111 [v1.4.0-RC](https://github.com/AUTOMATIC1111/stable-diffusion-webui/releases/tag/v1.4.0-RC). Gradio 3.32 seems to fix this issue
 
 ## Changelog
 <details>

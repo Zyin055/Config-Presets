@@ -46,6 +46,8 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_tiling
 #txt2img_hr_resize_x
 #txt2img_hr_resize_y
+#hires_prompt
+#hires_neg_prompt
 
 # Script dropdown:
 #script_list

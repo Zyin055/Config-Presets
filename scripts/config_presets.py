@@ -272,7 +272,6 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_subseed_strength
 #img2img_seed_resize_from_w
 #img2img_seed_resize_from_h
-#img2img_restore_faces
 #img2img_tiling
 #img2img_batch_input_dir
 #img2img_batch_output_dir
@@ -282,12 +281,12 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #script_list
 
 # X/Y/Z plot (script):
-#script_img2txt_xyz_plot_x_type
-#script_img2txt_xyz_plot_y_type
-#script_img2txt_xyz_plot_z_type
-#script_img2txt_xyz_plot_x_values
-#script_img2txt_xyz_plot_y_values
-#script_img2txt_xyz_plot_z_values
+#script_img2img_xyz_plot_x_type
+#script_img2img_xyz_plot_y_type
+#script_img2img_xyz_plot_z_type
+#script_img2img_xyz_plot_x_values
+#script_img2img_xyz_plot_y_values
+#script_img2img_xyz_plot_z_values
 
 # Loopback (script):
 #script_loopback_loops

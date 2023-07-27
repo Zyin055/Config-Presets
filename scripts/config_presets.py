@@ -46,6 +46,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_tiling
 #txt2img_hr_resize_x
 #txt2img_hr_resize_y
+#hr_sampler
 #hires_prompt
 #hires_neg_prompt
 
@@ -495,120 +496,102 @@ def load_txt2img_config_file():
         # First time running the extension or it was deleted, so fill it with default values
         txt2img_config_presets = {
             "None": {},
-            "Low quality ------ 512x512, steps: 10, batch size: 8, DPM++ 2M Karras": {
-                "txt2img_sampling": "DPM++ 2M Karras",
-                "txt2img_steps": 10,
+            "SD 1.5 - 512x512": {
                 "txt2img_width": 512,
                 "txt2img_height": 512,
+            },
+            "SD 2.1 - 768x768": {
+                "txt2img_width": 768,
+                "txt2img_height": 768,
+            },
+            "SDXL --- 1024x1024": {
+                "txt2img_width": 1024,
+                "txt2img_height": 1024,
+            },
+            "Low quality ------ steps: 10, batch size: 8, DPM++ 2M Karras": {
+                "txt2img_sampling": "DPM++ 2M Karras",
+                "txt2img_steps": 10,
+                #"txt2img_width": 512,
+                #"txt2img_height": 512,
                 "txt2img_enable_hr": False,
                 "txt2img_batch_count": 1,
                 "txt2img_batch_size": 8,
-                # "txt2img_cfg_scale": 7,
+                #"txt2img_cfg_scale": 7,
             },
-            "Medium quality - 512x512, steps: 15, batch size: 4, DPM++ 2M Karras": {
+            "Medium quality - steps: 15, batch size: 4, DPM++ 2M Karras": {
                 "txt2img_sampling": "DPM++ 2M Karras",
                 "txt2img_steps": 15,
-                "txt2img_width": 512,
-                "txt2img_height": 512,
+                #"txt2img_width": 512,
+                #"txt2img_height": 512,
                 "txt2img_enable_hr": False,
                 "txt2img_batch_count": 1,
                 "txt2img_batch_size": 4,
-                # "txt2img_cfg_scale": 7,
+                #"txt2img_cfg_scale": 7,
             },
-            "High quality ------ 512x512, steps: 20, batch size: 4, DPM++ 2S a Karras": {
+            "High quality ------ steps: 20, batch size: 4, DPM++ 2S a Karras": {
                 "txt2img_sampling": "DPM++ 2S a Karras",
                 "txt2img_steps": 20,
-                "txt2img_width": 512,
-                "txt2img_height": 512,
+                #"txt2img_width": 512,
+                #"txt2img_height": 512,
                 "txt2img_enable_hr": False,
                 "txt2img_batch_count": 1,
                 "txt2img_batch_size": 4,
-                # "txt2img_cfg_scale": 7,
+                #"txt2img_cfg_scale": 7,
             },
-            "Low quality ------ 768x768, steps: 10, batch size: 8, DPM++ 2M Karras": {
-                "txt2img_sampling": "DPM++ 2M Karras",
-                "txt2img_steps": 10,
-                "txt2img_width": 768,
-                "txt2img_height": 768,
-                "txt2img_enable_hr": False,
-                "txt2img_batch_count": 1,
-                "txt2img_batch_size": 8,
-                # "txt2img_cfg_scale": 7,
-            },
-            "Medium quality - 768x768, steps: 15, batch size: 4, DPM++ 2M Karras": {
-                "txt2img_sampling": "DPM++ 2M Karras",
-                "txt2img_steps": 15,
-                "txt2img_width": 768,
-                "txt2img_height": 768,
-                "txt2img_enable_hr": False,
-                "txt2img_batch_count": 1,
-                "txt2img_batch_size": 4,
-                # "txt2img_cfg_scale": 7,
-            },
-            "High quality ------ 768x768, steps: 20, batch size: 4, DPM++ 2S a Karras": {
-                "txt2img_sampling": "DPM++ 2S a Karras",
-                "txt2img_steps": 20,
-                "txt2img_width": 768,
-                "txt2img_height": 768,
-                "txt2img_enable_hr": False,
-                "txt2img_batch_count": 1,
-                "txt2img_batch_size": 4,
-                # "txt2img_cfg_scale": 7,
-            },
-            "High res -------- 1024x1024, steps: 30, batch size: 1, DPM++ 2M Karras, [Upscale by: 2, Denoising: 0.4, Hires steps: 10]": {
+            "High res -------- steps: 30, DPM++ 2M Karras, [Hires fix - Upscale by: 2, Denoising: 0.4, Hires steps: 10]": {
                 "txt2img_steps": 30,
                 "txt2img_sampling": "DPM++ 2M Karras",
-                "txt2img_width": 512,
-                "txt2img_height": 512,
+                #"txt2img_width": 512,
+                #"txt2img_height": 512,
                 "txt2img_enable_hr": True,
                 "txt2img_hr_scale": 2,
                 "txt2img_hires_steps": 10,
                 "txt2img_denoising_strength": 0.4,
-                "txt2img_batch_count": 1,
-                "txt2img_batch_size": 1,
-                # "txt2img_cfg_scale": 7,
+                #"txt2img_batch_count": 1,
+                #"txt2img_batch_size": 1,
+                #"txt2img_cfg_scale": 7,
             },
-            "1080p ----------- 1920x1080, steps: 20, batch size: 1, DPM++ 2S a Karras, [Upscale by: 2.5, Denoising: 0.4, Hires steps: 10]": {
+            "1080p ----------- 432x768 -> 1920x1080, steps: 20, DPM++ 2M Karras, [Hires fix - Upscale by: 2.5, Denoising: 0.4, Hires steps: 10]": {
                 # 2x 960x536, 2.5x 768x432, 3x 640x360
                 "txt2img_steps": 20,
-                "txt2img_sampling": "DPM++ 2S a Karras",
+                "txt2img_sampling": "DPM++ 2M Karras",
                 "txt2img_width": 768,
                 "txt2img_height": 432,
                 "txt2img_enable_hr": True,
                 "txt2img_hr_scale": 2.5,
                 "txt2img_hires_steps": 10,
                 "txt2img_denoising_strength": 0.4,
-                "txt2img_batch_count": 1,
-                "txt2img_batch_size": 1,
-                # "txt2img_cfg_scale": 7,
+                #"txt2img_batch_count": 1,
+                #"txt2img_batch_size": 1,
+                #"txt2img_cfg_scale": 7,
             },
-            "1440p ----------- 2560x1440, steps: 25, batch size: 1, DPM++ 2S a Karras, [Upscale by: 3.3334, Denoising: 0.3, Hires steps: 10]": {
+            "1440p ----------- 432x768 -> 2560x1440, steps: 25, DPM++ 2M Karras, [Hires fix - Upscale by: 3.3334, Denoising: 0.3, Hires steps: 10]": {
                 # 2x 1024x720, 2.5x 1024x576, 3.3334x 768x432, 4x 640x360
                 "txt2img_steps": 25,
-                "txt2img_sampling": "DPM++ 2S a Karras",
+                "txt2img_sampling": "DPM++ 2M Karras",
                 "txt2img_width": 768,
                 "txt2img_height": 432,
                 "txt2img_enable_hr": True,
                 "txt2img_hr_scale": 3.3334,
                 "txt2img_hires_steps": 10,
-                "txt2img_denoising_strength": 0.3,
-                "txt2img_batch_count": 1,
-                "txt2img_batch_size": 1,
-                # "txt2img_cfg_scale": 7,
+                "txt2img_denoising_strength": 0.4,
+                #"txt2img_batch_count": 1,
+                #"txt2img_batch_size": 1,
+                #"txt2img_cfg_scale": 7,
             },
-            "4k ---------------- 3840x2160, steps: 30, batch size: 1, DPM++ 2S a Karras, [Upscale by: 5, Denoising: 0.3, Hires steps: 15]": {
+            "4k ---------------- 432x768 -> 3840x2160, steps: 30, DPM++ 2M Karras, [Upscale by: 5, Denoising: 0.3, Hires steps: 15]": {
                 # 2x 1420x1080, 2.5x 1536x864, 3x 1280x720, 5x 768x432, 6x 640x360
                 "txt2img_steps": 30,
-                "txt2img_sampling": "DPM++ 2S a Karras",
+                "txt2img_sampling": "DPM++ 2M Karras",
                 "txt2img_width": 768,
                 "txt2img_height": 432,
                 "txt2img_enable_hr": True,
                 "txt2img_hr_scale": 5,
                 "txt2img_hires_steps": 15,
-                "txt2img_denoising_strength": 0.3,
-                "txt2img_batch_count": 1,
-                "txt2img_batch_size": 1,
-                # "txt2img_cfg_scale": 7,
+                "txt2img_denoising_strength": 0.4,
+                #"txt2img_batch_count": 1,
+                #"txt2img_batch_size": 1,
+                #"txt2img_cfg_scale": 7,
             },
         }
 
@@ -628,34 +611,34 @@ def load_img2img_config_file():
         # First time running the extension or it was deleted, so fill it with default values
         img2img_config_presets = {
             "None": {},
-            "Low denoising ------- 512x512, denoising: 0.25, steps: 10, DPM++ 2M Karras": {
-                "img2img_sampling": "DPM++ 2M Karras",
-                "img2img_steps": 10,
-                "img2img_width": 512,
-                "img2img_height": 512,
-                # "img2img_batch_count": 1,
-                # "img2img_batch_size": 1,
-                # "img2img_cfg_scale": 7,
-                "img2img_denoising_strength": 0.25,
-            },
-            "Medium denoising -- 512x512, denoising: 0.50, steps: 15, DPM++ 2M Karras": {
-                "img2img_sampling": "DPM++ 2M Karras",
-                "img2img_steps": 15,
-                "img2img_width": 512,
-                "img2img_height": 512,
-                # "img2img_batch_count": 1,
-                # "img2img_batch_size": 1,
-                # "img2img_cfg_scale": 7,
-                "img2img_denoising_strength": 0.50,
-            },
-            "High denoising ------- 512x512, denoising: 0.75, steps: 20, DPM++ 2M Karras": {
+            "Low denoising ------- denoising: 0.25, steps: 20, DPM++ 2M Karras": {
                 "img2img_sampling": "DPM++ 2M Karras",
                 "img2img_steps": 20,
-                "img2img_width": 512,
-                "img2img_height": 512,
-                # "img2img_batch_count": 1,
-                # "img2img_batch_size": 1,
-                # "img2img_cfg_scale": 7,
+                #"img2img_width": 512,
+                #"img2img_height": 512,
+                #"img2img_batch_count": 1,
+                #"img2img_batch_size": 1,
+                #"img2img_cfg_scale": 7,
+                "img2img_denoising_strength": 0.25,
+            },
+            "Medium denoising -- denoising: 0.40, steps: 20, DPM++ 2M Karras": {
+                "img2img_sampling": "DPM++ 2M Karras",
+                "img2img_steps": 20,
+                #"img2img_width": 512,
+                #"img2img_height": 512,
+                #"img2img_batch_count": 1,
+                #"img2img_batch_size": 1,
+                #"img2img_cfg_scale": 7,
+                "img2img_denoising_strength": 0.40,
+            },
+            "High denoising ------- denoising: 0.75, steps: 30, DPM++ 2M Karras": {
+                "img2img_sampling": "DPM++ 2M Karras",
+                "img2img_steps": 30,
+                #"img2img_width": 512,
+                #"img2img_height": 512,
+                #"img2img_batch_count": 1,
+                #"img2img_batch_size": 1,
+                #"img2img_cfg_scale": 7,
                 "img2img_denoising_strength": 0.75,
             },
         }
@@ -763,6 +746,8 @@ class Script(scripts.Script):
         #if component.elem_id == "script_list": #bottom of the script dropdown
         #if component.elem_id == "txt2img_style2_index": #doesn't work, need to be added after all the components we edit are loaded
         #if component.elem_id == "open_folder": #bottom of the image gallery
+        #if component.elem_id == "txt2img_results" or component.elem_id == "img2img_results": #bottom of the image gallery, doesn't work
+        #if component.elem_id == "txt2img_gallery_container" or component.elem_id == "img2img_gallery_container": #bottom of the image gallery, doesn't work
         if component.elem_id == "txt2img_generation_info_button" or component.elem_id == "img2img_generation_info_button": #very bottom of the txt2img/img2img image gallery
 
             #print("Creating dropdown values...")

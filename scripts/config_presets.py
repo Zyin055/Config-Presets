@@ -691,6 +691,10 @@ class Script(scripts.Script):
             "txt2img_cfg_scale",
             "txt2img_sampling_alt", # Equiv to hr_upscaler.
             "txt2img_steps_alt", # Equiv to hires_steps.
+            # Vlad's new toggleable interface.
+            "txt2img_show_batch",
+            "txt2img_show_seed",
+            "txt2img_show_advanced", 
             "txt2img_show_second_pass", # Replaces enable_hr in vlad's.
         ]
         self.txt2img_component_ids += txt2img_custom_tracked_components_ids # add the custom tracked components
@@ -705,6 +709,12 @@ class Script(scripts.Script):
             "img2img_cfg_scale",
             "img2img_denoising_strength",
             "img2img_restore_faces",
+            # Vlad's new toggleable interface.
+            "img2img_show_seed",
+            "img2img_show_resize",
+            "img2img_show_batch",
+            "img2img_show_denoise",
+            "img2img_show_advanced",
         ]
         self.img2img_component_ids += img2img_custom_tracked_components_ids # add the custom tracked components
 
@@ -715,7 +725,15 @@ class Script(scripts.Script):
             "txt2img_sampling_alt",
             "txt2img_steps_alt",
             "txt2img_enable_hr",
+            "txt2img_show_batch",
+            "txt2img_show_seed",
+            "txt2img_show_advanced", 
             "txt2img_show_second_pass",
+            "img2img_show_seed",
+            "img2img_show_resize",
+            "img2img_show_batch",
+            "img2img_show_denoise",
+            "img2img_show_advanced",
         ]
         
         # Mapping between component labels and the actual components in ui.py

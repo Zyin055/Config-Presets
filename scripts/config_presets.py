@@ -663,6 +663,22 @@ def get_config_preset_dropdown_choices(new_config_presets: list[str]) -> list[st
         new_choices.extend(new_config_presets)
     return new_choices
 
+def dict_synonyms(d, lsyn):
+    """Adds synonyms to keys in a given dictionary.
+    
+    lsyn = [(key1,key2..), (key3,key4..) ...]
+    Key2 will receive the value of key1 if it exists and vice versa.
+    If both key3 and key4 exist, then they'll keep their old values.
+    If two keys have values and a third doesn't, then it will be assigned to one of the two randomly.
+    One liner partly written by a chatbot.
+    """
+    d2 = {key: d[existing_key] # Get existing value.
+          for syn in lsyn # Loop over synonyms.
+          for key in syn # Loop over each key in the set.
+          for existing_key in syn  # Find existing key to copy from.
+          if existing_key in d and key not in d} # Only if the key doesn't exist already.
+    d2.update(d) # Add back all existing keys.
+    return d2
 
 class Script(scripts.Script):
 
@@ -735,6 +751,12 @@ class Script(scripts.Script):
             "img2img_show_denoise",
             "img2img_show_advanced",
         ]
+        # SBM Synonymous ids are interchangeable at load time.
+        self.synonym_ids = [
+        ("txt2img_hires_steps", "txt2img_steps_alt"),
+        ("txt2img_enable_hr", "txt2img_show_second_pass"),
+        ("controlnet_control_mod_radio", "controlnet_control_mode_radio"), # Component renamed on 5/26/2023 due to typo.
+        ]
         
         # Mapping between component labels and the actual components in ui.py
         self.txt2img_component_map = {k: None for k in self.txt2img_component_ids}  # gets filled up in the after_component() method
@@ -759,6 +781,7 @@ class Script(scripts.Script):
         component_ids = None
         config_file_name = None
         custom_tracked_components_config_file_name = None
+        synonym_ids = self.synonym_ids # SBM
         if self.is_txt2img:
             component_map = self.txt2img_component_map
             component_ids = self.txt2img_component_ids
@@ -835,6 +858,7 @@ class Script(scripts.Script):
 
                         def config_preset_dropdown_change(dropdown_value, *components_value):
                             config_preset = config_presets[dropdown_value]
+                            config_preset = dict_synonyms(config_preset, synonym_ids) # SBM Add synonyms.
                             print(f"[Config-Presets] Changed to: {dropdown_value}")
 
                             # update component values with user preset

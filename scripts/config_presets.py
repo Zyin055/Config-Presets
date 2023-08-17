@@ -774,16 +774,13 @@ class Script(scripts.Script):
                 #print(component_name, component_type)
                 if component is None:
                     log_error(f"The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist, no longer exists (if you updated an extension), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name} or just delete it so it resets to defaults). This extension will not work until this issue is resolved.")
-                    if component_name in self.optional_ids: # Remove component from roster.
-                        pass
-                    else:
-                        if "controlnet_control_mod_radio" in component_name:
-                            # 5/26/2023 special error message for ControlNet users letting them know their config file has been automatically updated
-                            # https://github.com/Mikubill/sd-webui-controlnet/commit/0d1c252cad9c37a75e839d52f9ea8207adb8aa46
-                            replace_text_in_file("controlnet_control_mod_radio", "controlnet_control_mode_radio", custom_tracked_components_config_file_name)
-                            log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
+                    if "controlnet_control_mod_radio" in component_name:
+                        # 5/26/2023 special error message for ControlNet users letting them know their config file has been automatically updated
+                        # https://github.com/Mikubill/sd-webui-controlnet/commit/0d1c252cad9c37a75e839d52f9ea8207adb8aa46
+                        replace_text_in_file("controlnet_control_mod_radio", "controlnet_control_mode_radio", custom_tracked_components_config_file_name)
+                        log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
 
-                        return
+                    return
 
             # Mark components with type "index" to be transform
             index_type_components = []

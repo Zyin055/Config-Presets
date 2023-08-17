@@ -663,6 +663,7 @@ def get_config_preset_dropdown_choices(new_config_presets: list[str]) -> list[st
         new_choices.extend(new_config_presets)
     return new_choices
 
+
 def dict_synonyms(d, lsyn):
     """Adds synonyms to keys in a given dictionary.
     
@@ -679,6 +680,7 @@ def dict_synonyms(d, lsyn):
           if existing_key in d and key not in d} # Only if the key doesn't exist already.
     d2.update(d) # Add back all existing keys.
     return d2
+
 
 class Script(scripts.Script):
 
@@ -736,12 +738,12 @@ class Script(scripts.Script):
         ]
         self.img2img_component_ids += img2img_custom_tracked_components_ids # add the custom tracked components
 
-        # SBM Optional ids don't crash the extension if no associated component is found.
+        # Optional IDs don't crash the extension if no associated component is found.
         # These could be legacy IDs from older versions of the Web UI/extensions, or IDs from another UI (Vlad's SD.Next).
         self.txt2img_optional_ids = [
             # "txt2img_hr_upscaler", # Moved around but still exists in known UIs.
-            "txt2img_hires_steps", # Replaced in vlad's UI.
-            "txt2img_enable_hr", # Replaced in vlad's UI.
+            "txt2img_hires_steps", # Replaced in Vlad's SD.Next
+            "txt2img_enable_hr", # Replaced in Vlad's SD.Next
 
             # IDs below are only in Vlad's SD.Next UI:
             "txt2img_sampling_alt",
@@ -768,7 +770,7 @@ class Script(scripts.Script):
             "controlnet_control_mode_radio",
         ]
 
-        # SBM Synonymous IDs are interchangeable at load time.
+        # Synonymous IDs are interchangeable at load time.
         self.synonym_ids = [
             ("txt2img_hires_steps", "txt2img_steps_alt"),                       # Vlad's SD.Next Hires fix steps
             ("txt2img_enable_hr", "txt2img_show_second_pass"),                  # Vlad's SD.Next Hires fix enable
@@ -799,7 +801,7 @@ class Script(scripts.Script):
         config_file_name = None
         custom_tracked_components_config_file_name = None
         optional_ids = None
-        synonym_ids = self.synonym_ids # SBM
+        synonym_ids = self.synonym_ids
         if self.is_txt2img:
             component_map = self.txt2img_component_map
             component_ids = self.txt2img_component_ids
@@ -828,20 +830,22 @@ class Script(scripts.Script):
             #print("Creating dropdown values...")
             #print("key/value pairs in component_map:")
             # before we create the dropdown, we need to check if each component was found successfully to prevent errors from bricking the Web UI
-            # SBM Cleanse missing optional components.
-            component_map = {k:v for k,v in component_map.items() if v is not None or k not in optional_ids}
+            component_map = {k:v for k,v in component_map.items() if v is not None or k not in optional_ids}    # Cleanse missing optional components with optional_ids
             component_ids = [k for k in component_ids if k in component_map]
+
             for component_name, component in component_map.items():
                 #print(component_name, component_type)
                 if component is None:
                     log_error(f"The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist, no longer exists (if you updated an extension), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name} or just delete it so it resets to defaults). This extension will not work until this issue is resolved.")
-                    if "controlnet_control_mod_radio" in component_name:
-                        # 5/26/2023 special error message for ControlNet users letting them know their config file has been automatically updated
-                        # https://github.com/Mikubill/sd-webui-controlnet/commit/0d1c252cad9c37a75e839d52f9ea8207adb8aa46
-                        replace_text_in_file("controlnet_control_mod_radio", "controlnet_control_mode_radio", custom_tracked_components_config_file_name)
-                        log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
 
-                    return
+                    # this block is redundant after adding "controlnet_control_mod_radio" into optional_ids
+                    # if "controlnet_control_mod_radio" in component_name:
+                    #     # 5/26/2023 special error message for ControlNet users letting them know their config file has been automatically updated
+                    #     # https://github.com/Mikubill/sd-webui-controlnet/commit/0d1c252cad9c37a75e839d52f9ea8207adb8aa46
+                    #     replace_text_in_file("controlnet_control_mod_radio", "controlnet_control_mode_radio", custom_tracked_components_config_file_name)
+                    #     log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
+                    #
+                    # return
 
             # Mark components with type "index" to be transform
             index_type_components = []
@@ -878,7 +882,7 @@ class Script(scripts.Script):
 
                         def config_preset_dropdown_change(dropdown_value, *components_value):
                             config_preset = config_presets[dropdown_value]
-                            config_preset = dict_synonyms(config_preset, synonym_ids) # SBM Add synonyms.
+                            config_preset = dict_synonyms(config_preset, synonym_ids) # Add synonyms
                             print(f"[Config-Presets] Changed to: {dropdown_value}")
 
                             # update component values with user preset

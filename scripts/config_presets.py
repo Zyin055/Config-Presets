@@ -768,8 +768,8 @@ class Script(scripts.Script):
             #print("key/value pairs in component_map:")
             # before we create the dropdown, we need to check if each component was found successfully to prevent errors from bricking the Web UI
             # SBM Cleanse missing optional components.
-            component_map = {k:v for k,v in component_map.items() if v is not None or k not in component_map}
-            component_ids = list(component_map.keys())
+            component_map = {k:v for k,v in component_map.items() if v is not None or k not in self.optional_ids}
+            component_ids = [k for k in component_ids if k in component_map]
             for component_name, component in component_map.items():
                 #print(component_name, component_type)
                 if component is None:

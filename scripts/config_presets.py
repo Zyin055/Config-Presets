@@ -691,6 +691,7 @@ class Script(scripts.Script):
             "txt2img_cfg_scale",
             "txt2img_sampling_alt", # Equiv to hr_upscaler.
             "txt2img_steps_alt", # Equiv to hires_steps.
+            "txt2img_show_second_pass", # Replaces enable_hr in vlad's.
         ]
         self.txt2img_component_ids += txt2img_custom_tracked_components_ids # add the custom tracked components
 
@@ -713,7 +714,8 @@ class Script(scripts.Script):
             "txt2img_hires_steps",
             "txt2img_sampling_alt",
             "txt2img_steps_alt",
-            "txt2img_enable_hr", # CONT: Need to see which one this is mapped to.
+            "txt2img_enable_hr",
+            "txt2img_show_second_pass",
         ]
         
         # Mapping between component labels and the actual components in ui.py

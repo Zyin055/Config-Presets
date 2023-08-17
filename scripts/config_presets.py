@@ -765,9 +765,9 @@ class Script(scripts.Script):
             #print("Creating dropdown values...")
             #print("key/value pairs in component_map:")
             # before we create the dropdown, we need to check if each component was found successfully to prevent errors from bricking the Web UI
-            # SBM Cleanse optional components.
-            component_map2 = dict()
-            component_ids2 = [] # Might instead just use list(component_map.keys())?
+            # SBM Cleanse missing optional components.
+            component_map = {k:v for k,v in component_map.items() if v is not None or k not in component_map}
+            component_ids = list(component_map.keys())
             for component_name, component in component_map.items():
                 #print(component_name, component_type)
                 if component is None:
@@ -782,11 +782,6 @@ class Script(scripts.Script):
                             log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
 
                         return
-                else:
-                    component_map2[component_name] = component
-                    component_ids2.append(component_name)
-            component_map = component_map2
-            component_ids = component_ids2
 
             # Mark components with type "index" to be transform
             index_type_components = []

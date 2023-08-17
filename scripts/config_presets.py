@@ -750,6 +750,8 @@ class Script(scripts.Script):
             "img2img_show_batch",
             "img2img_show_denoise",
             "img2img_show_advanced",
+            "controlnet_control_mod_radio",
+            "controlnet_control_mode_radio",
         ]
         # SBM Synonymous ids are interchangeable at load time.
         self.synonym_ids = [

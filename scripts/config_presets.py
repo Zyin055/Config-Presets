@@ -706,7 +706,7 @@ class Script(scripts.Script):
             "txt2img_denoising_strength",
             "txt2img_cfg_scale",
 
-            # IDs below are only in Vlad's SD.Next UI (they must also be added to self.optional_ids):
+            # IDs below are only in Vlad's SD.Next UI (they must also be added to self.txt2img_optional_ids):
             "txt2img_sampling_alt", # Equiv to txt2img_hr_upscaler
             "txt2img_steps_alt", # Equiv to txt2img_hires_steps
             "txt2img_show_batch",
@@ -727,7 +727,7 @@ class Script(scripts.Script):
             "img2img_denoising_strength",
             "img2img_restore_faces",
 
-            # IDs below are only in Vlad's SD.Next UI (they must also be added to self.optional_ids):
+            # IDs below are only in Vlad's SD.Next UI (they must also be added to self.img2img_optional_ids):
             "img2img_show_seed",
             "img2img_show_resize",
             "img2img_show_batch",
@@ -737,11 +737,11 @@ class Script(scripts.Script):
         self.img2img_component_ids += img2img_custom_tracked_components_ids # add the custom tracked components
 
         # SBM Optional ids don't crash the extension if no associated component is found.
-        # These could be legacy IDs from older versions of the Web UI/extensions, or IDs from Vlad's SD.Next UI.
-        self.optional_ids = [
-            "txt2img_hr_upscaler",
-            "txt2img_hires_steps",
-            "txt2img_enable_hr",
+        # These could be legacy IDs from older versions of the Web UI/extensions, or IDs from another UI (Vlad's SD.Next).
+        self.txt2img_optional_ids = [
+            # "txt2img_hr_upscaler", # Moved around but still exists in known UIs.
+            "txt2img_hires_steps", # Replaced in vlad's UI.
+            "txt2img_enable_hr", # Replaced in vlad's UI.
 
             # IDs below are only in Vlad's SD.Next UI:
             "txt2img_sampling_alt",
@@ -750,6 +750,13 @@ class Script(scripts.Script):
             "txt2img_show_seed",
             "txt2img_show_advanced", 
             "txt2img_show_second_pass",
+
+            # IDs below are only for extensions:
+            "controlnet_control_mod_radio",
+            "controlnet_control_mode_radio",
+        ]
+        self.img2img_optional_ids = [
+            # IDs below are only in Vlad's SD.Next UI:
             "img2img_show_seed",
             "img2img_show_resize",
             "img2img_show_batch",
@@ -791,17 +798,20 @@ class Script(scripts.Script):
         component_ids = None
         config_file_name = None
         custom_tracked_components_config_file_name = None
+        optional_ids = None
         synonym_ids = self.synonym_ids # SBM
         if self.is_txt2img:
             component_map = self.txt2img_component_map
             component_ids = self.txt2img_component_ids
             config_file_name = CONFIG_TXT2IMG_FILE_NAME
             custom_tracked_components_config_file_name = CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME
+            optional_ids = self.txt2img_optional_ids
         else:
             component_map = self.img2img_component_map
             component_ids = self.img2img_component_ids
             config_file_name = CONFIG_IMG2IMG_FILE_NAME
             custom_tracked_components_config_file_name = CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME
+            optional_ids = self.img2img_optional_ids
 
         #if component.label in self.component_map:
         if component.elem_id in component_map:
@@ -819,7 +829,7 @@ class Script(scripts.Script):
             #print("key/value pairs in component_map:")
             # before we create the dropdown, we need to check if each component was found successfully to prevent errors from bricking the Web UI
             # SBM Cleanse missing optional components.
-            component_map = {k:v for k,v in component_map.items() if v is not None or k not in self.optional_ids}
+            component_map = {k:v for k,v in component_map.items() if v is not None or k not in optional_ids}
             component_ids = [k for k in component_ids if k in component_map]
             for component_name, component in component_map.items():
                 #print(component_name, component_type)

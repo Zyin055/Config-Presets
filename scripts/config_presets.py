@@ -844,8 +844,8 @@ class Script(scripts.Script):
                     #     # https://github.com/Mikubill/sd-webui-controlnet/commit/0d1c252cad9c37a75e839d52f9ea8207adb8aa46
                     #     replace_text_in_file("controlnet_control_mod_radio", "controlnet_control_mode_radio", custom_tracked_components_config_file_name)
                     #     log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
-                    #
-                    # return
+                    
+                    return
 
             # Mark components with type "index" to be transform
             index_type_components = []

@@ -689,7 +689,7 @@ class Script(scripts.Script):
         txt2img_custom_tracked_components_ids = load_txt2img_custom_tracked_component_ids()
         img2img_custom_tracked_components_ids = load_img2img_custom_tracked_component_ids()
 
-        # SBM Vlad workaround - components made optional.
+
         # These are the settings from the UI that are saved for each preset
         self.txt2img_component_ids = [
             "txt2img_sampling",
@@ -705,13 +705,14 @@ class Script(scripts.Script):
             "txt2img_hires_steps",
             "txt2img_denoising_strength",
             "txt2img_cfg_scale",
-            "txt2img_sampling_alt", # Equiv to hr_upscaler.
-            "txt2img_steps_alt", # Equiv to hires_steps.
-            # Vlad's new toggleable interface.
+
+            # IDs below are only in Vlad's SD.Next UI (they must also be added to self.optional_ids):
+            "txt2img_sampling_alt", # Equiv to txt2img_hr_upscaler
+            "txt2img_steps_alt", # Equiv to txt2img_hires_steps
             "txt2img_show_batch",
             "txt2img_show_seed",
             "txt2img_show_advanced", 
-            "txt2img_show_second_pass", # Replaces enable_hr in vlad's.
+            "txt2img_show_second_pass", # Replaces txt2img_enable_hr in Vlad's
         ]
         self.txt2img_component_ids += txt2img_custom_tracked_components_ids # add the custom tracked components
 
@@ -725,7 +726,8 @@ class Script(scripts.Script):
             "img2img_cfg_scale",
             "img2img_denoising_strength",
             "img2img_restore_faces",
-            # Vlad's new toggleable interface.
+
+            # IDs below are only in Vlad's SD.Next UI (they must also be added to self.optional_ids):
             "img2img_show_seed",
             "img2img_show_resize",
             "img2img_show_batch",
@@ -735,12 +737,15 @@ class Script(scripts.Script):
         self.img2img_component_ids += img2img_custom_tracked_components_ids # add the custom tracked components
 
         # SBM Optional ids don't crash the extension if no associated component is found.
+        # These could be legacy IDs from older versions of the Web UI/extensions, or IDs from Vlad's SD.Next UI.
         self.optional_ids = [
             "txt2img_hr_upscaler",
             "txt2img_hires_steps",
+            "txt2img_enable_hr",
+
+            # IDs below are only in Vlad's SD.Next UI:
             "txt2img_sampling_alt",
             "txt2img_steps_alt",
-            "txt2img_enable_hr",
             "txt2img_show_batch",
             "txt2img_show_seed",
             "txt2img_show_advanced", 
@@ -750,14 +755,17 @@ class Script(scripts.Script):
             "img2img_show_batch",
             "img2img_show_denoise",
             "img2img_show_advanced",
+
+            # IDs below are only for extensions:
             "controlnet_control_mod_radio",
             "controlnet_control_mode_radio",
         ]
-        # SBM Synonymous ids are interchangeable at load time.
+
+        # SBM Synonymous IDs are interchangeable at load time.
         self.synonym_ids = [
-        ("txt2img_hires_steps", "txt2img_steps_alt"),
-        ("txt2img_enable_hr", "txt2img_show_second_pass"),
-        ("controlnet_control_mod_radio", "controlnet_control_mode_radio"), # Component renamed on 5/26/2023 due to typo.
+            ("txt2img_hires_steps", "txt2img_steps_alt"),                       # Vlad's SD.Next Hires fix steps
+            ("txt2img_enable_hr", "txt2img_show_second_pass"),                  # Vlad's SD.Next Hires fix enable
+            ("controlnet_control_mod_radio", "controlnet_control_mode_radio"),  # ControlNet component renamed on 5/26/2023 due to typo.
         ]
         
         # Mapping between component labels and the actual components in ui.py

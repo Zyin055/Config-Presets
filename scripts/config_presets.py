@@ -664,6 +664,24 @@ def get_config_preset_dropdown_choices(new_config_presets: list[str]) -> list[st
     return new_choices
 
 
+def dict_synonyms(d, lsyn):
+    """Adds synonyms to keys in a given dictionary.
+    
+    lsyn = [(key1,key2..), (key3,key4..) ...]
+    Key2 will receive the value of key1 if it exists and vice versa.
+    If both key3 and key4 exist, then they'll keep their old values.
+    If two keys have values and a third doesn't, then it will be assigned to one of the two randomly.
+    One liner partly written by a chatbot.
+    """
+    d2 = {key: d[existing_key] # Get existing value.
+          for syn in lsyn # Loop over synonyms.
+          for key in syn # Loop over each key in the set.
+          for existing_key in syn  # Find existing key to copy from.
+          if existing_key in d and key not in d} # Only if the key doesn't exist already.
+    d2.update(d) # Add back all existing keys.
+    return d2
+
+
 class Script(scripts.Script):
 
     def __init__(self, *args, **kwargs):
@@ -672,6 +690,7 @@ class Script(scripts.Script):
         # Load custom tracked components
         txt2img_custom_tracked_components_ids = load_txt2img_custom_tracked_component_ids()
         img2img_custom_tracked_components_ids = load_img2img_custom_tracked_component_ids()
+
 
         # These are the settings from the UI that are saved for each preset
         self.txt2img_component_ids = [
@@ -688,6 +707,14 @@ class Script(scripts.Script):
             "txt2img_hires_steps",
             "txt2img_denoising_strength",
             "txt2img_cfg_scale",
+
+            # IDs below are only in Vlad's SD.Next UI (they must also be added to self.txt2img_optional_ids):
+            "txt2img_sampling_alt", # Equiv to txt2img_hr_upscaler
+            "txt2img_steps_alt", # Equiv to txt2img_hires_steps
+            "txt2img_show_batch",
+            "txt2img_show_seed",
+            "txt2img_show_advanced", 
+            "txt2img_show_second_pass", # Replaces txt2img_enable_hr in Vlad's
         ]
         self.txt2img_component_ids += txt2img_custom_tracked_components_ids # add the custom tracked components
 
@@ -701,9 +728,55 @@ class Script(scripts.Script):
             "img2img_cfg_scale",
             "img2img_denoising_strength",
             "img2img_restore_faces",
+
+            # IDs below are only in Vlad's SD.Next UI (they must also be added to self.img2img_optional_ids):
+            "img2img_show_seed",
+            "img2img_show_resize",
+            "img2img_show_batch",
+            "img2img_show_denoise",
+            "img2img_show_advanced",
         ]
         self.img2img_component_ids += img2img_custom_tracked_components_ids # add the custom tracked components
 
+        # Optional IDs don't crash the extension if no associated component is found.
+        # These could be legacy IDs from older versions of the Web UI/extensions, or IDs from another UI (Vlad's SD.Next).
+        self.txt2img_optional_ids = [
+            # "txt2img_hr_upscaler", # Moved around but still exists in known UIs.
+            "txt2img_hires_steps", # Replaced in Vlad's SD.Next
+            "txt2img_enable_hr", # Replaced in Vlad's SD.Next
+
+            # IDs below are only in Vlad's SD.Next UI:
+            "txt2img_sampling_alt",
+            "txt2img_steps_alt",
+            "txt2img_show_batch",
+            "txt2img_show_seed",
+            "txt2img_show_advanced", 
+            "txt2img_show_second_pass",
+
+            # IDs below are only for extensions:
+            "controlnet_control_mod_radio",
+            "controlnet_control_mode_radio",
+        ]
+        self.img2img_optional_ids = [
+            # IDs below are only in Vlad's SD.Next UI:
+            "img2img_show_seed",
+            "img2img_show_resize",
+            "img2img_show_batch",
+            "img2img_show_denoise",
+            "img2img_show_advanced",
+
+            # IDs below are only for extensions:
+            "controlnet_control_mod_radio",
+            "controlnet_control_mode_radio",
+        ]
+
+        # Synonymous IDs are interchangeable at load time.
+        self.synonym_ids = [
+            ("txt2img_hires_steps", "txt2img_steps_alt"),                       # Vlad's SD.Next Hires fix steps
+            ("txt2img_enable_hr", "txt2img_show_second_pass"),                  # Vlad's SD.Next Hires fix enable
+            ("controlnet_control_mod_radio", "controlnet_control_mode_radio"),  # ControlNet component renamed on 5/26/2023 due to typo.
+        ]
+        
         # Mapping between component labels and the actual components in ui.py
         self.txt2img_component_map = {k: None for k in self.txt2img_component_ids}  # gets filled up in the after_component() method
         self.img2img_component_map = {k: None for k in self.img2img_component_ids}  # gets filled up in the after_component() method
@@ -727,16 +800,20 @@ class Script(scripts.Script):
         component_ids = None
         config_file_name = None
         custom_tracked_components_config_file_name = None
+        optional_ids = None
+        synonym_ids = self.synonym_ids
         if self.is_txt2img:
             component_map = self.txt2img_component_map
             component_ids = self.txt2img_component_ids
             config_file_name = CONFIG_TXT2IMG_FILE_NAME
             custom_tracked_components_config_file_name = CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME
+            optional_ids = self.txt2img_optional_ids
         else:
             component_map = self.img2img_component_map
             component_ids = self.img2img_component_ids
             config_file_name = CONFIG_IMG2IMG_FILE_NAME
             custom_tracked_components_config_file_name = CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME
+            optional_ids = self.img2img_optional_ids
 
         #if component.label in self.component_map:
         if component.elem_id in component_map:
@@ -753,17 +830,21 @@ class Script(scripts.Script):
             #print("Creating dropdown values...")
             #print("key/value pairs in component_map:")
             # before we create the dropdown, we need to check if each component was found successfully to prevent errors from bricking the Web UI
+            component_map = {k:v for k,v in component_map.items() if v is not None or k not in optional_ids}    # Cleanse missing optional components with optional_ids
+            component_ids = [k for k in component_ids if k in component_map]
+
             for component_name, component in component_map.items():
                 #print(component_name, component_type)
                 if component is None:
                     log_error(f"The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist, no longer exists (if you updated an extension), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name} or just delete it so it resets to defaults). This extension will not work until this issue is resolved.")
 
-                    if "controlnet_control_mod_radio" in component_name:
-                        # 5/26/2023 special error message for ControlNet users letting them know their config file has been automatically updated
-                        # https://github.com/Mikubill/sd-webui-controlnet/commit/0d1c252cad9c37a75e839d52f9ea8207adb8aa46
-                        replace_text_in_file("controlnet_control_mod_radio", "controlnet_control_mode_radio", custom_tracked_components_config_file_name)
-                        log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
-
+                    # this block is redundant after adding "controlnet_control_mod_radio" into optional_ids
+                    # if "controlnet_control_mod_radio" in component_name:
+                    #     # 5/26/2023 special error message for ControlNet users letting them know their config file has been automatically updated
+                    #     # https://github.com/Mikubill/sd-webui-controlnet/commit/0d1c252cad9c37a75e839d52f9ea8207adb8aa46
+                    #     replace_text_in_file("controlnet_control_mod_radio", "controlnet_control_mode_radio", custom_tracked_components_config_file_name)
+                    #     log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
+                    
                     return
 
             # Mark components with type "index" to be transform
@@ -801,6 +882,7 @@ class Script(scripts.Script):
 
                         def config_preset_dropdown_change(dropdown_value, *components_value):
                             config_preset = config_presets[dropdown_value]
+                            config_preset = dict_synonyms(config_preset, synonym_ids) # Add synonyms
                             print(f"[Config-Presets] Changed to: {dropdown_value}")
 
                             # update component values with user preset

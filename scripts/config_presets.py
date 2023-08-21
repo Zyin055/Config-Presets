@@ -54,12 +54,12 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #script_list
 
 # X/Y/Z plot (script):
-#script_txt2txt_xyz_plot_x_type
-#script_txt2txt_xyz_plot_y_type
-#script_txt2txt_xyz_plot_z_type
-#script_txt2txt_xyz_plot_x_values
-#script_txt2txt_xyz_plot_y_values
-#script_txt2txt_xyz_plot_z_values
+#script_txt2img_xyz_plot_x_type
+#script_txt2img_xyz_plot_y_type
+#script_txt2img_xyz_plot_z_type
+#script_txt2img_xyz_plot_x_values
+#script_txt2img_xyz_plot_y_values
+#script_txt2img_xyz_plot_z_values
 
 # Latent Couple (extension):
 #cd_txt2img_divisions

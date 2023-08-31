@@ -494,6 +494,11 @@ def load_txt2img_config_file():
     except FileNotFoundError:
         # txt2img config file not found
         # First time running the extension or it was deleted, so fill it with default values
+
+        # Note: "txt2img_enable_hr" was changed to "txt2img_hr-checkbox" in A1111 1.6.0 (8/31/2023), but we keep it
+        # as "txt2img_enable_hr" in the config file so that newer version of Config Presets will work with older
+        # versions of A1111. This is handled at run time with synonyms.
+
         txt2img_config_presets = {
             "None": {},
             "SD 1.5 - 512x512": {
@@ -507,6 +512,11 @@ def load_txt2img_config_file():
             "SDXL --- 1024x1024": {
                 "txt2img_width": 1024,
                 "txt2img_height": 1024,
+            },
+            "SDXL --- 1024x1024 with Refiner": {
+                "txt2img_width": 1024,
+                "txt2img_height": 1024,
+                "txt2img_enable-checkbox": True,
             },
             "Low quality ------ steps: 10, batch size: 8, DPM++ 2M Karras": {
                 "txt2img_sampling": "DPM++ 2M Karras",
@@ -701,12 +711,15 @@ class Script(scripts.Script):
             "txt2img_batch_count",
             "txt2img_batch_size",
             "txt2img_restore_faces",
-            "txt2img_enable_hr",
+            "txt2img_enable_hr",        # removed in A1111 1.6.0
+            "txt2img_hr-checkbox",      # added in A1111 1.6.0
             "txt2img_hr_scale",
             "txt2img_hr_upscaler",
             "txt2img_hires_steps",
             "txt2img_denoising_strength",
             "txt2img_cfg_scale",
+            "txt2img_enable-checkbox",  # Refiner, added in A1111 1.6.0
+            "txt2img_switch_at",        # Refiner switch at, added in A1111 1.6.0
 
             # IDs below are only in Vlad's SD.Next UI (they must also be added to self.txt2img_optional_ids):
             "txt2img_sampling_alt", # Equiv to txt2img_hr_upscaler
@@ -728,6 +741,8 @@ class Script(scripts.Script):
             "img2img_cfg_scale",
             "img2img_denoising_strength",
             "img2img_restore_faces",
+            "img2img_enable-checkbox",  # Refiner, added in A1111 1.6.0
+            "img2img_switch_at",        # Refiner switch at, added in A1111 1.6.0
 
             # IDs below are only in Vlad's SD.Next UI (they must also be added to self.img2img_optional_ids):
             "img2img_show_seed",
@@ -741,9 +756,13 @@ class Script(scripts.Script):
         # Optional IDs don't crash the extension if no associated component is found.
         # These could be legacy IDs from older versions of the Web UI/extensions, or IDs from another UI (Vlad's SD.Next).
         self.txt2img_optional_ids = [
-            # "txt2img_hr_upscaler", # Moved around but still exists in known UIs.
-            "txt2img_hires_steps", # Replaced in Vlad's SD.Next
-            "txt2img_enable_hr", # Replaced in Vlad's SD.Next
+            "txt2img_restore_faces",    # removed in A1111 1.6.0
+            "txt2img_enable_hr",        # removed in A1111 1.6.0, and replaced in Vlad's SD.Next
+            "txt2img_hr-checkbox",      # added in A1111 1.6.0
+            "txt2img_enable-checkbox",  # added in A1111 1.6.0 (Refiner accordion)
+            "txt2img_switch_at",        # added in A1111 1.6.0 (Refiner Switch at)
+
+            "txt2img_hires_steps",      # Replaced in Vlad's SD.Next
 
             # IDs below are only in Vlad's SD.Next UI:
             "txt2img_sampling_alt",
@@ -758,6 +777,10 @@ class Script(scripts.Script):
             "controlnet_control_mode_radio",
         ]
         self.img2img_optional_ids = [
+            "img2img_restore_faces",    # removed in A1111 1.6.0
+            "img2img_enable-checkbox",  # added in A1111 1.6.0 (Refiner accordion)
+            "img2img_switch_at",        # added in A1111 1.6.0 (Refiner Switch at)
+
             # IDs below are only in Vlad's SD.Next UI:
             "img2img_show_seed",
             "img2img_show_resize",
@@ -775,6 +798,7 @@ class Script(scripts.Script):
             ("txt2img_hires_steps", "txt2img_steps_alt"),                       # Vlad's SD.Next Hires fix steps
             ("txt2img_enable_hr", "txt2img_show_second_pass"),                  # Vlad's SD.Next Hires fix enable
             ("controlnet_control_mod_radio", "controlnet_control_mode_radio"),  # ControlNet component renamed on 5/26/2023 due to typo.
+            ("txt2img_enable_hr", "txt2img_hr-checkbox"),                       # Automatic1111 1.6.0 changed ID for Hires fix checkbox
         ]
         
         # Mapping between component labels and the actual components in ui.py
@@ -829,25 +853,19 @@ class Script(scripts.Script):
 
             #print("Creating dropdown values...")
             #print("key/value pairs in component_map:")
+
             # before we create the dropdown, we need to check if each component was found successfully to prevent errors from bricking the Web UI
             component_map = {k:v for k,v in component_map.items() if v is not None or k not in optional_ids}    # Cleanse missing optional components with optional_ids
             component_ids = [k for k in component_ids if k in component_map]
 
+            # protect against None type components to prevent bricking the UI
+            # this check needs to happen after optional_ids are accounted for
             for component_name, component in component_map.items():
-                #print(component_name, component_type)
                 if component is None:
-                    log_error(f"The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, or you included a component ID in the custom tracked components config file that does not exist, no longer exists (if you updated an extension), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name} or just delete it so it resets to defaults). This extension will not work until this issue is resolved.")
-
-                    # this block is redundant after adding "controlnet_control_mod_radio" into optional_ids
-                    # if "controlnet_control_mod_radio" in component_name:
-                    #     # 5/26/2023 special error message for ControlNet users letting them know their config file has been automatically updated
-                    #     # https://github.com/Mikubill/sd-webui-controlnet/commit/0d1c252cad9c37a75e839d52f9ea8207adb8aa46
-                    #     replace_text_in_file("controlnet_control_mod_radio", "controlnet_control_mode_radio", custom_tracked_components_config_file_name)
-                    #     log(f"'{component_name}' is from an outdated version of the ControlNet extension. Your config file has been automatically fixed to replace it with the correct ID ('control_mode_radio'). Please reload the Web UI to load the fix.")
-                    
+                    log_error(f"The {'txt2img' if self.is_txt2img else 'img2img'} component '{component_name}' could not be processed. This may be because you are running an outdated version of the Config-Presets extension, you included a component ID in the custom tracked components config file that does not exist, it no longer exists (if you updated an extension or Automatic1111), or is an invalid component (if this is the case, you need to manually edit the config file at {BASEDIR}\\{custom_tracked_components_config_file_name} or just delete it so it resets to defaults). This extension will not work until this issue is resolved.")
                     return
 
-            # Mark components with type "index" to be transform
+            # Mark components with type "index" to be transformed
             index_type_components = []
             for component in component_map.values():
                 #print(component)
@@ -906,7 +924,6 @@ class Script(scripts.Script):
                             choices=get_config_preset_dropdown_choices(preset_values),
                             elem_id="config_preset_txt2img_dropdown" if self.is_txt2img else "config_preset_img2img_dropdown",
                         )
-                        config_preset_dropdown.style(container=False) #set to True to give it a white box to sit in
 
                         #self.txt2img_config_preset_dropdown = config_preset_dropdown
 
@@ -1107,10 +1124,9 @@ def save_config(config_presets, component_map, config_file_name):
 
             if component_map[component_id] is not None:
                 new_value = new_setting[i]  # this gives the index when the component is a dropdown
-                if component_id == "txt2img_sampling":
-                    new_setting_map[component_id] = modules.sd_samplers.samplers[new_value].name
-                elif component_id == "img2img_sampling":
-                    new_setting_map[component_id] = modules.sd_samplers.samplers_for_img2img[new_value].name
+
+                if component_id == "txt2img_sampling" or component_id == "img2img_sampling" or component_id == "hr_sampler":
+                    new_setting_map[component_id] = modules.sd_samplers.samplers_map[new_value.lower()]
                 else:
                     new_setting_map[component_id] = new_value
 

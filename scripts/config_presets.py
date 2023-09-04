@@ -913,6 +913,8 @@ class Script(scripts.Script):
                                 #print(component_name, component_value)
                                 if component_name in index_type_components and type(component_value) == int:
                                         current_components[component_name] = component_map[component_name].choices[component_value]
+                                        if type(current_components[component_name]) == tuple:
+                                            current_components[component_name] = current_components[component_name][0]
 
                             #print("Components after :", current_components)
                             

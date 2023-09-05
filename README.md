@@ -36,6 +36,8 @@ Screenshot of config-txt2img.json, which can be opened with the "Open config fil
     <summary>Click to view Changelog</summary>
     
 #### 8/31/2023
+* Fixed config presets that used radio button components not working
+#### 8/31/2023
 * Updated for Automatic1111 [v1.6.0](https://github.com/AUTOMATIC1111/stable-diffusion-webui/releases/tag/v1.6.0)
 * Added support for "Refiner" (txt2img_enable-checkbox) and "Switch at" (txt2img_switch_at) components for txt2img and img2img, which are used for SDXL Refiner models. The refiner checkpoint component is not supported.
 #### 5/15/2023

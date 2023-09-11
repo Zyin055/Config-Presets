@@ -478,6 +478,25 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #script_img2img_adetailer_ad_controlnet_weight_2nd
 #script_img2img_adetailer_ad_controlnet_guidance_start_2nd
 #script_img2img_adetailer_ad_controlnet_guidance_end_2nd
+
+# Ultimate SD Upscale
+#ultimateupscale_target_size_type
+#ultimateupscale_custom_width
+#ultimateupscale_custom_height
+#ultimateupscale_custom_scale
+#ultimateupscale_upscaler_index
+#ultimateupscale_redraw_mode
+#ultimateupscale_tile_width
+#ultimateupscale_tile_height
+#ultimateupscale_mask_blur
+#ultimateupscale_padding
+#ultimateupscale_seams_fix_type
+#ultimateupscale_seams_fix_denoise
+#ultimateupscale_seams_fix_width
+#ultimateupscale_seams_fix_mask_blur
+#ultimateupscale_seams_fix_padding
+#ultimateupscale_save_upscaled_image
+#ultimateupscale_save_seams_fix_image
 """
 
         write_text_to_file(img2img_custom_tracked_components_ids, CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)

@@ -933,6 +933,15 @@ class Script(scripts.Script):
                                 if component_name in index_type_components and type(component_value) == int:
                                         current_components[component_name] = component_map[component_name].choices[component_value]
 
+                                        # A1111 1.6.0 changed radio buttons values into tuples.
+                                        # For example, for the "img2img_mask_mode" component it changed from:
+                                        #   ['Inpaint masked', 'Inpaint not masked']
+                                        #   to
+                                        #   [('Inpaint masked', 'Inpaint masked'), ('Inpaint not masked', 'Inpaint not masked')]
+                                        # Using a type == tuple check here will ensure compatibility with the older versions.
+                                        if type(current_components[component_name]) == tuple:
+                                            current_components[component_name] = current_components[component_name][0]
+
                             #print("Components after :", current_components)
                             
                             return list(current_components.values())

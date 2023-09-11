@@ -910,14 +910,21 @@ class Script(scripts.Script):
                                                     show_label=True,
                                                     interactive=True,
                                                     elem_id="script_config_preset_fields_to_save",
+                                                    container=True,
                                                     ).unrender() #we need to define this early on so that it can be used as an input for another function
 
             with gr.Column(min_width=600, elem_id="config_preset_wrapper_txt2img" if self.is_txt2img else "config_preset_wrapper_img2img"):  # pushes our stuff onto a new row at 1080p screen resolution
+                with gr.Row():
+                    gr.Markdown("Config Presets")
                 with gr.Row():
                     with gr.Column(scale=8, min_width=100) as dropdown_column:
 
 
                         def config_preset_dropdown_change(dropdown_value, *components_value):
+                            if dropdown_value == "":
+                                print(f"[Config-Presets] No preset selected")
+                                return components_value
+                            
                             config_preset = config_presets[dropdown_value]
                             config_preset = dict_synonyms(config_preset, synonym_ids) # Add synonyms
                             print(f"[Config-Presets] Changed to: {dropdown_value}")
@@ -947,7 +954,7 @@ class Script(scripts.Script):
                             return list(current_components.values())
 
                         config_preset_dropdown = gr.Dropdown(
-                            label="Config Presets",
+                            show_label=False,
                             #choices=preset_values,
                             choices=get_config_preset_dropdown_choices(preset_values),
                             elem_id="config_preset_txt2img_dropdown" if self.is_txt2img else "config_preset_img2img_dropdown",
@@ -976,130 +983,147 @@ class Script(scripts.Script):
                         # )
                     with gr.Column(scale=8, min_width=100, visible=False) as collapsable_column:
                         with gr.Row():
-                            with gr.Column(scale=1, min_width=10):
+                            def delete_selected_preset(config_preset_name):
+                                if config_preset_name in config_presets.keys():
+                                    del config_presets[config_preset_name]
+                                    print(f'[Config-Presets] deleted: "{config_preset_name}"')
 
-                                def delete_selected_preset(config_preset_name):
-                                    if config_preset_name in config_presets.keys():
-                                        del config_presets[config_preset_name]
-                                        print(f'[Config-Presets] deleted: "{config_preset_name}"')
+                                    write_json_to_file(config_presets, config_file_name)
 
-                                        write_json_to_file(config_presets, config_file_name)
+                                    preset_keys = list(config_presets.keys())
+                                    return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1],
+                                                                #choices=preset_values,
+                                                                choices=get_config_preset_dropdown_choices(preset_keys),
+                                                                )
+                                return gr.Dropdown.update() # do nothing if no value is selected
 
-                                        preset_keys = list(config_presets.keys())
-                                        return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1],
-                                                                  #choices=preset_values,
-                                                                  choices=get_config_preset_dropdown_choices(preset_keys),
-                                                                  )
-                                    return gr.Dropdown.update() # do nothing if no value is selected
+                            trash_button = gr.Button(
+                                value="\U0001f5d1\ufe0f", #🗑
+                                elem_id="script_config_preset_trash_button",
+                                elem_classes="tool",
+                            )
+                            trash_button.click(
+                                fn=delete_selected_preset,
+                                inputs=[config_preset_dropdown],
+                                outputs=[config_preset_dropdown],
+                            )
 
-                                trash_button = gr.Button(
-                                    value="\U0001f5d1\ufe0f", #🗑
-                                    elem_id="script_config_preset_trash_button",
-                                )
-                                trash_button.click(
-                                    fn=delete_selected_preset,
-                                    inputs=[config_preset_dropdown],
-                                    outputs=[config_preset_dropdown],
-                                )
+                            def open_file(f):
+                                path = os.path.normpath(f)
 
-                            with gr.Column(scale=2, min_width=190):
-                                def open_file(f):
-                                    path = os.path.normpath(f)
+                                if not os.path.exists(path):
+                                    print(f'Config Presets: The file at "{path}" does not exist.')
+                                    return
 
-                                    if not os.path.exists(path):
-                                        print(f'Config Presets: The file at "{path}" does not exist.')
-                                        return
+                                # copied from ui.py:538
+                                if platform.system() == "Windows":
+                                    os.startfile(path)
+                                elif platform.system() == "Darwin":
+                                    sp.Popen(["open", path])
+                                else:
+                                    sp.Popen(["xdg-open", path])
 
-                                    # copied from ui.py:538
-                                    if platform.system() == "Windows":
-                                        os.startfile(path)
-                                    elif platform.system() == "Darwin":
-                                        sp.Popen(["open", path])
-                                    else:
-                                        sp.Popen(["xdg-open", path])
+                            open_config_file_button = gr.Button(
+                                value="📂 Open config file...",
+                                elem_id="script_config_preset_open_config_file_button",
+                                elem_classes="tool",
+                            )
+                            open_config_file_button.click(
+                                fn=lambda: open_file(f"{BASEDIR}/{config_file_name}"),
+                                inputs=[],
+                                outputs=[],
+                            )
 
-                                open_config_file_button = gr.Button(
-                                    value="📂 Open config file...",
-                                    elem_id="script_config_preset_open_config_file_button",
-                                )
-                                open_config_file_button.click(
-                                    fn=lambda: open_file(f"{BASEDIR}/{config_file_name}"),
-                                    inputs=[],
-                                    outputs=[],
-                                )
+                            cancel_button = gr.Button(
+                                value="Cancel",
+                                elem_id="script_config_preset_cancel_save_button",
+                                elem_classes="tool",
+                            )
 
-                            with gr.Column(scale=2, min_width=50):
-                                cancel_button = gr.Button(
-                                    value="Cancel",
-                                    elem_id="script_config_preset_cancel_save_button",
-                                )
-
-                    with gr.Column(scale=1, min_width=120, visible=True) as add_remove_button_column:
-                        add_remove_button = gr.Button(
-                            value="Add/Remove...",
-                            elem_id="script_config_preset_add_button",
-                        )
+                    with gr.Column(scale=4, min_width=120, visible=True) as add_remove_button_column:
+                        with gr.Row():
+                            reapply_button = gr.Button(
+                                value="\U000021A9",  # ↩
+                                elem_id="script_config_preset_reapply_button",
+                                elem_classes="tool",
+                            )
+                            components = list(component_map.values())
+                            reapply_button.click(
+                                fn=config_preset_dropdown_change,
+                                inputs=[config_preset_dropdown, *components],
+                                show_progress=False,
+                                outputs=components,
+                            )
+                            add_remove_button = gr.Button(
+                                value="Add/Remove...",
+                                elem_id="script_config_preset_add_button",
+                                elem_classes="tool",
+                            )
 
                 with gr.Row() as collapsable_row:
                     collapsable_row.visible = False
                     with gr.Column():
                         with gr.Row():
+                            gr.Markdown("New preset name")
+                        with gr.Row():
                             with gr.Column(scale=10, min_width=100):
                                 save_textbox = gr.Textbox(
-                                    label="New preset name",
+                                    show_label=False,
                                     placeholder="Ex: Low quality",
                                     # value="My Preset",
                                     max_lines=1,
                                     elem_id="script_config_preset_save_textbox",
                                 )
                             with gr.Column(scale=2, min_width=200):
-                                save_button = gr.Button(
-                                    # value="Create",
-                                    value="💾 Save",
-                                    variant="primary",
-                                    elem_id="script_config_preset_save_button",
-                                )
+                                with gr.Row():
+                                    save_button = gr.Button(
+                                        # value="Create",
+                                        value="💾 Save",
+                                        variant="primary",
+                                        elem_id="script_config_preset_save_button",
+                                        elem_classes="tool",
+                                    )
 
-                                save_button.click(
-                                    fn=save_config(config_presets, component_map, config_file_name),
-                                    inputs=list(
-                                        [save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
-                                                                                   component_ids if
-                                                                                   component_map[comp_name] is not None]),
-                                    outputs=[config_preset_dropdown, save_textbox],
-                                )
+                                    save_button.click(
+                                        fn=save_config(config_presets, component_map, config_file_name),
+                                        inputs=list(
+                                            [save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
+                                                                                    component_ids if
+                                                                                    component_map[comp_name] is not None]),
+                                        outputs=[config_preset_dropdown, save_textbox],
+                                    )
 
-                                def add_remove_button_click(save_textbox_text: str, config_preset_dropdown_value: str):
-                                    if save_textbox_text == "" or save_textbox_text is None:
-                                        if config_preset_dropdown_value != "" and config_preset_dropdown_value is not None:
-                                            # save textbox is empty, and we have a dropdown value selected
-                                            # auto-populate the save textbox so it's easier to overwrite existing config preset
-                                            return gr.Textbox.update(value=config_preset_dropdown_value)
-                                    return gr.Textbox.update()
+                                    def add_remove_button_click(save_textbox_text: str, config_preset_dropdown_value: str):
+                                        if save_textbox_text == "" or save_textbox_text is None:
+                                            if config_preset_dropdown_value != "" and config_preset_dropdown_value is not None:
+                                                # save textbox is empty, and we have a dropdown value selected
+                                                # auto-populate the save textbox so it's easier to overwrite existing config preset
+                                                return gr.Textbox.update(value=config_preset_dropdown_value)
+                                        return gr.Textbox.update()
 
 
-                                def expand_edit_ui():
-                                    return gr.update(visible=True), gr.update(visible=True), gr.update(visible=False)
+                                    def expand_edit_ui():
+                                        return gr.update(visible=True), gr.update(visible=True), gr.update(visible=False)
 
-                                def collapse_edit_ui():
-                                    return gr.update(visible=False), gr.update(visible=False), gr.update(visible=True)
+                                    def collapse_edit_ui():
+                                        return gr.update(visible=False), gr.update(visible=False), gr.update(visible=True)
 
-                                add_remove_button.click(
-                                    fn=add_remove_button_click,
-                                    inputs=[save_textbox, config_preset_dropdown],
-                                    outputs=[save_textbox],
-                                )
-                                add_remove_button.click(
-                                    fn=expand_edit_ui,
-                                    inputs=[],
-                                    outputs=[collapsable_column, collapsable_row, add_remove_button_column],
-                                )
+                                    add_remove_button.click(
+                                        fn=add_remove_button_click,
+                                        inputs=[save_textbox, config_preset_dropdown],
+                                        outputs=[save_textbox],
+                                    )
+                                    add_remove_button.click(
+                                        fn=expand_edit_ui,
+                                        inputs=[],
+                                        outputs=[collapsable_column, collapsable_row, add_remove_button_column],
+                                    )
 
-                                cancel_button.click(
-                                    fn=collapse_edit_ui,
-                                    inputs=[],
-                                    outputs=[collapsable_column, collapsable_row, add_remove_button_column],
-                                )
+                                    cancel_button.click(
+                                        fn=collapse_edit_ui,
+                                        inputs=[],
+                                        outputs=[collapsable_column, collapsable_row, add_remove_button_column],
+                                    )
 
                         with gr.Row():
                             fields_checkboxgroup.render()

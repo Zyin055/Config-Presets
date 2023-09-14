@@ -987,9 +987,9 @@ class Script(scripts.Script):
 
                                         preset_keys = list(config_presets.keys())
                                         return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1],
-                                                                    #choices=preset_values,
-                                                                    choices=get_config_preset_dropdown_choices(preset_keys),
-                                                                    )
+                                                                  #choices=preset_values,
+                                                                  choices=get_config_preset_dropdown_choices(preset_keys),
+                                                                  )
                                     return gr.Dropdown.update() # do nothing if no value is selected
 
                                 trash_button = gr.Button(
@@ -1076,8 +1076,8 @@ class Script(scripts.Script):
                                     fn=save_config(config_presets, component_map, config_file_name),
                                     inputs=list(
                                         [save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
-                                                                                component_ids if
-                                                                                component_map[comp_name] is not None]),
+                                                                                   component_ids if
+                                                                                   component_map[comp_name] is not None]),
                                     outputs=[config_preset_dropdown, save_textbox],
                                 )
 

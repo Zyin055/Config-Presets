@@ -35,6 +35,8 @@ Screenshot of config-txt2img.json, which can be opened with the "Open config fil
 <details>
     <summary>Click to view Changelog</summary>
     
+#### 9/16/2023
+* Added a Reapply button
 #### 9/04/2023
 * Fixed config presets that used radio button components not working
 #### 8/31/2023

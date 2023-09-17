@@ -1034,11 +1034,25 @@ class Script(scripts.Script):
                                     elem_id="script_config_preset_cancel_save_button",
                                 )
 
-                    with gr.Column(scale=1, min_width=120, visible=True) as add_remove_button_column:
-                        add_remove_button = gr.Button(
-                            value="Add/Remove...",
-                            elem_id="script_config_preset_add_button",
-                        )
+                    with gr.Column(scale=4, min_width=160, visible=True) as add_remove_button_column:
+                        with gr.Row():
+                            reapply_button = gr.Button(
+                                value="\U000021A9",  # ↩
+                                elem_id="script_config_preset_reapply_button",
+                                min_width=40,
+                            )
+                            components = list(component_map.values())
+                            reapply_button.click(
+                                fn=config_preset_dropdown_change,
+                                inputs=[config_preset_dropdown, *components],
+                                show_progress=False,
+                                outputs=components,
+                            )
+                            add_remove_button = gr.Button(
+                                value="Add/Remove...",
+                                elem_id="script_config_preset_add_button",
+                                min_width=120,
+                            )
 
                 with gr.Row() as collapsable_row:
                     collapsable_row.visible = False

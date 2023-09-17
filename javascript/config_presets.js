@@ -10,8 +10,8 @@ onUiUpdate(function() {
 	gradioApp().querySelectorAll("#script_config_preset_cancel_save_button").forEach(el => el.setAttribute("title", "Go back"))
 	gradioApp().querySelectorAll("#script_config_preset_trash_button").forEach(el => el.setAttribute("title", "Permanently delete selected preset"))
 	gradioApp().querySelectorAll("#script_config_preset_fields_to_save > span").forEach(el => el.setAttribute("title", "Only selected field values will be saved with the preset. Unselected fields will be ignored."))
-    gradioApp().querySelectorAll("#script_config_preset_open_custom_tracked_components_config").forEach(el => el.setAttribute("title", "Open the config file to add new fields to the above list."))
-
+	gradioApp().querySelectorAll("#script_config_preset_open_custom_tracked_components_config").forEach(el => el.setAttribute("title", "Open the config file to add new fields to the above list."))
+	gradioApp().querySelectorAll("#script_config_preset_reapply_button").forEach(el => el.setAttribute("title", "Reapply the selected preset"))
 })
 /* No longer needed after the bump to Gradio 3.23
 //this function called by config_preset_dropdown in config_presets.py

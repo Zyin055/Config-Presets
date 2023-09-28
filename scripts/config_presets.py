@@ -531,24 +531,24 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #umiai-ignore-folders
 
 # Animated Diff (extension)
-#ad-motion-module
-#ad-enable
-#ad-video-length
-#ad-fps
-#ad-loop-number
-#ad-closed-loop
-#ad-batch-size
-#ad-stride
-#ad-overlap
-#ad-save-format
-#ad-reverse
-#ad-interp-choice
-#ad-interp-x
-#ad-video-path
-#ad-latent-power
-#ad-latent-scale
-#ad-latent-power-last
-#ad-latent-scale-last
+#ad-img2img-motion-module
+#ad-img2img-enable
+#ad-img2img-video-length
+#ad-img2img-fps
+#ad-img2img-loop-number
+#ad-img2img-closed-loop
+#ad-img2img-batch-size
+#ad-img2img-stride
+#ad-img2img-overlap
+#ad-img2img-save-format
+#ad-img2img-reverse
+#ad-img2img-interp-choice
+#ad-img2img-interp-x
+#ad-img2img-video-path
+#ad-img2img-latent-power
+#ad-img2img-latent-scale
+#ad-img2img-latent-power-last
+#ad-img2img-latent-scale-last
 """
 
         write_text_to_file(img2img_custom_tracked_components_ids, CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)

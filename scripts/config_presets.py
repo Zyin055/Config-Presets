@@ -529,6 +529,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #umiai-verbose
 #umiai-negative-keywords
 #umiai-ignore-folders
+
 # Animated Diff (extension)
 #ad-motion-module
 #ad-enable

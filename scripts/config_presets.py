@@ -230,12 +230,12 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #script_txt2img_adetailer_ad_controlnet_guidance_end_2nd
 
 # Umi AI Embeds (extension)
-#umiai-static-wildcards
-#umiai-same-seed
-#umiai-cache-files
-#umiai-verbose
-#umiai-negative-keywords
-#umiai-ignore-folders
+#txt2img-umiai-static-wildcards
+#txt2img-umiai-same-seed
+#txt2img-umiai-cache-files
+#txt2img-umiai-verbose
+#txt2img-umiai-negative-keywords
+#txt2img-umiai-ignore-folders
 
 # Animated Diff (extension)
 #txt2img-ad-motion-module
@@ -523,12 +523,12 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #ultimateupscale_save_seams_fix_image
 
 # Umi AI Embeds (extension)
-#umiai-static-wildcards
-#umiai-same-seed
-#umiai-cache-files
-#umiai-verbose
-#umiai-negative-keywords
-#umiai-ignore-folders
+#img2img-umiai-static-wildcards
+#img2img-umiai-same-seed
+#img2img-umiai-cache-files
+#img2img-umiai-verbose
+#img2img-umiai-negative-keywords
+#img2img-umiai-ignore-folders
 
 # Animated Diff (extension)
 #img2img-ad-motion-module

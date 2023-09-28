@@ -228,6 +228,30 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #script_txt2img_adetailer_ad_controlnet_weight_2nd
 #script_txt2img_adetailer_ad_controlnet_guidance_start_2nd
 #script_txt2img_adetailer_ad_controlnet_guidance_end_2nd
+
+# Umi AI Embeds (extension)
+#umiai-static-wildcards
+#umiai-same-seed
+#umiai-cache-files
+#umiai-verbose
+#umiai-negative-keywords
+#umiai-ignore-folders
+
+# Animated Diff (extension)
+#ad-motion-module
+#ad-enable
+#ad-video-length
+#ad-fps
+#ad-loop-number
+#ad-closed-loop
+#ad-batch-size
+#ad-stride
+#ad-overlap
+#ad-save-format
+#ad-reverse
+#ad-interp-choice
+#ad-interp-x
+#ad-video-path
 """
 
         write_text_to_file(txt2img_custom_tracked_components_default_text, CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)
@@ -497,6 +521,33 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #ultimateupscale_seams_fix_padding
 #ultimateupscale_save_upscaled_image
 #ultimateupscale_save_seams_fix_image
+
+# Umi AI Embeds (extension)
+#umiai-static-wildcards
+#umiai-same-seed
+#umiai-cache-files
+#umiai-verbose
+#umiai-negative-keywords
+#umiai-ignore-folders
+# Animated Diff (extension)
+#ad-motion-module
+#ad-enable
+#ad-video-length
+#ad-fps
+#ad-loop-number
+#ad-closed-loop
+#ad-batch-size
+#ad-stride
+#ad-overlap
+#ad-save-format
+#ad-reverse
+#ad-interp-choice
+#ad-interp-x
+#ad-video-path
+#ad-latent-power
+#ad-latent-scale
+#ad-latent-power-last
+#ad-latent-scale-last
 """
 
         write_text_to_file(img2img_custom_tracked_components_ids, CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)

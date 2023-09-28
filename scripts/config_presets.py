@@ -238,20 +238,20 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #umiai-ignore-folders
 
 # Animated Diff (extension)
-#ad-motion-module
-#ad-enable
-#ad-video-length
-#ad-fps
-#ad-loop-number
-#ad-closed-loop
-#ad-batch-size
-#ad-stride
-#ad-overlap
-#ad-save-format
-#ad-reverse
-#ad-interp-choice
-#ad-interp-x
-#ad-video-path
+#txt2img-ad-motion-module
+#txt2img-ad-enable
+#txt2img-ad-video-length
+#txt2img-ad-fps
+#txt2img-ad-loop-number
+#txt2img-ad-closed-loop
+#txt2img-ad-batch-size
+#txt2img-ad-stride
+#txt2img-ad-overlap
+#txt2img-ad-save-format
+#txt2img-ad-reverse
+#txt2img-ad-interp-choice
+#txt2img-ad-interp-x
+#txt2img-ad-video-path
 """
 
         write_text_to_file(txt2img_custom_tracked_components_default_text, CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)
@@ -531,24 +531,24 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #umiai-ignore-folders
 
 # Animated Diff (extension)
-#ad-img2img-motion-module
-#ad-img2img-enable
-#ad-img2img-video-length
-#ad-img2img-fps
-#ad-img2img-loop-number
-#ad-img2img-closed-loop
-#ad-img2img-batch-size
-#ad-img2img-stride
-#ad-img2img-overlap
-#ad-img2img-save-format
-#ad-img2img-reverse
-#ad-img2img-interp-choice
-#ad-img2img-interp-x
-#ad-img2img-video-path
-#ad-img2img-latent-power
-#ad-img2img-latent-scale
-#ad-img2img-latent-power-last
-#ad-img2img-latent-scale-last
+#img2img-ad-motion-module
+#img2img-ad-enable
+#img2img-ad-video-length
+#img2img-ad-fps
+#img2img-ad-loop-number
+#img2img-ad-closed-loop
+#img2img-ad-batch-size
+#img2img-ad-stride
+#img2img-ad-overlap
+#img2img-ad-save-format
+#img2img-ad-reverse
+#img2img-ad-interp-choice
+#img2img-ad-interp-x
+#img2img-ad-video-path
+#img2img-ad-latent-power
+#img2img-ad-latent-scale
+#img2img-ad-latent-power-last
+#img2img-ad-latent-scale-last
 """
 
         write_text_to_file(img2img_custom_tracked_components_ids, CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME)

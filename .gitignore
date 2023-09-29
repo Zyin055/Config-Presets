@@ -5,3 +5,4 @@ config-img2img.json
 config-img2img-custom-tracked-components.txt
 config-txt2img.json
 config-txt2img-custom-tracked-components.txt
+*.pyc

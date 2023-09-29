@@ -1,5 +1,6 @@
-# tracked_components.py
-
+# Any line of text changed here will be added as a new line at the bottom of the user's *-custom-tracked-components.txt
+# config file (this means we cannot change the informational header at the top).
+# All entries here should be commented out with a # so that they are not enabled by default.
 txt2img_template_tracked_components_ids = [
     '''# Put custom txt2img tracked component IDs here. This will allow those fields to be saved as a config preset.
 # Lines starting with a # are ignored.
@@ -8,8 +9,8 @@ txt2img_template_tracked_components_ids = [
 # Note that components on the top row of the UI cannot be added here, such as "setting_sd_model_checkpoint", "setting_sd_vae", and "setting_CLIP_stop_at_last_layers".
 
 # Other fields:
-txt2img_prompt
-txt2img_neg_prompt
+#txt2img_prompt
+#txt2img_neg_prompt
 #txt2img_styles
 #txt2img_subseed_show
 #txt2img_subseed
@@ -453,12 +454,12 @@ img2img_controlnet_ControlNet-0_controlnet_model_dropdown
 #script_img2img_adetailer_ad_controlnet_guidance_start_2nd
 #script_img2img_adetailer_ad_controlnet_guidance_end_2nd
 
-# Ultimate SD Upscaler
-ultimateupscale_upscaler_index
-ultimateupscale_tile_width
-ultimateupscale_custom_scale
-ultimateupscale_seams_fix_type
-ultimateupscale_seams_fix_denoise
+# Ultimate SD Upscaler (extension)
+#ultimateupscale_upscaler_index
+#ultimateupscale_tile_width
+#ultimateupscale_custom_scale
+#ultimateupscale_seams_fix_type
+#ultimateupscale_seams_fix_denoise
 #ultimateupscale_target_size_type
 #ultimateupscale_custom_width
 #ultimateupscale_custom_height

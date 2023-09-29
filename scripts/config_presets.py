@@ -13,8 +13,10 @@ CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME = "config-txt2img-custom-trac
 CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME = "config-img2img-custom-tracked-components.txt"
 CONFIG_TXT2IMG_FILE_NAME = "config-txt2img.json"
 CONFIG_IMG2IMG_FILE_NAME = "config-img2img.json"
-TEMPLATE_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_PATH = f"{BASEDIR}/Tracked IDs Templates/Template-config-txt2img-custom-tracked-components.txt"
-TEMPLATE_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_PATH = f"{BASEDIR}/Tracked IDs Templates/Template-config-img2img-custom-tracked-components.txt"
+
+import sys
+sys.path.append(f"{BASEDIR}/Templates")
+import Tracked_components
 
 def remove_duplicates(file_path):
     with open(file_path, "r") as file:
@@ -45,10 +47,8 @@ def remove_extra_newlines(file_path):
 
 def load_txt2img_custom_tracked_component_ids() -> list[str]:
     txt2img_custom_tracked_components_ids = []
-    template_data_txt2img = []
+    template_data_txt2img = Tracked_components.txt2img_template_tracked_components_ids
     try:
-        with open(TEMPLATE_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_PATH, "r") as txt2img_template_file:
-            template_data_txt2img = txt2img_template_file.readlines()
 
         with open(f"{BASEDIR}/{CONFIG_TXT2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME}", "a+") as file:
             file.seek(0)
@@ -91,10 +91,8 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 
 def load_img2img_custom_tracked_component_ids() -> list[str]:
     img2img_custom_tracked_components_ids = []
-    img2img_template_data = []
+    img2img_template_data = Tracked_components.img2img_template_tracked_components_ids
     try:
-        with open(TEMPLATE_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_PATH, "r") as img2img_template_file:
-            img2img_template_data = img2img_template_file.readlines()
 
         with open(f"{BASEDIR}/{CONFIG_IMG2IMG_CUSTOM_TRACKED_COMPONENTS_FILE_NAME}", "a+") as file:
             file.seek(0)

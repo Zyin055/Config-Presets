@@ -245,3 +245,23 @@ ultimateupscale_seams_fix_denoise
 #ultimateupscale_seams_fix_padding
 #ultimateupscale_save_upscaled_image
 #ultimateupscale_save_seams_fix_image
+
+# Animated Diff (extension)
+#img2img-ad-motion-module
+#img2img-ad-enable
+#img2img-ad-video-length
+#img2img-ad-fps
+#img2img-ad-loop-number
+#img2img-ad-closed-loop
+#img2img-ad-batch-size
+#img2img-ad-stride
+#img2img-ad-overlap
+#img2img-ad-save-format
+#img2img-ad-reverse
+#img2img-ad-interp-choice
+#img2img-ad-interp-x
+#img2img-ad-video-path
+#img2img-ad-latent-power
+#img2img-ad-latent-scale
+#img2img-ad-latent-power-last
+#img2img-ad-latent-scale-last

@@ -198,3 +198,23 @@ script_txt2img_adetailer_ad_controlnet_weight
 #script_txt2img_adetailer_ad_controlnet_weight_2nd
 #script_txt2img_adetailer_ad_controlnet_guidance_start_2nd
 #script_txt2img_adetailer_ad_controlnet_guidance_end_2nd
+
+# Animated Diff (extension)
+#txt2img-ad-motion-module
+#txt2img-ad-enable
+#txt2img-ad-video-length
+#txt2img-ad-fps
+#txt2img-ad-loop-number
+#txt2img-ad-closed-loop
+#txt2img-ad-batch-size
+#txt2img-ad-stride
+#txt2img-ad-overlap
+#txt2img-ad-save-format
+#txt2img-ad-reverse
+#txt2img-ad-interp-choice
+#txt2img-ad-interp-x
+#txt2img-ad-video-path
+#txt2img-ad-latent-power
+#txt2img-ad-latent-scale
+#txt2img-ad-latent-power-last
+#txt2img-ad-latent-scale-last

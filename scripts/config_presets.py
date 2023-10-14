@@ -182,8 +182,8 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 # ADetailer - 1st tab - Inpainting
 #script_txt2img_adetailer_ad_mask_blur
 #script_txt2img_adetailer_ad_denoising_strength
-#script_txt2img_adetailer_ad_inpaint_full_res
-#script_txt2img_adetailer_ad_inpaint_full_res_padding
+#script_txt2img_adetailer_ad_inpaint_only_masked
+#script_txt2img_adetailer_ad_inpaint_only_masked_padding
 #script_txt2img_adetailer_ad_use_inpaint_width_height
 #script_txt2img_adetailer_ad_inpaint_width
 #script_txt2img_adetailer_ad_inpaint_height
@@ -818,6 +818,8 @@ class Script(scripts.Script):
             ("txt2img_enable_hr", "txt2img_show_second_pass"),                  # Vlad's SD.Next Hires fix enable
             ("controlnet_control_mod_radio", "controlnet_control_mode_radio"),  # ControlNet component renamed on 5/26/2023 due to typo.
             ("txt2img_enable_hr", "txt2img_hr-checkbox"),                       # Automatic1111 1.6.0 changed ID for Hires fix checkbox
+            ("script_txt2img_adetailer_ad_inpaint_full_res", "script_txt2img_adetailer_ad_inpaint_only_masked"),                  # ADetailer changed ID 6/04/2023 https://github.com/Bing-su/adetailer/commit/3702d196b35fc9f0bcb7fcfbc0aa8f8fea5fbcdf
+            ("script_txt2img_adetailer_ad_inpaint_full_res_padding", "script_txt2img_adetailer_ad_inpaint_only_masked_padding"),  # ADetailer changed ID 6/04/2023 https://github.com/Bing-su/adetailer/commit/3702d196b35fc9f0bcb7fcfbc0aa8f8fea5fbcdf
         ]
         
         # Mapping between component labels and the actual components in ui.py

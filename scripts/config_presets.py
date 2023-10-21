@@ -156,13 +156,13 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #MD-t2i-2-neg-prompt
 #MD-t2i-2-seed
 # Tiled Diffusion - Tiled VAE
-#tiledvae-t2i-enable
-#tiledvae-t2i-vae2gpu
-#tiledvae-t2i-enc-size
-#tiledvae-t2i-dec-size
-#tiledvae-t2i-fastenc
-#tiledvae-t2i-fastenc-colorfix
-#tiledvae-t2i-fastdec
+#MD-t2i-enable
+#MD-t2i-vae2gpu
+#MD-t2i-enc-size
+#MD-t2i-dec-size
+#MD-t2i-fastenc
+#MD-t2i-fastenc-colorfix
+#MD-t2i-fastdec
 
 # ADetailer (extension)
 #script_txt2img_adetailer_ad_enable
@@ -399,13 +399,13 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #MD-i2i-2-neg-prompt
 #MD-i2i-2-seed
 # Tiled Diffusion - Tiled VAE
-#tiledvae-i2i-enable
-#tiledvae-i2i-vae2gpu
-#tiledvae-i2i-enc-size
-#tiledvae-i2i-dec-size
-#tiledvae-i2i-fastenc
-#tiledvae-i2i-fastenc-colorfix
-#tiledvae-i2i-fastdec
+#MD-i2i-enable
+#MD-i2i-vae2gpu
+#MD-i2i-enc-size
+#MD-i2i-dec-size
+#MD-i2i-fastenc
+#MD-i2i-fastenc-colorfix
+#MD-i2i-fastdec
 
 # StableSR (extension)
 #SR Model does not have an ID as of June 1 2023
@@ -818,10 +818,32 @@ class Script(scripts.Script):
             ("txt2img_enable_hr", "txt2img_show_second_pass"),                  # Vlad's SD.Next Hires fix enable
             ("controlnet_control_mod_radio", "controlnet_control_mode_radio"),  # ControlNet component renamed on 5/26/2023 due to typo.
             ("txt2img_enable_hr", "txt2img_hr-checkbox"),                       # Automatic1111 1.6.0 changed ID for Hires fix checkbox
-            ("script_txt2img_adetailer_ad_inpaint_full_res", "script_txt2img_adetailer_ad_inpaint_only_masked"),                            # ADetailer changed ID 6/04/2023 https://github.com/Bing-su/adetailer/commit/3702d196b35fc9f0bcb7fcfbc0aa8f8fea5fbcdf
-            ("script_txt2img_adetailer_ad_inpaint_full_res_padding", "script_txt2img_adetailer_ad_inpaint_only_masked_padding"),            # ADetailer changed ID 6/04/2023
-            ("script_txt2img_adetailer_ad_inpaint_full_res_2nd", "script_txt2img_adetailer_ad_inpaint_only_masked_2nd"),                    # ADetailer changed ID 6/04/2023
-            ("script_txt2img_adetailer_ad_inpaint_full_res_padding_2nd", "script_txt2img_adetailer_ad_inpaint_only_masked_padding_2nd"),    # ADetailer changed ID 6/04/2023
+
+            # ADetailer changed IDs 6/04/2023
+                # https://github.com/Bing-su/adetailer/commit/3702d196b35fc9f0bcb7fcfbc0aa8f8fea5fbcdf
+            ("script_txt2img_adetailer_ad_inpaint_full_res", "script_txt2img_adetailer_ad_inpaint_only_masked"),
+            ("script_txt2img_adetailer_ad_inpaint_full_res_padding", "script_txt2img_adetailer_ad_inpaint_only_masked_padding"),
+            ("script_txt2img_adetailer_ad_inpaint_full_res_2nd", "script_txt2img_adetailer_ad_inpaint_only_masked_2nd"),
+            ("script_txt2img_adetailer_ad_inpaint_full_res_padding_2nd", "script_txt2img_adetailer_ad_inpaint_only_masked_padding_2nd"),
+
+            # multidiffusion-upscaler (Tiled Diffusion, Tiled VAE) changed IDs 5/25/2023
+                # https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111/commit/f54e190b13dcf0f975f174b7b9f20efb5eba4952
+                # https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111/commit/acc3666ee833b4b6dde05a38c22185d273aa067f
+                # https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111/commit/2473d6b005a516fb4bd51b331abd04b0289fdf07
+            ("tiledvae-t2i-enable", "MD-t2i-enable"),
+            ("tiledvae-t2i-vae2gpu", "MD-t2i-vae2gpu"),
+            ("tiledvae-t2i-enc-size", "MD-t2i-enc-size"),
+            ("tiledvae-t2i-dec-size", "MD-t2i-dec-size"),
+            ("tiledvae-t2i-fastenc", "MD-t2i-fastenc"),
+            ("tiledvae-t2i-fastenc-colorfix", "MD-t2i-fastenc-colorfix"),
+            ("tiledvae-t2i-fastdec", "MD-t2i-fastdec"),
+            ("tiledvae-i2i-enable", "MD-i2i-enable"),
+            ("tiledvae-i2i-vae2gpu", "MD-i2i-vae2gpu"),
+            ("tiledvae-i2i-enc-size", "MD-i2i-enc-size"),
+            ("tiledvae-i2i-dec-size", "MD-i2i-dec-size"),
+            ("tiledvae-i2i-fastenc", "MD-i2i-fastenc"),
+            ("tiledvae-i2i-fastenc-colorfix", "MD-i2i-fastenc-colorfix"),
+            ("tiledvae-i2i-fastdec", "MD-i2i-fastdec"),
         ]
         
         # Mapping between component labels and the actual components in ui.py

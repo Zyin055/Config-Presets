@@ -28,13 +28,14 @@ Screenshot of config-txt2img.json, which can be opened with the "Open config fil
 * Git clone this repo to the `extensions` folder in your Stable Diffusion installation
 
 ## Known bugs
-* Automatic1111 [v1.1.0](https://github.com/AUTOMATIC1111/stable-diffusion-webui/releases/tag/v1.1.0)+ causes dropdown change events to not occur. This affects components such as the script_list dropdown, XYZ plot dropdowns, and ControlNet model/preprocessor dropdowns, and likely others. The workaround is to manually reselect the value in the dropdown list.
-  * This is fixed in Automatic1111 [v1.4.0-RC](https://github.com/AUTOMATIC1111/stable-diffusion-webui/releases/tag/v1.4.0-RC). Gradio 3.32 seems to fix this issue
+* Unable to save multi-select fields, such as the XYZ script's checkpoint name and sampler fields
 
 ## Changelog
 <details>
     <summary>Click to view Changelog</summary>
     
+#### 11/18/2023
+* Fixed an issue when saving a dropdown field in Web UI versions before 1.6.0
 #### 9/16/2023
 * Added a Reapply button
 #### 9/04/2023

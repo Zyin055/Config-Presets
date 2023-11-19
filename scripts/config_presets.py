@@ -6,6 +6,7 @@ import json
 import os
 import platform
 import subprocess as sp
+from json import JSONDecodeError
 
 
 BASEDIR = scripts.basedir()     #C:\path\to\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
@@ -72,6 +73,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_controlnet_ControlNet-0_controlnet_low_vram_checkbox
 #txt2img_controlnet_ControlNet-0_controlnet_pixel_perfect_checkbox
 #txt2img_controlnet_ControlNet-0_controlnet_preprocessor_preview_checkbox
+#txt2img_controlnet_ControlNet-0_controlnet_type_filter_radio
 #txt2img_controlnet_ControlNet-0_controlnet_preprocessor_dropdown
 #txt2img_controlnet_ControlNet-0_controlnet_model_dropdown
 #txt2img_controlnet_ControlNet-0_controlnet_control_weight_slider
@@ -85,6 +87,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_controlnet_ControlNet-1_controlnet_low_vram_checkbox
 #txt2img_controlnet_ControlNet-1_controlnet_pixel_perfect_checkbox
 #txt2img_controlnet_ControlNet-1_controlnet_preprocessor_preview_checkbox
+#txt2img_controlnet_ControlNet-1_controlnet_type_filter_radio
 #txt2img_controlnet_ControlNet-1_controlnet_preprocessor_dropdown
 #txt2img_controlnet_ControlNet-1_controlnet_model_dropdown
 #txt2img_controlnet_ControlNet-1_controlnet_control_weight_slider
@@ -98,6 +101,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_controlnet_ControlNet-2_controlnet_low_vram_checkbox
 #txt2img_controlnet_ControlNet-2_controlnet_pixel_perfect_checkbox
 #txt2img_controlnet_ControlNet-2_controlnet_preprocessor_preview_checkbox
+#txt2img_controlnet_ControlNet-2_controlnet_type_filter_radio
 #txt2img_controlnet_ControlNet-2_controlnet_preprocessor_dropdown
 #txt2img_controlnet_ControlNet-2_controlnet_model_dropdown
 #txt2img_controlnet_ControlNet-2_controlnet_control_weight_slider
@@ -309,6 +313,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_controlnet_ControlNet-0_controlnet_low_vram_checkbox
 #img2img_controlnet_ControlNet-0_controlnet_pixel_perfect_checkbox
 #img2img_controlnet_ControlNet-0_controlnet_preprocessor_preview_checkbox
+#img2img_controlnet_ControlNet-0_controlnet_type_filter_radio
 #img2img_controlnet_ControlNet-0_controlnet_preprocessor_dropdown
 #img2img_controlnet_ControlNet-0_controlnet_model_dropdown
 #img2img_controlnet_ControlNet-0_controlnet_control_weight_slider
@@ -322,6 +327,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_controlnet_ControlNet-1_controlnet_low_vram_checkbox
 #img2img_controlnet_ControlNet-1_controlnet_pixel_perfect_checkbox
 #img2img_controlnet_ControlNet-1_controlnet_preprocessor_preview_checkbox
+#img2img_controlnet_ControlNet-1_controlnet_type_filter_radio
 #img2img_controlnet_ControlNet-1_controlnet_preprocessor_dropdown
 #img2img_controlnet_ControlNet-1_controlnet_model_dropdown
 #img2img_controlnet_ControlNet-1_controlnet_control_weight_slider
@@ -335,6 +341,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_controlnet_ControlNet-2_controlnet_low_vram_checkbox
 #img2img_controlnet_ControlNet-2_controlnet_pixel_perfect_checkbox
 #img2img_controlnet_ControlNet-2_controlnet_preprocessor_preview_checkbox
+#img2img_controlnet_ControlNet-2_controlnet_type_filter_radio
 #img2img_controlnet_ControlNet-2_controlnet_preprocessor_dropdown
 #img2img_controlnet_ControlNet-2_controlnet_model_dropdown
 #img2img_controlnet_ControlNet-2_controlnet_control_weight_slider
@@ -510,7 +517,7 @@ def load_txt2img_config_file():
         with open(f"{BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME}") as file:
             txt2img_config_presets = json.load(file)
 
-    except FileNotFoundError:
+    except (FileNotFoundError, JSONDecodeError) as e:    #JSONDecodeError can happen and prevent the Web UI from loading if the json file is malformed
         # txt2img config file not found
         # First time running the extension or it was deleted, so fill it with default values
 
@@ -625,7 +632,11 @@ def load_txt2img_config_file():
         }
 
         write_json_to_file(txt2img_config_presets, CONFIG_TXT2IMG_FILE_NAME)
-        print(f"[Config Presets] txt2img config file not found, created default config at {BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME}")
+
+        if e.__class__ == FileNotFoundError:
+            print(f"[Config Presets] txt2img config file not found, created default config at {BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME}")
+        elif e.__class__ == JSONDecodeError:
+            print(f"[Config Presets] txt2img config file was corrupt or malformed, created default config at {BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME} ")
 
     return txt2img_config_presets
 
@@ -635,7 +646,8 @@ def load_img2img_config_file():
         with open(f"{BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME}") as file:
             img2img_config_presets = json.load(file)
 
-    except FileNotFoundError:
+
+    except (FileNotFoundError, JSONDecodeError) as e:  # JSONDecodeError can happen and prevent the Web UI from loading if the json file is malformed
         # img2img config file not found
         # First time running the extension or it was deleted, so fill it with default values
         img2img_config_presets = {
@@ -673,7 +685,10 @@ def load_img2img_config_file():
         }
 
         write_json_to_file(img2img_config_presets, CONFIG_IMG2IMG_FILE_NAME)
-        print(f"[Config Presets] img2img config file not found, created default config at {BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME}")
+        if e.__class__ == FileNotFoundError:
+            print(f"[Config Presets] img2img config file not found, created default config at {BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME}")
+        elif e.__class__ == JSONDecodeError:
+            print(f"[Config Presets] img2img config file was corrupt or malformed, created default config at {BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME} ")
 
     return img2img_config_presets
 
@@ -1193,8 +1208,14 @@ def save_config(config_presets, component_map, config_file_name):
             if component_map[component_id] is not None:
                 new_value = new_setting[i]  # this gives the index when the component is a dropdown
 
-                if component_id == "txt2img_sampling" or component_id == "img2img_sampling" or component_id == "hr_sampler":
-                    new_setting_map[component_id] = modules.sd_samplers.samplers_map[new_value.lower()]
+                if isinstance(new_value, str) and (component_id == "txt2img_sampling" or component_id == "img2img_sampling" or component_id == "hr_sampler"):
+                    if isinstance(new_value, str):  #in A1111 1.6.0(?) the sampler is now returned as a string instead of an integer
+                        new_setting_map[component_id] = modules.sd_samplers.samplers_map[new_value.lower()]
+                    elif isinstance(new_value, int):
+                        new_setting_map[component_id] = modules.sd_samplers.samplers[new_value].name
+                    else:
+                        print(f"[Config Presets][ERROR] Unable get sampler name for component: {component_id}")
+                        print(f"[Config Presets][ERROR] Unknown data type for sampler: {new_value}")
                 else:
                     new_setting_map[component_id] = new_value
 

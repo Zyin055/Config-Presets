@@ -1209,8 +1209,11 @@ def save_config(config_presets, component_map, config_file_name):
                 new_value = new_setting[i]  # this gives the index when the component is a dropdown
 
                 if isinstance(new_value, str) and (component_id == "txt2img_sampling" or component_id == "img2img_sampling" or component_id == "hr_sampler"):
-                    if isinstance(new_value, str):  #in A1111 1.6.0(?) the sampler is now returned as a string instead of an integer
-                        new_setting_map[component_id] = modules.sd_samplers.samplers_map[new_value.lower()]
+                    if isinstance(new_value, str):  # in A1111 1.6.0(?) the sampler is now returned as a string instead of an integer
+                        if new_value == "Use same sampler": # the hr_sampler dropdown has a "Use same sampler" value that doesn't exist in the samplers_map
+                            new_setting_map[component_id] = new_value
+                        else:
+                            new_setting_map[component_id] = modules.sd_samplers.samplers_map[new_value.lower()]
                     elif isinstance(new_value, int):
                         new_setting_map[component_id] = modules.sd_samplers.samplers[new_value].name
                     else:

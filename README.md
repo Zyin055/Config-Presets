@@ -34,6 +34,8 @@ Screenshot of config-txt2img.json, which can be opened with the "Open config fil
 <details>
     <summary>Click to view Changelog</summary>
     
+#### 2/05/2024
+* Fixed an error when saving the hires fix sampler dropdown field (hr_sampler) and selecting the value "Use same sampler"
 #### 11/18/2023
 * Fixed an issue when saving a dropdown field in Web UI versions before 1.6.0
 #### 9/16/2023

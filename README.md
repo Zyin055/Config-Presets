@@ -3,29 +3,31 @@ This [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) ex
 
 This allows you to do things like swap from low quality rendering settings to high quality. Or apply hires settings that uses your favorite anime upscaler. Or set image dimensions to make a wallpaper. You can even use it to set custom script fields like XYZ plot values or ControlNet values.
 
+Works with [stable-diffusion-webui-forge](https://github.com/lllyasviel/stable-diffusion-webui-forge). Untested with [SD.Next](https://github.com/vladmandic/automatic).
+
 ## Screenshots
 The new dropdown in the image gallery.
 
-![gallery](https://i.imgur.com/ef0p7wM.jpg)
+![gallery](https://i.imgur.com/f6PpXud.jpeg)
 
 Dropdown values (configurable), select one and the generation settings values will be applied to the Web UI.
 
-![dropdown](https://i.imgur.com/WqbTZCR.jpg)
+![dropdown](https://i.imgur.com/GsywR4x.jpeg)
 
-Clicking the "Add/Remove..." button lets you create and delete custom presets of settings currently in the Web UI. Custom fields added by other scripts/extensions can also be used by clicking the "Add custom fields..." button. Each button has tooltips to help you.
+Clicking the add/remove [🖌️] button lets you create and delete custom presets of settings currently in the Web UI. Custom fields added by other scripts/extensions can also be used by clicking the [📂 Add custom fields...] button. Each button has tooltips to help you.
 
-![addremove](https://i.imgur.com/7rSoTUF.jpg)
+![addremove](https://i.imgur.com/iQZpGEe.jpeg)
 
-Screenshot of config-txt2img.json, which can be opened with the "Open config file..." button. You can use this if you want manual control while editing your presets. config-img2img.json also exists for the img2img tab.
+Screenshot of config-txt2img.json, which can be opened with the open config file [📂] button. You can use this if you want manual control while editing your presets. If you decide to edit the config this way, you can use the refresh [🔄] button. config-img2img.json also exists for the img2img tab.
 
-![config](https://i.imgur.com/rLONKXz.jpg)
+![config](https://i.imgur.com/oUyMBq9.jpeg)
 
 ## Installation
 #### Easy way
 * In your Automatic1111 Web UI, go to the Extensions tab > Install from URL > URL for extension's git repository: `https://github.com/Zyin055/Config-Presets`
 * Click the Install button
 #### Manually
-* Git clone this repo to the `extensions` folder in your Stable Diffusion installation
+* `git clone` this repo to the `extensions` folder in your Web UI installation
 
 ## Known bugs
 * Unable to save multi-select fields, such as the XYZ script's checkpoint name and sampler fields
@@ -34,6 +36,10 @@ Screenshot of config-txt2img.json, which can be opened with the "Open config fil
 <details>
     <summary>Click to view Changelog</summary>
     
+#### 3/28/2024
+* Made the buttons smaller, fixes cosmetic alignment issue
+* Added a refresh button to reload the config file from disk, useful if you edit the config text file manually
+* Updated default config presets
 #### 2/05/2024
 * Fixed an error when saving the hires fix sampler dropdown field (hr_sampler) and selecting the value "Use same sampler"
 #### 11/18/2023

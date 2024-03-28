@@ -7,6 +7,7 @@ import os
 import platform
 import subprocess as sp
 from json import JSONDecodeError
+from modules.ui_components import ToolButton
 
 
 BASEDIR = scripts.basedir()     #C:\path\to\Stable Diffusion\extensions\Config-Presets   needs to be set in global space to get the extra 'extensions\Config-Presets' path
@@ -547,87 +548,64 @@ def load_txt2img_config_file():
             "Low quality ------ steps: 10, batch size: 8, DPM++ 2M Karras": {
                 "txt2img_sampling": "DPM++ 2M Karras",
                 "txt2img_steps": 10,
-                #"txt2img_width": 512,
-                #"txt2img_height": 512,
                 "txt2img_enable_hr": False,
                 "txt2img_batch_count": 1,
                 "txt2img_batch_size": 8,
-                #"txt2img_cfg_scale": 7,
             },
             "Medium quality - steps: 15, batch size: 4, DPM++ 2M Karras": {
                 "txt2img_sampling": "DPM++ 2M Karras",
                 "txt2img_steps": 15,
-                #"txt2img_width": 512,
-                #"txt2img_height": 512,
                 "txt2img_enable_hr": False,
                 "txt2img_batch_count": 1,
                 "txt2img_batch_size": 4,
-                #"txt2img_cfg_scale": 7,
             },
-            "High quality ------ steps: 20, batch size: 4, DPM++ 2S a Karras": {
+            "High quality ------ steps: 30, batch size: 4, DPM++ 2S a Karras": {
                 "txt2img_sampling": "DPM++ 2S a Karras",
-                "txt2img_steps": 20,
-                #"txt2img_width": 512,
-                #"txt2img_height": 512,
+                "txt2img_steps": 30,
                 "txt2img_enable_hr": False,
                 "txt2img_batch_count": 1,
                 "txt2img_batch_size": 4,
-                #"txt2img_cfg_scale": 7,
             },
-            "High res -------- steps: 30, DPM++ 2M Karras, [Hires fix - Upscale by: 2, Denoising: 0.4, Hires steps: 10]": {
-                "txt2img_steps": 30,
-                "txt2img_sampling": "DPM++ 2M Karras",
-                #"txt2img_width": 512,
-                #"txt2img_height": 512,
+            "High res ----------- [Hires fix - Upscale by: 2, Denoising: 0.4, Hires steps: 10]": {
                 "txt2img_enable_hr": True,
                 "txt2img_hr_scale": 2,
                 "txt2img_hires_steps": 10,
                 "txt2img_denoising_strength": 0.4,
-                #"txt2img_batch_count": 1,
-                #"txt2img_batch_size": 1,
-                #"txt2img_cfg_scale": 7,
+                "txt2img_batch_count": 1,
+                "txt2img_batch_size": 1,
             },
-            "1080p ----------- 432x768 -> 1920x1080, steps: 20, DPM++ 2M Karras, [Hires fix - Upscale by: 2.5, Denoising: 0.4, Hires steps: 10]": {
+            "SD 1.5 - 1080p --- 432x768 -> 1920x1080, [Hires fix - Upscale by: 2.5, Denoising: 0.4, Hires steps: 10]": {
                 # 2x 960x536, 2.5x 768x432, 3x 640x360
-                "txt2img_steps": 20,
-                "txt2img_sampling": "DPM++ 2M Karras",
                 "txt2img_width": 768,
                 "txt2img_height": 432,
                 "txt2img_enable_hr": True,
                 "txt2img_hr_scale": 2.5,
                 "txt2img_hires_steps": 10,
                 "txt2img_denoising_strength": 0.4,
-                #"txt2img_batch_count": 1,
-                #"txt2img_batch_size": 1,
-                #"txt2img_cfg_scale": 7,
+                "txt2img_batch_count": 1,
+                "txt2img_batch_size": 1,
             },
-            "1440p ----------- 432x768 -> 2560x1440, steps: 25, DPM++ 2M Karras, [Hires fix - Upscale by: 3.3334, Denoising: 0.3, Hires steps: 10]": {
+            "SD 1.5 - 1440p --- 432x768 -> 2560x1440, [Hires fix - Upscale by: 3.3334, Denoising: 0.35, Hires steps: 10]": {
                 # 2x 1024x720, 2.5x 1024x576, 3.3334x 768x432, 4x 640x360
-                "txt2img_steps": 25,
-                "txt2img_sampling": "DPM++ 2M Karras",
                 "txt2img_width": 768,
                 "txt2img_height": 432,
                 "txt2img_enable_hr": True,
                 "txt2img_hr_scale": 3.3334,
                 "txt2img_hires_steps": 10,
-                "txt2img_denoising_strength": 0.4,
-                #"txt2img_batch_count": 1,
-                #"txt2img_batch_size": 1,
-                #"txt2img_cfg_scale": 7,
+                "txt2img_denoising_strength": 0.35,
+                "txt2img_batch_count": 1,
+                "txt2img_batch_size": 1,
             },
-            "4k ---------------- 432x768 -> 3840x2160, steps: 30, DPM++ 2M Karras, [Upscale by: 5, Denoising: 0.3, Hires steps: 15]": {
+            "SD 1.5 - 4k -------- 432x768 -> 3840x2160, [Upscale by: 5, Denoising: 0.3, Hires steps: 15]": {
                 # 2x 1420x1080, 2.5x 1536x864, 3x 1280x720, 5x 768x432, 6x 640x360
-                "txt2img_steps": 30,
-                "txt2img_sampling": "DPM++ 2M Karras",
                 "txt2img_width": 768,
                 "txt2img_height": 432,
                 "txt2img_enable_hr": True,
                 "txt2img_hr_scale": 5,
                 "txt2img_hires_steps": 15,
-                "txt2img_denoising_strength": 0.4,
-                #"txt2img_batch_count": 1,
-                #"txt2img_batch_size": 1,
-                #"txt2img_cfg_scale": 7,
+                "txt2img_denoising_strength": 0.3,
+                "txt2img_batch_count": 1,
+                "txt2img_batch_size": 1,
             },
         }
 
@@ -953,208 +931,212 @@ class Script(scripts.Script):
                                                     elem_id="script_config_preset_fields_to_save",
                                                     ).unrender() #we need to define this early on so that it can be used as an input for another function
 
-            with gr.Column(min_width=600, elem_id="config_preset_wrapper_txt2img" if self.is_txt2img else "config_preset_wrapper_img2img"):  # pushes our stuff onto a new row at 1080p screen resolution
-                with gr.Row():
-                    with gr.Column(scale=8, min_width=100) as dropdown_column:
+            with gr.Box(elem_id="config_preset_wrapper_txt2img" if self.is_txt2img else "config_preset_wrapper_img2img"):
+                with gr.Row(elem_id="config_preset_dropdown_row") as dropdown_row:
+                    
+                    def config_preset_dropdown_change(dropdown_value, *components_value):
+                        config_preset = config_presets[dropdown_value]
+                        config_preset = dict_synonyms(config_preset, synonym_ids) # Add synonyms
+                        print(f"[Config-Presets] Changed to: {dropdown_value}")
 
+                        # update component values with user preset
+                        current_components = dict(zip(component_map.keys(), components_value))
+                        #print("Components before:", current_components)
+                        current_components.update(config_preset)
 
-                        def config_preset_dropdown_change(dropdown_value, *components_value):
-                            config_preset = config_presets[dropdown_value]
-                            config_preset = dict_synonyms(config_preset, synonym_ids) # Add synonyms
-                            print(f"[Config-Presets] Changed to: {dropdown_value}")
+                        # transform necessary components from index to value
+                        for component_name, component_value in current_components.items():
+                            #print(component_name, component_value)
+                            if component_name in index_type_components and type(component_value) == int:
+                                    current_components[component_name] = component_map[component_name].choices[component_value]
 
-                            # update component values with user preset
-                            current_components = dict(zip(component_map.keys(), components_value))
-                            #print("Components before:", current_components)
-                            current_components.update(config_preset)
+                                    # A1111 1.6.0 changed radio buttons values into tuples.
+                                    # For example, for the "img2img_mask_mode" component it changed from:
+                                    #   ['Inpaint masked', 'Inpaint not masked']
+                                    #   to
+                                    #   [('Inpaint masked', 'Inpaint masked'), ('Inpaint not masked', 'Inpaint not masked')]
+                                    # Using a type == tuple check here will ensure compatibility with the older versions.
+                                    if type(current_components[component_name]) == tuple:
+                                        current_components[component_name] = current_components[component_name][0]
 
-                            # transform necessary components from index to value
-                            for component_name, component_value in current_components.items():
-                                #print(component_name, component_value)
-                                if component_name in index_type_components and type(component_value) == int:
-                                        current_components[component_name] = component_map[component_name].choices[component_value]
+                        #print("Components after :", current_components)
+                        
+                        return list(current_components.values())
 
-                                        # A1111 1.6.0 changed radio buttons values into tuples.
-                                        # For example, for the "img2img_mask_mode" component it changed from:
-                                        #   ['Inpaint masked', 'Inpaint not masked']
-                                        #   to
-                                        #   [('Inpaint masked', 'Inpaint masked'), ('Inpaint not masked', 'Inpaint not masked')]
-                                        # Using a type == tuple check here will ensure compatibility with the older versions.
-                                        if type(current_components[component_name]) == tuple:
-                                            current_components[component_name] = current_components[component_name][0]
+                    config_preset_dropdown = gr.Dropdown(
+                        label="Config Presets",
+                        choices=get_config_preset_dropdown_choices(preset_values),
+                        elem_id="config_preset_txt2img_dropdown" if self.is_txt2img else "config_preset_img2img_dropdown",
+                    )
 
-                            #print("Components after :", current_components)
-                            
-                            return list(current_components.values())
-
-                        config_preset_dropdown = gr.Dropdown(
-                            label="Config Presets",
-                            #choices=preset_values,
-                            choices=get_config_preset_dropdown_choices(preset_values),
-                            elem_id="config_preset_txt2img_dropdown" if self.is_txt2img else "config_preset_img2img_dropdown",
-                        )
-
-                        #self.txt2img_config_preset_dropdown = config_preset_dropdown
-
-                        try:
-                            components = list(component_map.values())
-                            config_preset_dropdown.change(
-                                fn=config_preset_dropdown_change,
-                                show_progress=False,
-                                inputs=[config_preset_dropdown, *components],
-                                outputs=components
-                                )
-                        except AttributeError:
-                            print(traceback.format_exc())   # prints the exception stacktrace
-                            log_critical_error("The Config-Presets extension encountered a fatal error. A component required by this extension no longer exists in the Web UI. This is most likely due to the A1111 Web UI being updated. Try updating the Config-Presets extension. If that doesn't work, please post a bug report at https://github.com/Zyin055/Config-Presets/issues and delete your extensions/Config-Presets folder until an update is published.")
-
-                        # No longer needed after the bump to Gradio 3.23
-                        # config_preset_dropdown.change(
-                        #     fn=None,
-                        #     inputs=[],
-                        #     outputs=[],
-                        #     _js="function() { config_preset_dropdown_change() }",   # JS is used to update the Hires fix row to show/hide it
-                        # )
-                    with gr.Column(scale=8, min_width=100, visible=False) as collapsable_column:
-                        with gr.Row():
-                            with gr.Column(scale=1, min_width=10):
-
-                                def delete_selected_preset(config_preset_name):
-                                    if config_preset_name in config_presets.keys():
-                                        del config_presets[config_preset_name]
-                                        print(f'[Config-Presets] deleted: "{config_preset_name}"')
-
-                                        write_json_to_file(config_presets, config_file_name)
-
-                                        preset_keys = list(config_presets.keys())
-                                        return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1],
-                                                                  #choices=preset_values,
-                                                                  choices=get_config_preset_dropdown_choices(preset_keys),
-                                                                  )
-                                    return gr.Dropdown.update() # do nothing if no value is selected
-
-                                trash_button = gr.Button(
-                                    value="\U0001f5d1\ufe0f", #🗑
-                                    elem_id="script_config_preset_trash_button",
-                                )
-                                trash_button.click(
-                                    fn=delete_selected_preset,
-                                    inputs=[config_preset_dropdown],
-                                    outputs=[config_preset_dropdown],
-                                )
-
-                            with gr.Column(scale=2, min_width=190):
-                                def open_file(f):
-                                    path = os.path.normpath(f)
-
-                                    if not os.path.exists(path):
-                                        print(f'Config Presets: The file at "{path}" does not exist.')
-                                        return
-
-                                    # copied from ui.py:538
-                                    if platform.system() == "Windows":
-                                        os.startfile(path)
-                                    elif platform.system() == "Darwin":
-                                        sp.Popen(["open", path])
-                                    else:
-                                        sp.Popen(["xdg-open", path])
-
-                                open_config_file_button = gr.Button(
-                                    value="📂 Open config file...",
-                                    elem_id="script_config_preset_open_config_file_button",
-                                )
-                                open_config_file_button.click(
-                                    fn=lambda: open_file(f"{BASEDIR}/{config_file_name}"),
-                                    inputs=[],
-                                    outputs=[],
-                                )
-
-                            with gr.Column(scale=2, min_width=50):
-                                cancel_button = gr.Button(
-                                    value="Cancel",
-                                    elem_id="script_config_preset_cancel_save_button",
-                                )
-
-                    with gr.Column(scale=4, min_width=160, visible=True) as add_remove_button_column:
-                        with gr.Row():
-                            reapply_button = gr.Button(
-                                value="\U000021A9",  # ↩
-                                elem_id="script_config_preset_reapply_button",
-                                min_width=40,
+                    try:
+                        components = list(component_map.values())
+                        config_preset_dropdown.change(
+                            fn=config_preset_dropdown_change,
+                            show_progress=False,
+                            inputs=[config_preset_dropdown, *components],
+                            outputs=components
                             )
-                            components = list(component_map.values())
-                            reapply_button.click(
-                                fn=config_preset_dropdown_change,
-                                inputs=[config_preset_dropdown, *components],
-                                show_progress=False,
-                                outputs=components,
-                            )
-                            add_remove_button = gr.Button(
-                                value="Add/Remove...",
-                                elem_id="script_config_preset_add_button",
-                                min_width=120,
-                            )
+                    except AttributeError:
+                        print(traceback.format_exc())   # prints the exception stacktrace
+                        log_critical_error("The Config-Presets extension encountered a fatal error. A component required by this extension no longer exists in the Web UI. This is most likely due to the A1111 Web UI being updated. Try updating the Config-Presets extension. If that doesn't work, please post a bug report at https://github.com/Zyin055/Config-Presets/issues and delete your extensions/Config-Presets folder until an update is published.")
+
+
+                    def delete_selected_preset(config_preset_name):
+                        if config_preset_name in config_presets.keys():
+                            del config_presets[config_preset_name]
+                            print(f'[Config-Presets] deleted: "{config_preset_name}"')
+
+                            write_json_to_file(config_presets, config_file_name)
+
+                            preset_keys = list(config_presets.keys())
+                            return gr.Dropdown.update(value=preset_keys[len(preset_keys)-1],
+                                                        choices=get_config_preset_dropdown_choices(preset_keys),
+                                                        )
+                        return gr.Dropdown.update() # do nothing if no value is selected
+                    
+                    def refresh_dropdown_button_click():
+                        if self.is_txt2img:
+                            self.txt2img_config_presets = load_txt2img_config_file()
+                            #new_config_presets = self.txt2img_config_presets
+                            config_presets.update(self.txt2img_config_presets)
+                            preset_values: list[str] = list(self.txt2img_config_presets.keys())
+                        else:
+                            self.img2img_config_presets = load_img2img_config_file()
+                            #new_config_presets = self.img2img_config_presets
+                            config_presets.update(self.img2img_config_presets)
+                            preset_values: list[str] = list(self.img2img_config_presets.keys())
+                        
+                        return gr.Dropdown.update(choices=get_config_preset_dropdown_choices(preset_values))
+
+                    refresh_dropdown_button = ToolButton(
+                        value="🔄",
+                        elem_id="script_config_preset_refresh_dropdown_button",
+                        visible=False,
+                    )
+                    refresh_dropdown_button.click(
+                        fn=refresh_dropdown_button_click,
+                        inputs=[],
+                        outputs=[config_preset_dropdown],
+                    )
+
+                    trash_button = ToolButton(
+                        value="🗑️",
+                        elem_id="script_config_preset_trash_button",
+                        visible=False,
+                    )
+                    trash_button.click(
+                        fn=delete_selected_preset,
+                        inputs=[config_preset_dropdown],
+                        outputs=[config_preset_dropdown],
+                    )
+
+                    def open_file(f):
+                        path = os.path.normpath(f)
+
+                        if not os.path.exists(path):
+                            print(f'Config Presets: The file at "{path}" does not exist.')
+                            return
+
+                        # copied from ui.py:538
+                        if platform.system() == "Windows":
+                            os.startfile(path)
+                        elif platform.system() == "Darwin":
+                            sp.Popen(["open", path])
+                        else:
+                            sp.Popen(["xdg-open", path])
+
+                    open_config_file_button = ToolButton(
+                        value="📂",
+                        elem_id="script_config_preset_open_config_file_button",
+                        visible=False,
+                    )
+                    open_config_file_button.click(
+                        fn=lambda: open_file(f"{BASEDIR}/{config_file_name}"),
+                        inputs=[],
+                        outputs=[],
+                    )
+
+                    cancel_button = ToolButton(
+                        value="\U000021A9",
+                        elem_id="script_config_preset_cancel_save_button",
+                        visible=False,
+                    )
+
+                    reapply_button = ToolButton(
+                        value="📋",
+                        elem_id="script_config_preset_reapply_button"
+                    )
+
+                    components = list(component_map.values())
+                    reapply_button.click(
+                        fn=config_preset_dropdown_change,
+                        inputs=[config_preset_dropdown, *components],
+                        show_progress=False,
+                        outputs=components,
+                    )
+
+                    add_remove_button = ToolButton(
+                        value="🖌️",
+                        elem_id="script_config_preset_add_button"
+                    )
 
                 with gr.Row() as collapsable_row:
                     collapsable_row.visible = False
                     with gr.Column():
                         with gr.Row():
-                            with gr.Column(scale=10, min_width=100):
-                                save_textbox = gr.Textbox(
-                                    label="New preset name",
-                                    placeholder="Ex: Low quality",
-                                    # value="My Preset",
-                                    max_lines=1,
-                                    elem_id="script_config_preset_save_textbox",
-                                )
-                            with gr.Column(scale=2, min_width=200):
-                                save_button = gr.Button(
-                                    # value="Create",
-                                    value="💾 Save",
-                                    variant="primary",
-                                    elem_id="script_config_preset_save_button",
-                                )
+                            save_textbox = gr.Textbox(
+                                label="New preset name",
+                                placeholder="Ex: Low quality",
+                                max_lines=1,
+                                elem_id="script_config_preset_save_textbox",
+                            )
+                            save_button = ToolButton(
+                                value="💾",
+                                variant="primary",
+                                elem_id="script_config_preset_save_button",
+                            )
 
-                                save_button.click(
-                                    fn=save_config(config_presets, component_map, config_file_name),
-                                    inputs=list(
-                                        [save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
-                                                                                   component_ids if
-                                                                                   component_map[comp_name] is not None]),
-                                    outputs=[config_preset_dropdown, save_textbox],
-                                )
+                            save_button.click(
+                                fn=save_config(config_presets, component_map, config_file_name),
+                                inputs=list(
+                                    [save_textbox] + [fields_checkboxgroup] + [component_map[comp_name] for comp_name in
+                                                                                component_ids if
+                                                                                component_map[comp_name] is not None]),
+                                outputs=[config_preset_dropdown, save_textbox],
+                            )
 
-                                def add_remove_button_click(save_textbox_text: str, config_preset_dropdown_value: str):
-                                    if save_textbox_text == "" or save_textbox_text is None:
-                                        if config_preset_dropdown_value != "" and config_preset_dropdown_value is not None:
-                                            # save textbox is empty, and we have a dropdown value selected
-                                            # auto-populate the save textbox so it's easier to overwrite existing config preset
-                                            return gr.Textbox.update(value=config_preset_dropdown_value)
-                                    return gr.Textbox.update()
+                            def add_remove_button_click(save_textbox_text: str, config_preset_dropdown_value: str):
+                                if save_textbox_text == "" or save_textbox_text is None:
+                                    if config_preset_dropdown_value != "" and config_preset_dropdown_value is not None:
+                                        # save textbox is empty, and we have a dropdown value selected
+                                        # auto-populate the save textbox so it's easier to overwrite existing config preset
+                                        return gr.Textbox.update(value=config_preset_dropdown_value)
+                                return gr.Textbox.update()
 
 
-                                def expand_edit_ui():
-                                    return gr.update(visible=True), gr.update(visible=True), gr.update(visible=False)
+                            def expand_edit_ui():
+                                return gr.Row.update(visible=True), gr.Button.update(visible=True), gr.Button.update(visible=False), gr.Button.update(visible=False), gr.Button.update(visible=True), gr.Button.update(visible=True), gr.Button.update(visible=True)
 
-                                def collapse_edit_ui():
-                                    return gr.update(visible=False), gr.update(visible=False), gr.update(visible=True)
+                            def collapse_edit_ui():
+                                return gr.Row.update(visible=False), gr.Button.update(visible=False), gr.Button.update(visible=True), gr.Button.update(visible=True), gr.Button.update(visible=False), gr.Button.update(visible=False), gr.Button.update(visible=False)
 
-                                add_remove_button.click(
-                                    fn=add_remove_button_click,
-                                    inputs=[save_textbox, config_preset_dropdown],
-                                    outputs=[save_textbox],
-                                )
-                                add_remove_button.click(
-                                    fn=expand_edit_ui,
-                                    inputs=[],
-                                    outputs=[collapsable_column, collapsable_row, add_remove_button_column],
-                                )
+                            add_remove_button.click(
+                                fn=add_remove_button_click,
+                                inputs=[save_textbox, config_preset_dropdown],
+                                outputs=[save_textbox],
+                            )
+                            add_remove_button.click(
+                                fn=expand_edit_ui,
+                                inputs=[],
+                                outputs=[collapsable_row, refresh_dropdown_button, reapply_button, add_remove_button, trash_button, open_config_file_button, cancel_button],
+                            )
 
-                                cancel_button.click(
-                                    fn=collapse_edit_ui,
-                                    inputs=[],
-                                    outputs=[collapsable_column, collapsable_row, add_remove_button_column],
-                                )
+                            cancel_button.click(
+                                fn=collapse_edit_ui,
+                                inputs=[],
+                                outputs=[collapsable_row, refresh_dropdown_button, reapply_button, add_remove_button, trash_button, open_config_file_button, cancel_button],
+                            )
 
                         with gr.Row():
                             fields_checkboxgroup.render()

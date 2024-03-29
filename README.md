@@ -29,7 +29,8 @@ Screenshot of config-txt2img.json, which can be opened with the open config file
 #### Manually
 * `git clone` this repo to the `extensions` folder in your Web UI installation
 
-## Known bugs
+## Known issues
+* Unable to save fields in the quick access area at the top of the page (checkpoint, vae, clip skip, etc)
 * Unable to save multi-select fields, such as the XYZ script's checkpoint name and sampler fields
 
 ## Changelog

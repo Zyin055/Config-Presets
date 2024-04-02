@@ -37,6 +37,8 @@ Screenshot of config-txt2img.json, which can be opened with the open config file
 <details>
     <summary>Click to view Changelog</summary>
     
+#### 4/02/2024
+* Improved error handling when the config files are edited manually
 #### 3/28/2024
 * Made the buttons smaller, fixes cosmetic alignment issue
 * Added a refresh button to reload the config file from disk, useful if you edit the config text file manually

@@ -609,12 +609,14 @@ def load_txt2img_config_file():
             },
         }
 
-        write_json_to_file(txt2img_config_presets, CONFIG_TXT2IMG_FILE_NAME)
-
         if e.__class__ == FileNotFoundError:
-            print(f"[Config Presets] txt2img config file not found, created default config at {BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME}")
+            write_json_to_file(txt2img_config_presets, CONFIG_TXT2IMG_FILE_NAME)
+            print(f"[Config Presets] txt2img config file not found. Created default txt2img config at {BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME}")
         elif e.__class__ == JSONDecodeError:
-            print(f"[Config Presets] txt2img config file was corrupt or malformed, created default config at {BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME} ")
+            log_error(f"failed to load txt2img config file at {BASEDIR}/{CONFIG_TXT2IMG_FILE_NAME}")
+            log_error(f"at line {e.lineno}, col {e.colno}: {e.msg}")
+            log_error(f"Loading the default presets until you fix the syntax error, or you could delete the file and let it be recreated with default values.")
+            txt2img_config_presets = {"ERROR loading your config file! See the console for details": {}}
 
     return txt2img_config_presets
 
@@ -662,11 +664,14 @@ def load_img2img_config_file():
             },
         }
 
-        write_json_to_file(img2img_config_presets, CONFIG_IMG2IMG_FILE_NAME)
         if e.__class__ == FileNotFoundError:
-            print(f"[Config Presets] img2img config file not found, created default config at {BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME}")
+            write_json_to_file(img2img_config_presets, CONFIG_IMG2IMG_FILE_NAME)
+            print(f"[Config Presets] img2img config file not found. Created default img2img config at {BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME}")
         elif e.__class__ == JSONDecodeError:
-            print(f"[Config Presets] img2img config file was corrupt or malformed, created default config at {BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME} ")
+            log_error(f"failed to load img2img config file at {BASEDIR}/{CONFIG_IMG2IMG_FILE_NAME}")
+            log_error(f"at line {e.lineno}, col {e.colno}: {e.msg}")
+            log_error(f"Loading the default presets until you fix the syntax error, or you could delete the file and let it be recreated with default values.")
+            img2img_config_presets = {"ERROR loading your config file! See the console for details": {}}
 
     return img2img_config_presets
 
@@ -1199,8 +1204,8 @@ def save_config(config_presets, component_map, config_file_name):
                     elif isinstance(new_value, int):
                         new_setting_map[component_id] = modules.sd_samplers.samplers[new_value].name
                     else:
-                        print(f"[Config Presets][ERROR] Unable get sampler name for component: {component_id}")
-                        print(f"[Config Presets][ERROR] Unknown data type for sampler: {new_value}")
+                        log_error(f"Unable get sampler name for component: {component_id}")
+                        log_error(f"Unknown data type for sampler: {new_value}")
                 else:
                     new_setting_map[component_id] = new_value
 

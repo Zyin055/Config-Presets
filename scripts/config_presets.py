@@ -161,7 +161,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #MD-t2i-2-neg-prompt
 #MD-t2i-2-seed
 # Tiled Diffusion - Tiled VAE
-#MD-t2i-enable
+#MDV-t2i-enabled
 #MD-t2i-vae2gpu
 #MD-t2i-enc-size
 #MD-t2i-dec-size
@@ -407,7 +407,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #MD-i2i-2-neg-prompt
 #MD-i2i-2-seed
 # Tiled Diffusion - Tiled VAE
-#MD-i2i-enable
+#MDV-i2i-enabled
 #MD-i2i-vae2gpu
 #MD-i2i-enc-size
 #MD-i2i-dec-size
@@ -824,7 +824,7 @@ class Script(scripts.Script):
             ("script_txt2img_adetailer_ad_inpaint_full_res_2nd", "script_txt2img_adetailer_ad_inpaint_only_masked_2nd"),
             ("script_txt2img_adetailer_ad_inpaint_full_res_padding_2nd", "script_txt2img_adetailer_ad_inpaint_only_masked_padding_2nd"),
 
-            # multidiffusion-upscaler (Tiled Diffusion, Tiled VAE) changed IDs 5/25/2023
+            # multidiffusion-upscaler-for-automatic1111 (Tiled Diffusion, Tiled VAE) changed IDs 5/25/2023
                 # https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111/commit/f54e190b13dcf0f975f174b7b9f20efb5eba4952
                 # https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111/commit/acc3666ee833b4b6dde05a38c22185d273aa067f
                 # https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111/commit/2473d6b005a516fb4bd51b331abd04b0289fdf07
@@ -842,6 +842,12 @@ class Script(scripts.Script):
             ("tiledvae-i2i-fastenc", "MD-i2i-fastenc"),
             ("tiledvae-i2i-fastenc-colorfix", "MD-i2i-fastenc-colorfix"),
             ("tiledvae-i2i-fastdec", "MD-i2i-fastdec"),
+
+            # multidiffusion-upscaler-for-automatic1111 changed IDs 3/28/2024
+                # https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111/commit/0d88a384c7e60ed81e5dba7ecf4ce927d062ee63
+                # Note: MD-i2i-enabled (see the d) is for "Tiled Difusion" tab, MDV-i2i-enabled is for "Tiled VAE" tab (previously MD-i2i-enable)
+            ("MD-t2i-enable", "MDV-t2i-enabled"),
+            ("MD-i2i-enable", "MDV-i2i-enabled"),
         ]
         
         # Mapping between component labels and the actual components in ui.py

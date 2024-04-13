@@ -545,22 +545,22 @@ def load_txt2img_config_file():
                 "txt2img_height": 1024,
                 "txt2img_enable-checkbox": True,
             },
-            "Low quality ------ steps: 10, batch size: 8, DPM++ 2M Karras": {
-                "txt2img_sampling": "DPM++ 2M Karras",
+            "Low quality ------ steps: 10, batch size: 8, DPM++ 2M": {
+                "txt2img_sampling": "DPM++ 2M",
                 "txt2img_steps": 10,
                 "txt2img_enable_hr": False,
                 "txt2img_batch_count": 1,
                 "txt2img_batch_size": 8,
             },
-            "Medium quality - steps: 15, batch size: 4, DPM++ 2M Karras": {
-                "txt2img_sampling": "DPM++ 2M Karras",
+            "Medium quality - steps: 15, batch size: 4, DPM++ 2M": {
+                "txt2img_sampling": "DPM++ 2M",
                 "txt2img_steps": 15,
                 "txt2img_enable_hr": False,
                 "txt2img_batch_count": 1,
                 "txt2img_batch_size": 4,
             },
-            "High quality ------ steps: 30, batch size: 4, DPM++ 2S a Karras": {
-                "txt2img_sampling": "DPM++ 2S a Karras",
+            "High quality ------ steps: 30, batch size: 4, DPM++ 2S a": {
+                "txt2img_sampling": "DPM++ 2S a",
                 "txt2img_steps": 30,
                 "txt2img_enable_hr": False,
                 "txt2img_batch_count": 1,
@@ -632,8 +632,8 @@ def load_img2img_config_file():
         # First time running the extension or it was deleted, so fill it with default values
         img2img_config_presets = {
             "None": {},
-            "Low denoising ------- denoising: 0.25, steps: 20, DPM++ 2M Karras": {
-                "img2img_sampling": "DPM++ 2M Karras",
+            "Low denoising ------- denoising: 0.25, steps: 20, DPM++ 2M": {
+                "img2img_sampling": "DPM++ 2M",
                 "img2img_steps": 20,
                 #"img2img_width": 512,
                 #"img2img_height": 512,
@@ -642,8 +642,8 @@ def load_img2img_config_file():
                 #"img2img_cfg_scale": 7,
                 "img2img_denoising_strength": 0.25,
             },
-            "Medium denoising -- denoising: 0.40, steps: 20, DPM++ 2M Karras": {
-                "img2img_sampling": "DPM++ 2M Karras",
+            "Medium denoising -- denoising: 0.40, steps: 20, DPM++ 2M": {
+                "img2img_sampling": "DPM++ 2M",
                 "img2img_steps": 20,
                 #"img2img_width": 512,
                 #"img2img_height": 512,
@@ -652,8 +652,8 @@ def load_img2img_config_file():
                 #"img2img_cfg_scale": 7,
                 "img2img_denoising_strength": 0.40,
             },
-            "High denoising ------- denoising: 0.75, steps: 30, DPM++ 2M Karras": {
-                "img2img_sampling": "DPM++ 2M Karras",
+            "High denoising ------- denoising: 0.75, steps: 30, DPM++ 2M": {
+                "img2img_sampling": "DPM++ 2M",
                 "img2img_steps": 30,
                 #"img2img_width": 512,
                 #"img2img_height": 512,
@@ -722,6 +722,7 @@ class Script(scripts.Script):
         # These are the settings from the UI that are saved for each preset
         self.txt2img_component_ids = [
             "txt2img_sampling",
+            "txt2img_scheduler",        # added in A1111 1.9.0
             "txt2img_steps",
             "txt2img_width",
             "txt2img_height",
@@ -750,6 +751,7 @@ class Script(scripts.Script):
 
         self.img2img_component_ids = [
             "img2img_sampling",
+            "img2img_scheduler",        # added in A1111 1.9.0
             "img2img_steps",
             "img2img_width",
             "img2img_height",

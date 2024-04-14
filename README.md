@@ -42,9 +42,10 @@ Screenshot of config-txt2img.json, which can be opened with the open config file
 <details>
     <summary>Click to view Changelog</summary>
     
+#### 4/14/2024
+* Fixed backwards compatibility issue introduced in yesterdays update.
 #### 4/13/2024
-* Updated for Automatic1111 1.9.0
-* This update to A1111 1.9.0 will likely not be backwards compatible with older A1111 versions.
+* Updated for Automatic1111 [v1.9.0](https://github.com/AUTOMATIC1111/stable-diffusion-webui/releases/tag/v1.9.0)
 * There is a new "Schedule type" dropdown next to the "Sampling method" dropdown which splits off the scheduler from the sampler. This means that all of your config presets that have a saved sampler needs to be renamed/fixed to remove the scheduler text at the end. For example, if you have `txt2img_sampling` set to "DPM++ 2M Karras", it now needs to be set to "DPM++ 2M" with the new `txt2img_scheduler` dropdown set to "Karras". You can do this by manually editing your `config-txt2img.txt` and `config-img2img.txt` files at `/extensions/Config-Presets`, or by deleting the bad presets in the web UI and remaking them.
 #### 4/02/2024
 * Improved error handling when the config files are edited manually

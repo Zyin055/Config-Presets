@@ -5,6 +5,11 @@ This allows you to do things like swap from low quality rendering settings to hi
 
 Works with [stable-diffusion-webui-forge](https://github.com/lllyasviel/stable-diffusion-webui-forge). Untested with [SD.Next](https://github.com/vladmandic/automatic).
 
+## Updating from A1111 1.8.0 to 1.9.0
+A1111 1.9.0 added a new "Schedule type" dropdown next to the "Sampling method" dropdown which splits off the scheduler from the sampler. This means that all of your config presets that have a saved sampler needs to be renamed/fixed to remove the scheduler text at the end. For example, if you have `txt2img_sampling` set to "DPM++ 2M Karras", it now needs to be set to "DPM++ 2M" with the new `txt2img_scheduler` dropdown set to "Karras". You can do this by manually editing your `config-txt2img.txt` and `config-img2img.txt` files at `/extensions/Config-Presets`, or by deleting the bad presets in the web UI and remaking them.
+
+If you get a `AssertionError: bad sampler name` this is why. You need to fix your sampler names to match the new naming convention in A1111 1.9.0.
+
 ## Screenshots
 The new dropdown in the image gallery.
 
@@ -37,6 +42,10 @@ Screenshot of config-txt2img.json, which can be opened with the open config file
 <details>
     <summary>Click to view Changelog</summary>
     
+#### 4/13/2024
+* Updated for Automatic1111 1.9.0
+* This update to A1111 1.9.0 will likely not be backwards compatible with older A1111 versions.
+* There is a new "Schedule type" dropdown next to the "Sampling method" dropdown which splits off the scheduler from the sampler. This means that all of your config presets that have a saved sampler needs to be renamed/fixed to remove the scheduler text at the end. For example, if you have `txt2img_sampling` set to "DPM++ 2M Karras", it now needs to be set to "DPM++ 2M" with the new `txt2img_scheduler` dropdown set to "Karras". You can do this by manually editing your `config-txt2img.txt` and `config-img2img.txt` files at `/extensions/Config-Presets`, or by deleting the bad presets in the web UI and remaking them.
 #### 4/02/2024
 * Improved error handling when the config files are edited manually
 #### 3/28/2024

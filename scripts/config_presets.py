@@ -722,7 +722,7 @@ class Script(scripts.Script):
         # These are the settings from the UI that are saved for each preset
         self.txt2img_component_ids = [
             "txt2img_sampling",
-            "txt2img_scheduler",        # added in A1111 1.9.0
+            "txt2img_scheduler",        # added in A1111 1.9.0 (Schedule type)
             "txt2img_steps",
             "txt2img_width",
             "txt2img_height",
@@ -736,12 +736,12 @@ class Script(scripts.Script):
             "txt2img_hires_steps",
             "txt2img_denoising_strength",
             "txt2img_cfg_scale",
-            "txt2img_enable-checkbox",  # Refiner, added in A1111 1.6.0
-            "txt2img_switch_at",        # Refiner switch at, added in A1111 1.6.0
+            "txt2img_enable-checkbox",  # added in A1111 1.6.0 (Refiner)
+            "txt2img_switch_at",        # added in A1111 1.6.0 (Refiner switch at)
 
             # IDs below are only in Vlad's SD.Next UI (they must also be added to self.txt2img_optional_ids):
-            "txt2img_sampling_alt", # Equiv to txt2img_hr_upscaler
-            "txt2img_steps_alt", # Equiv to txt2img_hires_steps
+            "txt2img_sampling_alt",     # Equiv to txt2img_hr_upscaler
+            "txt2img_steps_alt",        # Equiv to txt2img_hires_steps
             "txt2img_show_batch",
             "txt2img_show_seed",
             "txt2img_show_advanced", 
@@ -751,7 +751,7 @@ class Script(scripts.Script):
 
         self.img2img_component_ids = [
             "img2img_sampling",
-            "img2img_scheduler",        # added in A1111 1.9.0
+            "img2img_scheduler",        # added in A1111 1.9.0 (Schedule type)
             "img2img_steps",
             "img2img_width",
             "img2img_height",
@@ -760,8 +760,8 @@ class Script(scripts.Script):
             "img2img_cfg_scale",
             "img2img_denoising_strength",
             "img2img_restore_faces",
-            "img2img_enable-checkbox",  # Refiner, added in A1111 1.6.0
-            "img2img_switch_at",        # Refiner switch at, added in A1111 1.6.0
+            "img2img_enable-checkbox",  # added in A1111 1.6.0 (Refiner)
+            "img2img_switch_at",        # added in A1111 1.6.0 (Refiner switch at)
 
             # IDs below are only in Vlad's SD.Next UI (they must also be added to self.img2img_optional_ids):
             "img2img_show_seed",
@@ -774,12 +774,14 @@ class Script(scripts.Script):
 
         # Optional IDs don't crash the extension if no associated component is found.
         # These could be legacy IDs from older versions of the Web UI/extensions, or IDs from another UI (Vlad's SD.Next).
+        # IDs put here also need to be put in the above txt2img_component_ids and img2img_component_ids arrays.
         self.txt2img_optional_ids = [
             "txt2img_restore_faces",    # removed in A1111 1.6.0
             "txt2img_enable_hr",        # removed in A1111 1.6.0, and replaced in Vlad's SD.Next
             "txt2img_hr-checkbox",      # added in A1111 1.6.0
             "txt2img_enable-checkbox",  # added in A1111 1.6.0 (Refiner accordion)
             "txt2img_switch_at",        # added in A1111 1.6.0 (Refiner Switch at)
+            "txt2img_scheduler",        # added in A1111 1.9.0 (Schedule type)
 
             "txt2img_hires_steps",      # Replaced in Vlad's SD.Next
 
@@ -799,6 +801,7 @@ class Script(scripts.Script):
             "img2img_restore_faces",    # removed in A1111 1.6.0
             "img2img_enable-checkbox",  # added in A1111 1.6.0 (Refiner accordion)
             "img2img_switch_at",        # added in A1111 1.6.0 (Refiner Switch at)
+            "img2img_scheduler",        # added in A1111 1.9.0 (Schedule type)
 
             # IDs below are only in Vlad's SD.Next UI:
             "img2img_show_seed",

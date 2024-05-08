@@ -113,7 +113,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #txt2img_controlnet_ControlNet-2_controlnet_automatically_send_generated_images_checkbox
 
 # Tiled Diffusion (extension)
-#MD-t2i-enabled
+#MD-t2i-enabled-checkbox
 #MD-t2i-overwrite-image-size
 #MD-overwrite-width-t2i
 #MD-overwrite-height-t2i
@@ -161,7 +161,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #MD-t2i-2-neg-prompt
 #MD-t2i-2-seed
 # Tiled Diffusion - Tiled VAE
-#MDV-t2i-enabled
+#MDV-t2i-enabled-checkbox
 #MD-t2i-vae2gpu
 #MD-t2i-enc-size
 #MD-t2i-dec-size
@@ -353,7 +353,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #img2img_controlnet_ControlNet-2_controlnet_automatically_send_generated_images_checkbox
 
 # Tiled Diffusion (extension)
-#MD-i2i-enabled
+#MD-i2i-enabled-checkbox
 #MD-i2i-keep-input-size
 #MD-i2i-method
 #MD-i2i-control-tensor-cpu
@@ -407,7 +407,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #MD-i2i-2-neg-prompt
 #MD-i2i-2-seed
 # Tiled Diffusion - Tiled VAE
-#MDV-i2i-enabled
+#MDV-i2i-enabled-checkbox
 #MD-i2i-vae2gpu
 #MD-i2i-enc-size
 #MD-i2i-dec-size
@@ -851,8 +851,16 @@ class Script(scripts.Script):
             # multidiffusion-upscaler-for-automatic1111 changed IDs 3/28/2024
                 # https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111/commit/0d88a384c7e60ed81e5dba7ecf4ce927d062ee63
                 # Note: MD-i2i-enabled (see the d) is for "Tiled Difusion" tab, MDV-i2i-enabled is for "Tiled VAE" tab (previously MD-i2i-enable)
-            ("MD-t2i-enable", "MDV-t2i-enabled"),
-            ("MD-i2i-enable", "MDV-i2i-enabled"),
+                # 3/30/2024 commit made these obsolete
+            #("MD-t2i-enable", "MDV-t2i-enabled"),
+            #("MD-i2i-enable", "MDV-i2i-enabled"),
+
+            # multidiffusion-upscaler-for-automatic1111 changed IDs 3/30/2024
+                # https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111/commit/8f924dc6efce47ede615f01cca011b1ab0c54c96
+            ("MD-t2i-enabled", "MD-t2i-enabled-checkbox"),
+            ("MD-i2i-enabled", "MD-i2i-enabled-checkbox"),
+            ("MDV-t2i-enabled", "MDV-t2i-enabled-checkbox"),
+            ("MDV-i2i-enabled", "MDV-i2i-enabled-checkbox"),
         ]
         
         # Mapping between component labels and the actual components in ui.py

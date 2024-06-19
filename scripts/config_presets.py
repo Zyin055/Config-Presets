@@ -170,7 +170,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #MD-t2i-fastdec
 
 # ADetailer (extension)
-#script_txt2img_adetailer_ad_main_accordion
+#script_txt2img_adetailer_ad_main_accordion-checkbox
 # ADetailer - 1st tab
 #script_txt2img_adetailer_ad_model
 #script_txt2img_adetailer_ad_prompt
@@ -441,7 +441,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #StableSR-pure-noise
 
 # ADetailer (extension)
-#script_img2img_adetailer_ad_main_accordion
+#script_img2img_adetailer_ad_main_accordion-checkbox
 # ADetailer - 1st tab
 #script_img2img_adetailer_ad_model
 #script_img2img_adetailer_ad_prompt
@@ -901,8 +901,8 @@ class Script(scripts.Script):
             # ADetailer changed IDs 6/01/2024
                 # Moved the enable checkbox to the accordion, and added individual enable checkboxes for each tab
                 # https://github.com/Bing-su/adetailer/commit/a479f60f405481a37c98c1b08534610de9e9e05b
-            ("script_txt2img_adetailer_ad_enable", "script_txt2img_adetailer_ad_main_accordion"),
-            ("script_img2img_adetailer_ad_enable", "script_img2img_adetailer_ad_main_accordion"),
+            ("script_txt2img_adetailer_ad_enable", "script_txt2img_adetailer_ad_main_accordion-checkbox"),
+            ("script_img2img_adetailer_ad_enable", "script_img2img_adetailer_ad_main_accordion-checkbox"),
         ]
         
         # Mapping between component labels and the actual components in ui.py

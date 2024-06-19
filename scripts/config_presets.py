@@ -990,7 +990,7 @@ class Script(scripts.Script):
             #     #print(f"Config Presets: added \"{dropdownValue}\"")
 
             fields_checkboxgroup = gr.CheckboxGroup(choices=component_ids,
-                                                    value=component_ids,    #check all checkboxes by default
+                                                    value=None,    # disable check all checkboxes by default
                                                     label="Fields to save",
                                                     show_label=True,
                                                     interactive=True,

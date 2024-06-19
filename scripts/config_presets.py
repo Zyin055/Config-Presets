@@ -170,7 +170,7 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #MD-t2i-fastdec
 
 # ADetailer (extension)
-#script_txt2img_adetailer_ad_enable
+#script_txt2img_adetailer_ad_main_accordion
 # ADetailer - 1st tab
 #script_txt2img_adetailer_ad_model
 #script_txt2img_adetailer_ad_prompt
@@ -196,6 +196,15 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #script_txt2img_adetailer_ad_steps
 #script_txt2img_adetailer_ad_use_cfg_scale
 #script_txt2img_adetailer_ad_cfg_scale
+#script_txt2img_adetailer_ad_use_checkpoint
+#script_txt2img_adetailer_ad_use_vae
+#script_txt2img_adetailer_ad_use_sampler
+#script_txt2img_adetailer_ad_sampler
+#script_txt2img_adetailer_ad_scheduler
+#script_txt2img_adetailer_ad_use_noise_multiplier
+#script_txt2img_adetailer_ad_noise_multiplier
+#script_txt2img_adetailer_ad_use_clip_skip
+#script_txt2img_adetailer_ad_clip_skip
 #script_txt2img_adetailer_ad_restore_face
 # ADetailer - 1st tab - ControlNet
 #script_txt2img_adetailer_ad_controlnet_model
@@ -227,6 +236,15 @@ def load_txt2img_custom_tracked_component_ids() -> list[str]:
 #script_txt2img_adetailer_ad_steps_2nd
 #script_txt2img_adetailer_ad_use_cfg_scale_2nd
 #script_txt2img_adetailer_ad_cfg_scale_2nd
+#script_txt2img_adetailer_ad_use_checkpoint_2nd
+#script_txt2img_adetailer_ad_use_vae_2nd
+#script_txt2img_adetailer_ad_use_sampler_2nd
+#script_txt2img_adetailer_ad_sampler_2nd
+#script_txt2img_adetailer_ad_scheduler_2nd
+#script_txt2img_adetailer_ad_use_noise_multiplier_2nd
+#script_txt2img_adetailer_ad_noise_multiplier_2nd
+#script_txt2img_adetailer_ad_use_clip_skip_2nd
+#script_txt2img_adetailer_ad_clip_skip_2nd
 #script_txt2img_adetailer_ad_restore_face_2nd
 # ADetailer - 2nd tab - ControlNet
 #script_txt2img_adetailer_ad_controlnet_model_2nd
@@ -423,7 +441,7 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #StableSR-pure-noise
 
 # ADetailer (extension)
-#script_img2img_adetailer_ad_enable
+#script_img2img_adetailer_ad_main_accordion
 # ADetailer - 1st tab
 #script_img2img_adetailer_ad_model
 #script_img2img_adetailer_ad_prompt
@@ -449,6 +467,15 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #script_img2img_adetailer_ad_steps
 #script_img2img_adetailer_ad_use_cfg_scale
 #script_img2img_adetailer_ad_cfg_scale
+#script_img2img_adetailer_ad_use_checkpoint
+#script_img2img_adetailer_ad_use_vae
+#script_img2img_adetailer_ad_use_sampler
+#script_img2img_adetailer_ad_sampler
+#script_img2img_adetailer_ad_scheduler
+#script_img2img_adetailer_ad_use_noise_multiplier
+#script_img2img_adetailer_ad_noise_multiplier
+#script_img2img_adetailer_ad_use_clip_skip
+#script_img2img_adetailer_ad_clip_skip
 #script_img2img_adetailer_ad_restore_face
 # ADetailer - 1st tab - ControlNet
 #script_img2img_adetailer_ad_controlnet_model
@@ -480,6 +507,15 @@ def load_img2img_custom_tracked_component_ids() -> list[str]:
 #script_img2img_adetailer_ad_steps_2nd
 #script_img2img_adetailer_ad_use_cfg_scale_2nd
 #script_img2img_adetailer_ad_cfg_scale_2nd
+#script_img2img_adetailer_ad_use_checkpoint_2nd
+#script_img2img_adetailer_ad_use_vae_2nd
+#script_img2img_adetailer_ad_use_sampler_2nd
+#script_img2img_adetailer_ad_sampler_2nd
+#script_img2img_adetailer_ad_scheduler_2nd
+#script_img2img_adetailer_ad_use_noise_multiplier_2nd
+#script_img2img_adetailer_ad_noise_multiplier_2nd
+#script_img2img_adetailer_ad_use_clip_skip_2nd
+#script_img2img_adetailer_ad_clip_skip_2nd
 #script_img2img_adetailer_ad_restore_face_2nd
 # ADetailer - 2nd tab - ADetailer ControlNet
 #script_img2img_adetailer_ad_controlnet_model_2nd
@@ -861,6 +897,12 @@ class Script(scripts.Script):
             ("MD-i2i-enabled", "MD-i2i-enabled-checkbox"),
             ("MDV-t2i-enabled", "MDV-t2i-enabled-checkbox"),
             ("MDV-i2i-enabled", "MDV-i2i-enabled-checkbox"),
+
+            # ADetailer changed IDs 6/01/2024
+                # Moved the enable checkbox to the accordion, and added individual enable checkboxes for each tab
+                # https://github.com/Bing-su/adetailer/commit/a479f60f405481a37c98c1b08534610de9e9e05b
+            ("script_txt2img_adetailer_ad_enable", "script_txt2img_adetailer_ad_main_accordion"),
+            ("script_img2img_adetailer_ad_enable", "script_img2img_adetailer_ad_main_accordion"),
         ]
         
         # Mapping between component labels and the actual components in ui.py

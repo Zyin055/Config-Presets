@@ -1063,8 +1063,9 @@ class Script(scripts.Script):
             #     preset_values.append(dropdownValue)
             #     #print(f"Config Presets: added \"{dropdownValue}\"")
 
+            fields_checkboxgroup_value = component_ids.copy()
             fields_checkboxgroup = gr.CheckboxGroup(choices=component_ids,
-                                                    value=component_ids,    #check all checkboxes by default
+                                                    value=fields_checkboxgroup_value,    #check all checkboxes by default
                                                     label="Fields to save",
                                                     show_label=True,
                                                     interactive=True,
@@ -1073,10 +1074,24 @@ class Script(scripts.Script):
 
             with gr.Box(elem_id="config_preset_wrapper_txt2img" if self.is_txt2img else "config_preset_wrapper_img2img"):
                 with gr.Row(elem_id="config_preset_dropdown_row") as dropdown_row:
-                    
-                    def config_preset_dropdown_change(dropdown_value, *components_value):
+
+                    def get_config_preset(dropdown_value):
                         config_preset = config_presets[dropdown_value]
-                        config_preset = dict_synonyms(config_preset, synonym_ids) # Add synonyms
+                        config_preset = dict_synonyms(config_preset, synonym_ids)  # Add synonyms
+                        return config_preset
+
+                    def get_filtered_ids(config_preset):
+                        filtered_ids = [id for id in component_ids if
+                                        id in config_preset.keys()] or component_ids.copy()
+                        return filtered_ids
+
+                    def update_fields_checkboxgroup(dropdown_value):
+                        config_preset = get_config_preset(dropdown_value)
+                        filtered_ids = get_filtered_ids(config_preset)
+                        return gr.update(value=filtered_ids)
+
+                    def config_preset_dropdown_change(dropdown_value, *components_value):
+                        config_preset = get_config_preset(dropdown_value)
                         print(f"[Config-Presets] Changed to: {dropdown_value}")
 
                         # update component values with user preset
@@ -1100,7 +1115,7 @@ class Script(scripts.Script):
                                         current_components[component_name] = current_components[component_name][0]
 
                         #print("Components after :", current_components)
-                        
+
                         return list(current_components.values())
 
                     config_preset_dropdown = gr.Dropdown(
@@ -1117,6 +1132,12 @@ class Script(scripts.Script):
                             inputs=[config_preset_dropdown, *components],
                             outputs=components
                             )
+                        config_preset_dropdown.change(
+                            fn=update_fields_checkboxgroup,
+                            show_progress=False,
+                            inputs=[config_preset_dropdown],
+                            outputs=[fields_checkboxgroup]
+                        )
                     except AttributeError:
                         print(traceback.format_exc())   # prints the exception stacktrace
                         log_critical_error("The Config-Presets extension encountered a fatal error. A component required by this extension no longer exists in the Web UI. This is most likely due to the A1111 Web UI being updated. Try updating the Config-Presets extension. If that doesn't work, please post a bug report at https://github.com/Zyin055/Config-Presets/issues and delete your extensions/Config-Presets folder until an update is published.")
@@ -1214,6 +1235,12 @@ class Script(scripts.Script):
                         inputs=[config_preset_dropdown, *components],
                         show_progress=False,
                         outputs=components,
+                    )
+                    reapply_button.click(
+                        fn=update_fields_checkboxgroup,
+                        inputs=[config_preset_dropdown],
+                        show_progress=False,
+                        outputs=[fields_checkboxgroup],
                     )
 
                     add_remove_button = ToolButton(
